@@ -1,0 +1,60 @@
+
+% Day 9 --- new-format entry.
+% Cross-references: Perron--Frobenius was introduced in \qref{Q008}; if you have
+% registered it as a recurring tool, swap the \qref for \usetool{...}.
+\begin{entry}{Q009}{Hamiltonians without a sign problem}
+
+\entrymeta{
+  topic   = {Quantum many-body systems; ground states; Perron--Frobenius.},
+  est     = $\sim$10 minutes,
+  origin  = {Original. The result is the standard fact underlying \emph{stoquastic}
+    Hamiltonians; the phrasing is mine.},
+  source  = {Original problem.},
+  prereq  = {Perron--Frobenius may be quoted, as in \qref{Q008}: a matrix with strictly
+    positive entries has a largest eigenvalue that is simple, with a strictly positive
+    eigenvector.},
+  status  = open,
+}
+
+\begin{problem}
+Fix the computational basis $\{\ket{x}\}_{x\in\{0,1\}^{n}}$ of $(\CC^{2})^{\otimes n}$
+and let $H$ be a Hamiltonian that is real symmetric in this basis. The \emph{ground
+energy} is $E_0=\min\operatorname{spec}(H)$ and a \emph{ground state} is an eigenvector
+for $E_0$. Call $H$ \emph{strictly stoquastic} if all its off-diagonal entries in this
+basis are strictly negative,
+\[
+  \avg{x}{H}{y}<0 \qquad \text{for all } x\neq y .
+\]
+
+Let $H$ be strictly stoquastic. Prove that
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item the ground energy $E_0$ is non-degenerate;
+  \item the ground state $\ket{\psi_0}$ may be chosen so that $\braket{x}{\psi_0}>0$ for
+        \emph{every} basis state $x$.
+\end{enumerate}
+Then say in one sentence what goes wrong with your argument if some off-diagonal entries
+are allowed to vanish.
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[Part (a)]
+Take $a$ the bigger than any diagonal entry of $H$, $a > \max_x \avg{x}{H}{x}$, then $a\id - H$ is a matrix with all entries positive, then we can apply \usetool{T3} on $A=a\id - H$ to see that$\rho(A)$ is a simple, positive and strictly dominant eigenvalue of $A$. 
+
+On the other side, $H\ket{\psi}=E\ket{\psi} \iff A\ket{\psi}= (a-E)\ket{\psi} $, thus the biggest eigenvalue of $A$ share eigenspace with the lowest eigenvalue of $H$. Therefore, $E_0 = a - \rho(A)$ and it is non-degenerate because $\rho(A)$ is a simple eigenvalue, and thus is $E_0$.
+\end{solution}
+
+\begin{solution}[Part (b)]
+Follow from Perron-Frobenius as well, \usetool{T3}(4). The eigenspace of $\rho(A)$ to the matrix $A$, i.e., the eigenspace of $E_0$ to the matrix $H$, is spanned by a vector with positive entries.
+\end{solution}
+
+If one entry is allowed to vanish, the strict positivity of $A$ is no longer satisfied, the result might still be possible if the conditions for the stronger version of Perron-Frobenius are met, yet they may fail.
+
+\attempt{
+  date        = 2026-09-13,
+  time        = 10,
+  difficulty  = 1,
+  howitwent = direct application of Perron-Frobenius useful to practice a non-familiar tool
+}
+
+\end{entry}

@@ -1,0 +1,63 @@
+\begin{entry}{Q016}{A symmetric ground state}
+
+\entrymeta{
+  topic   = {Quantum many-body systems; symmetry; ground-state degeneracy.},
+  est     = $\sim$8 minutes,
+  origin  = {Original. The statement isstandard folklore; the phrasing is mine.},
+  source  = {Original problem.},
+  prereq  = {None beyond the definition of a ground state.},
+  status  = open,
+}
+
+\begin{problem}
+Let $H$ act on a finite-dimensional Hilbert space $\mathcal H$ and let $U$ be a unitary
+with $[H,U]=0$. Write $E_0=\min\operatorname{spec}(H)$ for the ground energy and
+$\mathcal G=\ker(H-E_0\id)$ for the ground space.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Show that $U\mathcal G=\mathcal G$.
+  \item Suppose $E_0$ is non-degenerate, i.e.\ $\dim\mathcal G=1$, and let
+        $\ket{\psi_0}$ span $\mathcal G$. Show that $\ket{\psi_0}$ is an eigenvector of
+        $U$, and that the eigenvalue has modulus one.
+  \item Give an explicit $H$ and $U$ on $(\CC^{2})^{\otimes 2}$ with $[H,U]=0$ for which
+        some ground state is \emph{not} an eigenvector of $U$. Say in one sentence which
+        hypothesis of (b) your example violates.
+\end{enumerate}
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[Part (a)]
+Let $\ket{x}$ be an element of the ground space, then 
+\begin{equation}
+    HU\ket{x}=UH\ket{x}=UE_0\ket{x}=E_0U\ket{x}
+\end{equation}
+so we can see that $U\ket{x}$ is an eigenvector of $H$ with eigenvalue $E_0$, thus $U\ket{x} \in \mathcal G$. Due to the generality of $\ket{x}$, $U\mathcal G \subseteq \mathcal G$.
+
+Taking the hermitian conjugate of the commutator we see that $[H, U^\dagger]=0$ and $U^\dagger$ is itself a unitary operator, so proceeding similarly we can see that $\mathcal U^\dagger\mathcal G\subseteq  \mathcal G$, thus 
+$\mathcal G = U(U^\dagger \mathcal G) \subseteq U \mathcal G$. Therefore, proving the equality.
+\end{solution}
+
+\begin{solution}[Part (b)]
+Given $\ket{x} \in \mathcal G$ from a) $U\ket{x} \in \mathcal{ G}$, but since it is a one-dimensional space we have that $U\ket{x} = \alpha\ket{x}$. Moreover 
+\begin{equation}
+    |\alpha|^2 = \avg{x}{U^\dagger U}{x} =\avg{x}{\id}{x}=1
+\end{equation}
+\end{solution}
+
+\begin{solution}[Part (c)]
+The condition that must be broken is the non-degeneracy of the Hamiltonian. Pick $H=\id \otimes Z$, the ground space is spanned by $\{\ket{01},\ket{11}\}$. Then the unitary can be $U=X\otimes \id$ clearly commuting with $H$ since they both act non-trivially in different subspaces, and no element of the eigenspace is an eigenvector of $U$ besides $\ket{+1},\ket{-1}$
+\end{solution}
+
+\begin{takeaway}
+Symmetry is useful when calculating the ground state is untrackable 
+\end{takeaway}
+
+\attempt{
+  date        = 2026-09-20,
+  time        = 10min,
+  difficulty  = 1,
+  how it went = ,
+}
+
+\end{entry}

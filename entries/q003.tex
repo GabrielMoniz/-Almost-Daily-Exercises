@@ -1,0 +1,112 @@
+% Migrated from days/day03.tex.  Paste your original problem, solution,
+% remark and takeaway bodies into the slots below -- the wrappers are the only
+% thing that changed.  Replace "the Day 4 result" style cross-references with
+% \qref{Q004}, and recurring lemmas with \usetool{T1}.
+\begin{entry}{Q003}{What survives a channel, and what doesn't}
+
+\entrymeta{
+  topic   = {Trace norm vs.\ Hilbert--Schmidt norm; positive maps; distinguishability},
+  est     = $\sim$12 minutes,
+  origin  = Adapted,
+  source  = {J.~Watrous, \emph{The Theory of Quantum Information} (CUP, 2018), Cor.~3.40},
+  prereq  = {},
+  status  = written-up,
+}
+
+\begin{problem}
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+
+\item Let $\Phi:\Lop{\CC^{d}}\to\Lop{\CC^{d'}}$ be \emph{positive and trace preserving}
+      --- complete positivity is \emph{not} assumed. Prove that
+      \[
+        \tnorm{\Phi(X)}\;\le\;\tnorm{X}
+        \qquad\text{for every Hermitian }X .
+      \]
+      Say explicitly which step fails if $\Phi$ is not trace preserving, and which step
+      fails if $X$ is not Hermitian.
+
+\item Prove or disprove: the same holds for the Hilbert--Schmidt norm. Precisely --- is it
+      true that for every channel $\Phi$ on $\Lop{\CC^{d}}$ and all states
+      $\rho,\sigma\in\Dop{\CC^{d}}$,
+      \[
+        \hsnorm{\Phi(\rho)-\Phi(\sigma)}\;\le\;\hsnorm{\rho-\sigma}\;?
+      \]
+      If you disprove it, $\Phi$ must be a genuine CPTP map from $\Lop{\CC^{d}}$ to itself,
+      and $\rho,\sigma$ genuine states: no rescaling tricks, and the input and output spaces
+      must have the same dimension.
+
+\end{enumerate}
+\end{problem}
+
+\begin{solution}[Part (a)]
+If $X$ is hermitian, it can be written as $X= X_+ - X_-$, where $X_+$ and $X_-$ are the orthogonal decomposition, i.e., $X_{\pm}$ is the projection of $\pm X$ onto its positive eigenspace. They are positive  
+
+Since the map $\Phi$ is positive, we have that $\Phi(X_{\pm})$ is positive as well, since positive maps always map positive operators to positive operators. 
+
+Given that the map is linear and using the triangular inequality
+$$||\Phi(X)||_1\leq ||\Phi(X_+)||_1 + ||\Phi(X_-)||_1$$
+
+Meanwhile, for positive operators their trace one norm is precisely their trace, thus $||\Phi(X_{\pm})||_1 = \Tr(\Phi(X_{\pm}))$. Since the map is trace preserving we have finally $$||\Phi(X)||_1 \leq \Tr(X_+) + \Tr(X_-) = ||X||_1$$
+\\
+Diagnostics:\\
+\emph{If $\Phi$ is not trace preserving we fail that $\Tr(\Phi(X_{\pm}))=\Tr(X_{\pm})$}\\
+\emph{If $X$ is not Hermitian, there is no orthogonal decomposition} 
+\end{solution}
+
+\begin{solution}[Part (b)]
+\remark{
+The condition that the $||.||_2$ norm changes is the relation $$||\Phi(X_{\pm})||_1 = \Tr(\Phi(X_{\pm})),$$ the norm no longer reduces to the trace for positive operator.
+We actually have 
+$$||X||_2=\sqrt{\Tr(X_+^2)+\Tr(X_-^2)}$$ this is where we got explore.}\\
+Given X hermitian, write X in its spectral decomposition $X=\sum_i x_i \ket{x_i}\bra{x_i}$, for $x_i$ real numbers (possible since X is Hermitian), and let $\rank(X)=n$. Then 
+$$||X||_2=\sqrt{\sum_i x_i^2},$$ by the AM-RMS inequality
+\begin{equation}
+    \begin{split}
+        ||X||_2&=\sqrt{\sum_i x_i^2}\\
+        &\geq \frac{1}{\sqrt{n}}\sum_i|x_i|\\
+        &= \frac{1}{\sqrt{n}} ||X||_1.
+    \end{split}
+    \label{ineq norms}
+\end{equation}
+Thus, there is a direct relation between the norms. Moreover, they are proportional whenever $|x_i|$ is constant.
+The inequality suggests two routes, a channel that breaks the "degeneracy", changing the eigenvalues whose modulus are equal to have a strict inequality, but having to do this while preserving the trace constant might not be possible (I don't know) or a channel that changes the rank of the operator.
+
+The right-hand side of \eqref{ineq norms} suggests that lowering the $\rank$ can increase (at least allows a bigger) $||\Phi(X)||_2$ if we have that $||\Phi(X)||_1 = ||X||_1$, is this is possible whenever we don't mix the positive and negative eigenspaces of $X$ by applying $\Phi$. This suggests we got start looking for $X$ with $\rank(X)=3$ (if we start with $\rank(X)=2$, lowering would mean $\rank(\Phi(X))=1$, but that would mean $\Phi(X)=0$ for a traceless operator $X$, which is the case for differences of density matrices)
+Consider
+\begin{equation}
+    X= \begin{pmatrix}
+        1 & 0 & 0\\
+        0 & 1 & 0\\
+        0 & 0 & -2
+    \end{pmatrix}
+\end{equation}
+and 
+\begin{equation}
+    \Phi(X)= \begin{pmatrix}
+        2 & 0 & 0\\
+        0 & 0 & 0\\
+        0 & 0 & -2
+    \end{pmatrix}
+\end{equation}
+we have 
+$||\Phi(X)||_2=\sqrt{8}>\sqrt{6}=||X||_2$ which is our goal to violate the inequality.
+Consider the basis $\ket{0}, \ket{1},\ket{2}$, the got have a $\Phi$ that projects the $\ket{1}$ onto $\ket{0}$, so to construct the general map that can apply to any $\Lop{\CC^{d}}$ operator while being trace preserving is
+\begin{equation}
+    \Phi(X)= \big( \bra{0}X\ket{0}+ \bra{1}X\ket{1}\big) \ket{0}\bra{0} \ + \big(  \bra{2}X\ket{2}\big) \ket{2}\bra{2}
+\end{equation}
+Notice that from this hermitian operator $X$, it is trivial to construct the corresponding density matrices.
+\end{solution}
+
+\begin{takeaway}
+Trying to reason how to construct a counter-example is helpful in terms of problem solving, but it is much more valuable to exercise in terms of developing a qualitative understanding of the problem, developing much more intuition over time. 
+\end{takeaway}
+
+\attempt{
+  date       = 2026-09-09,
+  time       = $\sim$1 h,
+  difficulty = 2,
+  howitwent  = really fun to do reasoning to construct counter-example used a lot deductive thinking. Should aim for that.
+}
+
+\end{entry}

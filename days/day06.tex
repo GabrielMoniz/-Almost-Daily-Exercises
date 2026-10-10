@@ -1,0 +1,150 @@
+\daytitle{6}{No chain of singlets}
+
+\begin{daymeta}
+  \item[Topic] Many-body spin chains; monogamy of entanglement; reduced states.
+  \item[Estimated time] $\sim 10$ minutes (solving and write-up).
+  \item[Origin] Original. The fact is standard --- the elementary case of monogamy of
+    entanglement; the phrasing is mine.
+  \item[Source] Original problem.
+  \item[Prerequisites] The singlet
+    $\ket{\Psi^{-}}=\tfrac{1}{\sqrt{2}}\bigl(\ket{01}-\ket{10}\bigr)$.
+    The Day~\ref{sec:day4} result may be used without reproving it.
+\end{daymeta}
+
+\begin{problem}
+Let $n\ge 2$ and let $\rho\in\Dop{(\CC^{2})^{\otimes n}}$ be an arbitrary state (pure or
+mixed) of $n$ spin-$\tfrac12$ particles. Label the particles, or \emph{sites},
+$1,\dots,n$, so that site $j$ carries the tensor factor $\mathcal H_j\cong\CC^{2}$.
+For $j\neq k$ write
+\[
+  \rho_{jk}:=\Tr_{\{1,\dots,n\}\setminus\{j,k\}}\,\rho
+\]
+for the reduced state of sites $j$ and $k$. The pairs $(j,j+1)$ with
+$j=1,\dots,n-1$ are called the \emph{nearest-neighbour bonds} of the chain; there are
+$n-1$ of them. A bond $(j,j+1)$ \emph{is a singlet} in the state $\rho$ if
+$\rho_{j,j+1}=\proj{\Psi^{-}}$, where
+$\ket{\Psi^{-}}=\tfrac{1}{\sqrt{2}}\bigl(\ket{01}-\ket{10}\bigr)$.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Show that two adjacent bonds cannot both be singlets: for $n\ge 3$ it is
+        impossible that $\rho_{12}=\proj{\Psi^{-}}$ and $\rho_{23}=\proj{\Psi^{-}}$
+        simultaneously.
+  \item Let
+        \[
+          S(\rho):=\bigl\{\,j\in\{1,\dots,n-1\}\ :\ \rho_{j,j+1}=\proj{\Psi^{-}}\,\bigr\}
+        \]
+        be the set of singlet bonds of $\rho$. Determine
+        \[
+          M(n):=\max_{\rho\in\Dop{(\CC^{2})^{\otimes n}}}\ \lvert S(\rho)\rvert ,
+        \]
+        proving both that $\lvert S(\rho)\rvert\le M(n)$ for every $\rho$ and that the
+        bound is attained by an explicit state.
+\end{enumerate}
+\end{problem}
+
+% ============================================================== solutions ===
+\subsection*{Solution}
+
+\begin{solution}[Part (a)]
+Using the result from day 4, if for a given $i$ we have that $\rho_{i,i+1}=\proj{\Psi^{-}}$, then the total state must be written as \begin{equation}
+    \rho = \proj{\Psi^{-}}_{i,i+1} \otimes \rho_{\{1,\dots,n\}\setminus\{i,i+1\}},
+    \label{reduced state}
+\end{equation} now since $\proj{\Psi^{-}}$ is entangled state when taking the partial to obtain $\rho_{i+1,i+2}$ or $\rho_{i-1,i}$ we don't get a pure state. To see this, from \eqref{reduced state}
+\begin{equation}
+    \rho_{i+1,i+2} = \frac{1}{2}\proj{1}_{i+1} \otimes \rho_{i+2} + \frac{1}{2}\proj{0}_{i+1} \otimes \rho_{i+2} = \frac{1}{2} \id \otimes \rho_{i+2} 
+\end{equation}
+for 
+\[
+  \rho_{j}:=\Tr_{\{1,\dots,n\}\setminus\{j\}}\,\rho
+\]
+which is clearly not a pure state, where $\Tr(\rho_{i+1,i+2}^2) = \frac{1}{2}\Tr(\rho_{i+2}^2) \leq \frac{1}{2} < 1$. Furthermore, the final state is separable, and 
+
+
+\end{solution}
+
+\begin{solution}[Part (b)]
+
+From part a) there should be no nearest-neighbour bonds of the chain having intersection, the best possible scenario is having pairs bonds $(1,2),(3,4),...$, with $i\rightarrow i+2$ to have the next singlet bond whenever $(i,i+1)$ is singlet bond, one can assume without lack of generality that it starts from $i=1$. Then for $n$ we have 
+$$S(\rho) \leq \left\lfloor \frac{n}{2} \right\rfloor,$$
+since for $n$ even, we can take as pairs $(2r-1,2r)$ with $r$ varying from $r=1$ until $r=\frac{n}{2}$, resulting in $\frac{n}{2}$ pairs, and for $n$ odd, the site $n$ will not be able to form a pair without having a intersection with another pair, so we have $\frac{n-1}{2}$ pairs.
+
+Now we only need to show there is a state that satisfies this, and by the construction imposed by item a) the state must be 
+\begin{equation}
+    \rho =  \begin{cases} 
+\otimes_{r=1}^{\frac{n}{2}} \proj{\Psi^{-}}_{2r-1,2r} & \text{if } n \text{ is even }, \\
+\otimes_{r=1}^{\frac{n-1}{2}} \proj{\Psi^{-}}_{2r-1,2r} \otimes \rho_n & \text{if } n \text{ is odd},
+\end{cases} 
+\end{equation}
+
+\end{solution}
+
+
+\begin{takeaway}
+\todo{one or two sentences}
+\end{takeaway}
+
+% =============================================================== bookkeeping =
+\begin{attemptlog}
+  \item[Date] \todo{}
+  \item[Time taken] \todo{}
+  \item[Unaided?] \todo{}
+  \item[Hints used] \todo{}
+  \item[Difficulty] \todo{perceived, 1--5}
+  \item[Error type] \todo{or: successful insight}
+\end{attemptlog}
+
+\daytitle{7}{How large can a heat capacity be?}
+
+\begin{daymeta}
+  \item[Topic] Statistical mechanics; Gibbs states; fluctuation identities; variance bounds.
+  \item[Estimated time] $\sim 12$ minutes (solving and write-up).
+  \item[Origin] Original. Both ingredients are standard; the combination is mine.
+  \item[Source] Original problem. The variance bound needed in the second step is
+    Popoviciu's inequality.
+  \item[Definitions] Let $H$ be a Hamiltonian on $\CC^{d}$ with eigenvalues
+    $E_1,\dots,E_d$. At inverse temperature $\beta=1/(k_BT)$ the \emph{Gibbs state} is
+    $\rho_\beta=e^{-\beta H}/Z(\beta)$ with $Z(\beta)=\Tr e^{-\beta H}$; the
+    \emph{internal energy} is $U(\beta)=\Tr(\rho_\beta H)$; the \emph{heat capacity} is
+    $C=\partial U/\partial T$.
+\end{daymeta}
+
+\begin{problem}
+Let $\Delta=E_{\max}-E_{\min}$ denote the spectral width of $H$. Prove that for every
+Hamiltonian $H$ on $\CC^{d}$ and every temperature $T>0$,
+\[
+  C \;\le\; \frac{k_B\,\beta^{2}\,\Delta^{2}}{4}.
+\]
+State also the condition for equality.
+\end{problem}
+
+% ============================================================== solutions ===
+\subsection*{Solution}
+
+\begin{solution}
+From the internal energy definition
+$U(\beta)= - \frac{ d ln(Z)}{d\beta}$
+then
+$C= \frac{dU}{dT}= k_b\beta^2 \frac{d^2 ln(Z)}{d\beta^2}.$
+However, such second order derivative relates to the variance of the energy 
+$$\frac{d^2 ln(Z)}{d\beta^2} = \text{var}(H)= \avg{}{H^2}{} - \avg{}{H}{}^2 $$
+
+Now we know that the variance is bigger when the points are more sparse. Having the energies fixed, the probability distribution that would create the biggest variance is one localized at $E_1$ and another at $E_d$, each with probability $1/2$, in such case 
+$$\text{var}(H) = \frac{E_1^2}{2} + \frac{E_d^2}{2} - \frac{(E_1 + E_d)^2}{4} = \Delta^2/4$$
+Any other probability distribution have a lower variance, so for our Gibbs distribution we will have
+$$C \leq \frac{k_b E_d^2\Delta^2}{4}$$
+In order to achieve the bound, we would need a degenerate Hamiltonian where $E_1$ and $E_d$ are the only distinct eigenvalues and the variance inequality becomes tighter as $\beta \rightarrow 0$, but that would make C vanish. So the bound is never saturated for any canonical thermal state $\rho_\beta$.
+\end{solution}
+
+\begin{takeaway}
+The formal proof of the claim about the distribution that maximizes the variance is known as \emph{Popoviciu's inequality for variance}. I think in this case, having a qualitative understanding of variance is more valuable than the quantitative result and knowing the formal proof.
+\end{takeaway}
+
+% =============================================================== bookkeeping =
+\begin{attemptlog}
+  \item[Date] \todo{}
+  \item[Time taken] \todo{}
+  \item[Unaided?] \todo{}
+  \item[Hints used] \todo{}
+  \item[Difficulty] \todo{perceived, 1--5}
+  \item[Error type] \todo{or: successful insight}
+\end{attemptlog}

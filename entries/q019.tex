@@ -1,0 +1,171 @@
+% -----------------------------------------------------------------------------
+%  entries/q021.tex
+% -----------------------------------------------------------------------------
+\begin{entry}{Q019}{Which entropy certifies that few terms suffice?}
+
+\entrymeta{
+  topic   = {R\'enyi entropies; truncation of Schmidt and Pauli expansions},
+  est     = $\sim$20 minutes,
+  origin  = {Adapted. Part (a) is the source's lemma with a weaker constant, posed as a proof; part (b) was built for this routine.},
+  source  = {F.~Verstraete and J.~I.~Cirac, \emph{Matrix product states represent ground states faithfully}, Phys.~Rev.~B \textbf{73}, 094423 (2006), arXiv:cond-mat/0505140, Lemma~2},
+  url     = https://arxiv.org/abs/cond-mat/0505140,
+  prereq  = None,
+  status  = drafted,
+}
+
+\begin{problem}
+\emph{Context.} Tensor-network methods keep the $\chi$ largest Schmidt coefficients
+across a cut; Pauli-truncation methods keep the $\chi$ largest Pauli coefficients of an
+operator. In both cases a normalised vector is replaced by its $\chi$ largest components
+in an orthonormal family, and the squared error is the total weight that was discarded.
+The question is which entropy of the weights certifies that a small $\chi$ is enough.
+
+Let $p=(p_1\ge p_2\ge\dots\ge p_N\ge 0)$ with $\sum_k p_k=1$. For a state, $p_k$ are the
+squared Schmidt coefficients across a cut; for an operator, the squared moduli of its
+Pauli coefficients, normalised to sum to one. For $\alpha\in(0,1)\cup(1,\infty)$ the
+\emph{R\'enyi entropy} of order $\alpha$ is
+\[
+  S_\alpha(p) := \frac{1}{1-\alpha}\,\log_2 \sum_{k=1}^{N} p_k^{\alpha},
+\]
+and the \emph{truncation error} at $\chi$ terms is
+\[
+  \varepsilon(\chi) := \sum_{k>\chi} p_k .
+\]
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Let $0<\alpha<1$. Prove that for every integer $\chi\ge 1$,
+        \[
+          \varepsilon(\chi)\;\le\;\frac{\alpha}{1-\alpha}
+          \left(\frac{2^{S_\alpha(p)}}{\chi}\right)^{\frac{1-\alpha}{\alpha}} ,
+        \]
+        and state the number of terms this guarantees to be sufficient for a target
+        error $\varepsilon$.
+  \item Fix $0<\delta<\tfrac12$ and consider the family with $N+1$ entries
+        \[
+          p_1 = 1-\delta, \qquad p_k=\frac{\delta}{N}\quad (k=2,\dots,N+1).
+        \]
+        \begin{enumerate}[label=(\roman*)]
+          \item Let $\alpha>1$. Show that $S_\alpha(p)$ is bounded by a constant that
+                does not depend on $N$. Then, for a fixed target $\epsilon<\delta$,
+                find the smallest $\chi$ with $\varepsilon(\chi)\le\epsilon$. What do
+                the two results together say about a bound like the one in (a) for
+                $\alpha>1$?
+          \item The same family does not contradict (a). How does $S_\alpha(p)$ behave
+                on it for $\alpha<1$ as $N\to\infty$, and which feature of the
+                definition of $S_\alpha$ is responsible for the different behaviour on
+                the two sides of $\alpha=1$?
+
+        \end{enumerate}
+
+    \item \emph{The sharper constant.} The prefactor in (a) diverges as $\alpha\to1^-$.
+        Prove the bound in the form given in the source: for $0<\alpha<1$ and every
+        integer $\chi\ge1$,
+        \[
+          \varepsilon(\chi)\;\le\;
+          \left(\frac{(1-\alpha)\,2^{S_\alpha(p)}}{\chi}\right)^{\frac{1-\alpha}{\alpha}} .
+        \]
+        Then compare the two bounds: which part of the statement changed, which part
+        is identical, and what does that say about what the entropy $S_\alpha$ really
+        controls?
+\end{enumerate}
+\end{problem}
+
+\begin{solution}[a]
+
+One can invert the equation of the Rényi entropy to see that 
+\begin{equation}
+    \sum_{k=1}^{N} p_k^{\alpha} = 2^{(1-\alpha)S_a(p)}
+\end{equation}
+splitting the sum, using the non-negativity of $p_k$ for $k>\chi$ and that $ p_k\geq p_\chi$ for $k \leq \chi$
+\begin{equation}
+\begin{split}
+    2^{(1-\alpha)S_a(p)}=\sum_{k=1}^{N} p_k^{\alpha} &= \sum_{k \leq \chi}^{N} p_k^{\alpha} + \sum_{k >\chi}^{N} p_k^{\alpha} \geq \chi p_\chi^\alpha \geq 0 \iff \\
+    0\leq &p_\chi \leq \left(\frac{2^{(1-\alpha)S_a(p)}}{\chi}\right)^{1/\alpha}
+\end{split} 
+\end{equation}
+
+However, notice how the truncation is arbitrary here, such that we actually have 
+\begin{equation*}
+    p_k \leq \left(\frac{2^{(1-\alpha)S_a(p)}}{k}\right)^{1/\alpha}
+\end{equation*}
+This allows a tighter bound than using that each element of sum in $\varepsilon(\chi)$ is lower than $p_\chi$. Thus
+\begin{equation}
+    \varepsilon(\chi)\leq 2^{(1-\alpha)S_a(p)/\alpha} \sum_{k>\chi} k^{-1/\alpha}
+\end{equation}
+
+The right-hand side of the equation can only get bigger as $N\rightarrow \infty$. Also we have $k^{-s} \leq \int_{k-1}^k x^{-s} dx$, hence the summation can be upper bounded by the 
+\begin{equation}
+    \varepsilon(\chi) \leq  2^{(1-\alpha)S_a(p)/\alpha} \int_{\chi}^{\infty} x^{-1/\alpha}dx= \frac{\alpha}{1-\alpha}
+          \left(\frac{2^{S_\alpha(p)}}{\chi}\right)^{\frac{1-\alpha}{\alpha}}
+\end{equation}
+
+\end{solution}
+
+\begin{solution}[b]
+
+The map $\alpha \rightarrow \sum_{k=1}^{N} p_k^{\alpha}$ is monotonic decreasing for $p_k\geq0$ in general. So $\sum_{k=1}^{N} p_k^{\alpha} \leq 1$, making the log of this sum negative, leading to positive entropy due to $1-\alpha$ being negative. In order to find an upper bound to the Rényi entropy for $\alpha>1$, we got minimize the sum.
+For that probability distribution 
+\begin{equation}
+    \sum_{k=1}^{N} p_k^{\alpha} = (1-\delta)^\alpha + \frac{\delta^\alpha}{N^{\alpha-1}}.
+\end{equation}
+which is minimal as $N\rightarrow \infty$.
+Thus,
+\begin{equation}
+    S_\alpha(p) \leq \frac{\alpha}{1-\alpha} \log_2 (1-\delta). 
+\end{equation}
+Whereas
+\begin{equation}
+    \varepsilon(\chi) = \frac{N-\chi}{N} \delta \leq \epsilon \iff \chi \geq N\left(1-\frac{\epsilon}{\delta}\right)
+\end{equation}
+
+From the first result, you learn that you can already get close to the maximal entropy by truncating at $\chi =1$. Lowering the error $\varepsilon(\chi)$ tells very little about the entropy for $\alpha>1$. Moreover, the formal maximal entropy is attained when $N\rightarrow \infty$, which the second inequality imposes $\chi \rightarrow \infty$, which means no truncation.
+
+The feature that distinguishes both cases is 
+\begin{equation}
+    \sum_{k=1}^{N} p_k^{\alpha} = (1-\delta)^\alpha + \frac{\delta^\alpha}{N^{\alpha-1}}.
+\end{equation}
+which diverge as $N\diverg$ for $\alpha <1$ instead of converging to a finite value.
+
+\end{solution}
+
+
+\begin{solution}
+One must notice that the bound can be tighter by using that $p_k^{\alpha-1} \geq p_x^{\alpha-1}$ for $k>x$, when $\alpha<1$. So going back to the sum
+\begin{equation}
+\begin{split}
+    \sum_{k=1}^{N} p_k^{\alpha} &= \sum_{k \leq x}^{N} p_k^{\alpha} + \sum_{k >x}^{N} p_k^{\alpha} \geq xp_x^\alpha + \sum_{k >x}^{N} \frac{p_k}{p_k^{1-\alpha}} \geq xp_x^\alpha + \frac{1}{p_x^{1-\alpha}} \varepsilon(x)
+\end{split} 
+\end{equation}
+
+Then 
+\begin{equation}
+\begin{split}
+    2^{(1-\alpha)S_a(p)}p_x^{1-\alpha} \geq xp_x + \varepsilon(x)
+\end{split} 
+\end{equation}
+
+
+\end{solution}
+
+
+
+% \begin{remark}
+% \end{remark}
+
+\begin{takeaway}
+\end{takeaway}
+
+%  Everything below is optional.  An entry with no attempt block is complete.
+%  Record only what would change what you do next time: typos and arithmetic
+%  slips you caught yourself are artefacts of the medium, not facts about the
+%  mathematics.  Add "public," to show this block in the public build.
+% \attempt{
+%   date       = ,               % ISO, YYYY-MM-DD -- required if the block is used
+%   time       = ,
+%   difficulty = ,               % 1-5, perceived
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
+
+\end{entry}

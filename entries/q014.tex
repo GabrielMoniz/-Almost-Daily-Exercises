@@ -1,0 +1,213 @@
+\begin{entry}{Q014}{Grassmann integrals and the trace of a Floquet operator}
+
+\entrymeta{
+  topic   = {Grassmann (Berezin) integration; Gaussian fermionic integrals;
+    field-theory approach to quantum chaos.},
+  est     = $\sim$25 minutes --- longer than the usual daily entry; part (c) is the core
+    and may be done separately.,
+  origin  = {Adapted. Reconstructed from a lecture exercise; the Grassmann axioms are
+    inlined and the time-lattice conventions fixed so the statement is self-contained.},
+  source  = {T. Micklitz, lectures on \emph{Field-Theory Approach to Quantum Chaos},
+    School on Analytical and Numerical Methods for Disordered Quantum Systems.},
+  prereq  = {None beyond linear algebra; all Grassmann conventions are stated below.},
+  status  = open,
+}
+
+\begin{problem}
+\textbf{Conventions.} Let $\psi_1,\dots,\psi_n,\bar\psi_1,\dots,\bar\psi_n$ be
+\emph{Grassmann variables}: generators of an associative algebra over $\CC$ subject to
+\[
+  \{\psi_i,\psi_j\}=\{\bar\psi_i,\bar\psi_j\}=\{\psi_i,\bar\psi_j\}=0
+  \qquad\text{for all } i,j,
+\]
+so in particular $\psi_i^{2}=\bar\psi_i^{2}=0$. Every function of them is a polynomial
+of degree at most one in each generator. \emph{Berezin integration} in a single variable
+is the linear map defined by
+\begin{equation}
+    \int d\psi\;1=0,
+  \qquad
+  \int d\psi\;\psi=1,
+  \label{grassman identity}
+\end{equation}
+
+and the differentials $d\psi_i,d\bar\psi_i$ anticommute with each other and with all
+generators. For $n$ pairs write
+\[
+  D(\bar\psi,\psi):=\prod_{i=1}^{n} d\bar\psi_i\, d\psi_i ,
+  \qquad\text{normalised so that}\qquad
+  \int D(\bar\psi,\psi)\;\prod_{i=1}^{n}\psi_i\bar\psi_i \;=\;1 .
+\]
+For $A\in\CC^{n\times n}$ set $\bar\psi A\psi:=\sum_{i,j}\bar\psi_i A_{ij}\psi_j$.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Prove that
+        \[
+          \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi} \;=\;\det A .
+        \]
+  \item Prove that, for $A$ invertible,
+        \[
+          \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi}\,\psi_a\bar\psi_b
+          \;=\;\det A\;\bigl(A^{-1}\bigr)_{ab} .
+        \]
+  \item Let $U_0$ be a unitary on $\CC^{N}$ (one step of a Floquet evolution), and let
+        the discrete time lattice be $\{0,1,\dots,t\}$, on which the lowering operator
+        $T_-$ acts by $T_-\ket{\tau}=\ket{\tau-1}$, i.e.
+        $(T_-)_{\tau,\tau'}=\delta_{\tau,\tau'-1}$. Take Grassmann variables
+        $\psi_{(i,\tau)},\bar\psi_{(i,\tau)}$ indexed by $i\in\{1,\dots,N\}$ and
+        $\tau\in\{0,\dots,t\}$, and set
+        \[
+          A=\id-U_0\otimes T_- .
+        \]
+        Show that $\det A=1$, compute $\bigl(A^{-1}\bigr)_{(i,\tau),(j,\tau')}$, and
+        conclude that
+        \[
+          \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi}
+          \sum_{a=1}^{N}\psi_{(a,0)}\,\bar\psi_{(a,t)}
+          \;=\;\Tr\bigl(U_0^{\,t}\bigr).
+        \]
+        Explain why an insertion diagonal in the time index, $\sum_a
+        \psi_{(a,\tau)}\bar\psi_{(a,\tau)}$, cannot produce this result.
+\end{enumerate}
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[Part (a)]
+Since $\psi_i^{2}=\bar\psi_i^{2}=0$, we have that 
+\begin{equation}
+    e^{-\bar\psi A\psi}= \prod_{i,j}(1 -  \bar\psi_i A_{ij}\psi_j)=O(0)+O(2)+...+O(2n)
+\end{equation}
+where here $O(2k)$ represent the term where there is a product of $2k$ Grassmann variables, i.e.,
+\begin{equation*}
+\begin{split}
+    O(2k)= (-1)^k\sum_{\substack{i_1\neq...\neq i_k\\j_1\neq...\neq j_k}} \prod_{x=1}^{k}\bar\psi_{i_x}A_{i_x,j_x}\psi_{j_x}
+\end{split}
+\end{equation*}
+(notice that equal index leads to 0 contribution, $\psi_i^{2}=\bar\psi_i^{2}=0$ forcing the summation to be over different index) but from \eqref{grassman identity}, any term that doesn't have the full $2n$ Grassmann variables vanishes when integrated, $\int D(\bar\psi,\psi) O(2k)=0,\ k<n$, then 
+\begin{equation}
+\begin{split}
+    \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi} = \int D(\bar\psi,\psi) \sum_{\substack{i_1\neq...\neq i_n\\j_1\neq...\neq j_n}} \prod_{x=1}^{n}\bar\psi_{i_x}A_{i_x,j_x}\psi_{j_x}
+\end{split}
+\end{equation}
+which can be rewritten in the permutation notation 
+\begin{equation}
+\begin{split}
+    \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi} =& (-1)^n\int D(\bar\psi,\psi) \sum_{\sigma \in S_n} \prod_i^n \bar\psi_i A_{i\sigma(i)}\psi_{\sigma(i)}\\
+    =& (-1)^n\sum_{\sigma \in S_n}\int D(\bar\psi,\psi)\prod_i\bar\psi_i \psi_{\sigma(i)}A_{i \sigma(i)}.
+\end{split}
+\end{equation}
+Now, due to the anti-commutativity of the Grassmann variables, we can rewrite the normalization condition and then derive for a generic permutation
+\begin{equation}
+   \int D(\bar\psi,\psi)\prod_i\bar\psi_i \psi_{i} =(-1)^n\implies\int D(\bar\psi,\psi)\prod_i\bar\psi_i \psi_{\sigma(i)}=(-1)^n\text{sign}(\sigma)
+\end{equation}, where an even permutation would require an even number of exchanges to order the integral as products $\int d \psi \psi$, meanwhile an odd permutation requires an odd number of exchanges, leading to a $-$ sign overall, hence
+\begin{equation}
+\begin{split}
+    \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi}
+    =&\sum_{\sigma \in S_n}\text{sign}(\sigma)\prod_iA_{i \sigma(i)}\\
+    =& \det (A
+)\end{split}
+\end{equation}
+\end{solution}
+
+\begin{solution}[Part (b)]
+We can see the matrix itself as a list of complex variables, consider Einstein summation notation for an Euclidean norm, such that the expression can be written as (for the sake of precision consider $X_{i,j}$ the list of complex variables)
+\begin{equation}
+\begin{split}
+    \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi}\psi_a \bar\psi_b
+    =&\int D(\bar\psi,\psi)\; e^{-\bar\psi^\nu A_{\nu\mu}\psi^\mu}\psi_a \bar\psi_b\\
+    =& \int D(\bar\psi,\psi)\; e^{-\bar\psi^\nu A_{\nu\mu}\psi^\mu}(-\bar\psi_b \psi_a) \\
+    =&\bigg(\frac{\partial}{\partial X_{ba}}\int D(\bar\psi,\psi)\; e^{-\bar\psi^\nu X_{\nu\mu}\psi^\mu}\bigg)_{X=A}\\
+    =& \bigg(\frac{\partial}{\partial X_{ba}}\det(X)\bigg)_{X=A}
+\end{split}
+\end{equation}
+From Cramer's rule for the determinant, for any row $i$
+\begin{equation*}
+    \det X = \sum_{j}X_{ij}C_{ij}
+\end{equation*}
+where $C_{ij}$ is the cofactor in the corresponding position $i,j$, which depends on all variables of $X$ besides the ones that have either row $i$ or column $j$ (you eliminate the row $i$ and columns $j$ to calculate the determinant of the remaining matrix, to attain $C_{i,j}$), so taking the row $i=b$, we can write $\det X = \sum_{j}X_{bj}C_{bj}$. No element of the summation depends on $X_{ba}$ besides when $j=a$, so
+\begin{equation*}
+    \frac{\partial}{\partial X_{ba}}\det X = C_{ba}
+\end{equation*}
+Now, from Laplace's formula for the inverse, or cofactor method, the inverse is calculated precisely from the cofactor by
+$$(X^{-1})_{ij} =\frac{C_{ji} }{\det X}$$
+therefore
+\begin{equation}
+    \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi}\psi_a \bar\psi_b
+    = \det A (A^{-1})_{ab}
+\end{equation}
+\end{solution}
+
+\begin{solution}[Part (c)]
+Defining properly the notation for the spatial and temporal degrees of freedom
+\begin{equation}
+\begin{split}
+    \sum_{a,a',\tau,\tau'} \bar \psi_{(a,\tau)} (U^k_0\otimes T_-^k)_{(a,a'),(\tau,\tau')} \psi_{(a',\tau')}= \sum_{a,a',\tau,\tau'} \bar \psi_{(a,\tau)} (U^k_0)_{(a,a')}\otimes (T_-^k)_{(\tau,\tau')} \psi_{(a',\tau')}
+\end{split}
+\end{equation}
+Now notice 
+\begin{equation}
+    T_-=\sum_{\tau=1}^{t}\ket{\tau-1}\bra{\tau}
+=\begin{pmatrix}
+0 & 1 & 0 & \cdots & 0 \\
+0 & 0 & 1 & \ddots & \vdots \\
+\vdots & \vdots & \ddots & \ddots & 0 \\
+0 & 0 & \cdots & 0 & 1 \\
+0 & 0 & \cdots & 0 & 0 \qquad 
+\end{pmatrix},
+\qquad
+(T_-)_{\tau\tau'}=\delta_{\tau,\tau'-1}. \qquad \text{odering}\ \ket{0} = \begin{pmatrix}
+    1\\
+    ...\\
+    0
+\end{pmatrix}
+\end{equation}
+exponentiation of $T_-$ lower its own entries, leading to
+\begin{equation}
+T_-^{\,k}=\sum_{\tau=1}^{t}\ket{\tau-1}\bra{\tau}
+=\begin{pmatrix}
+0_{(t+1-k)\times k} & \id_{t+1-k} \\[2pt]
+0_{k\times k} & 0_{k\times(t+1-k)}
+\end{pmatrix},
+\quad (T_-^{\,k})_{\tau\tau'}=\delta_{\tau,\tau'-k},,
+\qquad T_-^{\,t+1}=0 ,
+\end{equation}
+Moreover, we have that $(T_-^k)_{0t} = \delta_{kt}$, which means that the we got apply the $T_-$ $t$ times in order to have an element in the last columns of the first row, meanwhile the condition $T_{-}^{t+1}=0$, makes $U_0\otimes T_-$ nilpotent, such that the inverse of $A=\id-U_0\otimes T_-$ can be calculated from the geometric series, 
+\begin{equation}
+    (\id -U_0\otimes T_-)^{-1}= \sum_{k=0}^t U_0^k \otimes T_{-}^k
+\end{equation}
+ thus
+\begin{equation}
+    (A^{-1})_{(a,0),(b,t)}= (U_0^t)_{a,b}
+\end{equation}
+Finally,
+\begin{equation}
+    A=\id-U_0\otimes T_-=
+\begin{pmatrix}
+\id_N & -U_0 & & & \\
+ & \id_N & -U_0 & & \\
+ & & \ddots & \ddots & \\
+ & & & \id_N & -U_0 \\
+ & & & & \id_N
+\end{pmatrix}
+\end{equation} such that $\det A=1$, therefore, using item b) 
+\begin{equation}
+    \int D(\bar\psi,\psi)\; e^{-\bar\psi A\psi}
+          \sum_{a=1}^{N}\psi_{(a,0)}\,\bar\psi_{(a,t)}
+          \;=\; \sum_a =\Tr\bigl(U_0^{\,t}\bigr).
+\end{equation}
+ 
+
+
+
+\end{solution}
+
+
+
+\attempt{
+  date        = 2026-09-15,
+  time        = ,
+  difficulty  = ,
+  how it went = ,
+}
+
+\end{entry}

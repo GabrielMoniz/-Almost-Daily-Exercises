@@ -1,0 +1,122 @@
+\begin{entry}{Q0NN}{What survives a Haar-random gate}
+
+\entrymeta{
+  topic   = {Haar measure; random matrices; unitary twirl.},
+  est     = {$\sim$15 minutes},
+  origin  = {Original.},
+  source  = {Original problem.},
+  prereq  = {None beyond linear algebra; the two averaging rules are stated below.},
+  status  = drafted,
+}
+
+\begin{problem}
+\textbf{What this describes.} A Haar-random unitary is the idealisation of a maximally
+generic, chaotic evolution: no direction in Hilbert space is preferred. Averaging over it
+is how random circuits are analysed, and the basic question is what information about an
+input survives the average. Everything follows from two rules.
+
+\textbf{Setup.} A random matrix is a matrix whose entries are random numbers. Its average
+$\mathbb E[M]$ is the matrix of entry-wise averages, $(\mathbb E[M])_{kl}=\mathbb E[M_{kl}]$.
+
+\emph{Rule 1 (linearity).} For fixed matrices $A,B$ and a random matrix $M$,
+\[
+  \mathbb E[A\,M\,B]=A\;\mathbb E[M]\;B .
+\]
+Indeed $(AMB)_{kl}=\sum_{i,j}A_{ki}M_{ij}B_{jl}$; the average of a sum is the sum of the
+averages, and constants factor out.
+
+\emph{Rule 2 (invariance).} If $U$ is Haar-distributed on $\mathrm U(n)$ and $V$ is a
+fixed unitary, then $VU$ has the same distribution as $U$, so for any matrix-valued
+function $f$,
+\[
+  \mathbb E[f(VU)]=\mathbb E[f(U)] .
+\]
+
+Let $U$ be Haar-distributed on $\mathrm U(n)$, $X$ a fixed $n\times n$ matrix, and
+$M:=\mathbb E[UXU^{\dagger}]$.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item \emph{Warm-up.} Use the two rules with a well-chosen $V$ to show that
+        $\mathbb E[U]=0$.
+
+  \item \emph{Invariance of $M$.} Apply Rule~2 to $f(U)=UXU^{\dagger}$, then Rule~1,
+        to show that
+        \begin{equation}
+            VMV^{\dagger}=M\qquad\text{for every unitary } V 
+            \label{invariance identity}
+        \end{equation}
+          
+
+  \item \emph{$M$ is a multiple of the identity.} Use (b) with two families of $V$:
+        \begin{itemize}
+          \item $V$ diagonal, with one entry equal to $-1$ and all others $+1$. What does
+                this force on the off-diagonal entries of $M$?
+          \item $V$ the permutation swapping two basis vectors and fixing the rest. What
+                does this force on the diagonal entries?
+        \end{itemize}
+        Conclude that $M=c\,\id$ for some $c\in\CC$.
+
+  \item \emph{The constant.} Take the trace of $M=\mathbb E[UXU^{\dagger}]$; since the
+        trace is a sum of entries, it can be exchanged with the average. Find $c$.
+
+  \item \emph{Reading.} Let $\rho$ be any state of two qubits, so $n=4$. What is the
+        average state after a Haar-random gate, and what property of $\rho$ survives?
+\end{enumerate}
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[Part (a)]
+For any fixed unitary $V$, by linearity
+\begin{equation*}
+    \mathbb E[VU] = V\mathbb E[U].
+\end{equation*}
+Now, take $f(X)=X: \CC^{n\times n} \rightarrow \CC^{n\times n}$, so by invariance
+\begin{equation*}
+    \mathbb E[VU] = \mathbb E[U].
+\end{equation*}
+Thus, taking $V=-\id$, $ \mathbb E[U]=0$.
+
+\end{solution}
+
+\begin{solution}[Part (b)]
+Given a unitary $V$, by the invariance $\mathbb E(VUXU^\dagger V^\dagger)=\mathbb E(UXU^\dagger)=M$, using linearity on the left hand side $M = V \mathbb E(UXU^\dagger)V^\dagger=V  MV^\dagger$.
+\end{solution}
+
+\begin{solution}[Part (c)]
+Let $V_{ij}= (-1)^{\delta_{ia}}\delta_{ij}$, so the $a-$th element of the diagonal is the $-1$. Then
+\begin{equation}
+   M_{kl}= \sum_{i,j} (-1)^{\delta_{ka}}\delta_{ki}M_{ij} (-1)^{\delta_{ja}}\delta_{jl} = (-1)^{\delta_{ka}+\delta_{ja}} M_{lk}
+\end{equation}
+So for diagonal elements, this equation tells nothing. However, given a pair $(l,k)$ of off-diagonal elements $l\neq k$, one can take $a=k$ (due to the generality of $V$), leading to $M_{lk}=-M_{kl}$. Thus, the matrix $M$ must be diagonal.
+
+In order to the unitary act as a permutation of two basis vectors, it must act on that subspace as the Pauli-X matrix, $ \ket{e_i}\bra{e_j} + \ket{e_j}\bra{e_i}$, and act trivially as the identity on the rest 
+$$V=\ket{e_i}\bra{e_j} + \ket{e_j}\bra{e_i}+ \sum_{k\neq i,j} \ket{e_k}\bra{e_k}.$$ 
+This forces $(VMV^\dagger)_{ii}=M_{jj}$ and $(VMV^\dagger)_{jj}=M_{ii}$, while leaving the others diagonal elements unaltered. 
+
+Furthermore, Eq.\eqref{invariance identity} imposes $M_{jj}=M_{ii}$ for all diagonal elements, such that $M$ must be proportional to the identity.
+
+\end{solution}
+
+\begin{solution}[Part (d)]
+Using linearity and cyclicity of the trace 
+\begin{equation}
+    c \id= E[UXU^{\dagger}]   \implies c\, n= \Tr\left( \mathbb E[UXU^{\dagger}]\right) = E[\Tr(UXU^{\dagger})] = \mathbb E[ \Tr(X)]= \Tr(X)
+\end{equation}
+\end{solution}
+
+\begin{solution}[Part (e)]
+For any state $\mathbb E(U\rho U^\dagger)= \frac{1}{n} \id$, which is the maximally mixed state. Meaning the operation erases all information from the state. 
+\end{solution}
+
+
+
+\attempt{
+  date      = 2026-10-05,
+  time      = 20min,
+  difficulty= 1,
+  howitwent = ,
+  insight   = ,
+}
+
+\end{entry}

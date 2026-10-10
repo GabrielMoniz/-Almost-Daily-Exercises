@@ -1,0 +1,118 @@
+% =====================================================================
+%  Day 12 entry. Structure copied from TEMPLATE-entry.tex.
+%  LONG / MULTI-PART entry (labelled in advance): (a)-(b) warm-up,
+%  (c) is the core, (d) is optional.
+% =====================================================================
+\makeatletter
+\@ifundefined{problem}{\theoremstyle{definition}\newtheorem*{problem}{Problem}}{}
+\@ifundefined{solution}{\theoremstyle{definition}\newtheorem*{solution}{Solution}}{}
+\@ifundefined{remark}{\theoremstyle{remark}\newtheorem*{remark}{Remark}}{}
+\@ifundefined{takeaway}{\theoremstyle{remark}\newtheorem*{takeaway}{Takeaway}}{}
+\makeatother
+\providecommand{\TODO}[1]{{\color{purple}[\textbf{TODO:} #1]}}
+\providecommand{\Tr}{\operatorname{Tr}}
+
+\section{Day 12 --- The AKLT state from valence bonds}
+\label{sec:day12}
+
+\noindent
+{\color{black!65}%
+\begin{tabular}{@{}l p{0.76\linewidth}@{}}
+\textbf{Topic}          & Matrix product states; spin-$1$ chains; $\mathrm{SU}(2)$ intertwiners; frustration-free parent Hamiltonians. \\
+\textbf{Estimated time} & \textbf{Long, multi-part entry} (labelled in advance): $\sim 35$--$45$ minutes including write-up. Parts (a)--(b) are warm-up, part (c) is the core, part (d) is optional. \\
+\textbf{Origin}         & Adapted. The nine questions of the source are regrouped into four parts; the ``physical motivation'' question is sharpened into a precise intertwining statement; the map called a ``projection'' in the source is defined as a map $\mathbb{C}^2\otimes\mathbb{C}^2\to\mathbb{C}^3$; a typo in the source's formula for $P^{(j)-}_{ab}$ is corrected; the non-vanishing of the state, needed for the ground-state conclusion, is added. \\
+\textbf{Source}         & J.~E.~Nava Sejas and D.~Rosa, \emph{The AKLT state}, problem sheet (minicourse lecture notes, 21/09/2026), Questions~1--9 and the bonus question on Eq.~(10). \TODO{course name and URL}. Model: I.~Affleck, T.~Kennedy, E.~H.~Lieb, H.~Tasaki, \emph{Rigorous results on valence-bond ground states in antiferromagnets}, Phys.\ Rev.\ Lett.\ \textbf{59}, 799 (1987). \\
+\textbf{Conventions}    & $\hbar = 1$. Spin-$\tfrac12$ basis $\{\lvert\uparrow\rangle,\lvert\downarrow\rangle\}$, $\vec S = \tfrac12\vec\sigma$, $\sigma^{\pm} = \tfrac12(\sigma^x \pm i\sigma^y)$. Spin-$1$ basis ordered $(\lvert{+}\rangle,\lvert 0\rangle,\lvert{-}\rangle)$ with $S^z = \operatorname{diag}(1,0,-1)$, $S^{+}\lvert 0\rangle = \sqrt2\,\lvert{+}\rangle$, $S^{+}\lvert{-}\rangle = \sqrt2\,\lvert 0\rangle$, $S^{+}\lvert{+}\rangle = 0$, $S^- = (S^+)^\dagger$, $S^x = \tfrac12(S^++S^-)$, $S^y = \tfrac1{2i}(S^+-S^-)$. $\varepsilon := i\sigma^y = \begin{psmallmatrix}0&1\\-1&0\end{psmallmatrix}$ in the basis $(\uparrow,\downarrow)$. Periodic boundary conditions, site $N+1 \equiv 1$. \\
+\textbf{Prerequisites}  & Addition of angular momentum ($\tfrac12\otimes\tfrac12 = 0\oplus 1$, $1\otimes 1 = 0\oplus1\oplus2$) may be quoted. \\
+\end{tabular}}
+
+\bigskip
+
+\begin{problem}
+Consider a ring of $N \geq 2$ spin-$1$ particles. Each site $j$ is represented by two \emph{virtual} spin-$\tfrac12$ particles $L_j$ (``left'') and $R_j$ (``right''). Let $V_j : \mathbb{C}^3 \to \mathbb{C}^2_{L_j}\otimes\mathbb{C}^2_{R_j}$ be the linear map
+\[
+  V_j\lvert{+}\rangle = \lvert\uparrow\uparrow\rangle, \qquad
+  V_j\lvert 0\rangle = \tfrac{1}{\sqrt2}\big(\lvert\uparrow\downarrow\rangle + \lvert\downarrow\uparrow\rangle\big), \qquad
+  V_j\lvert{-}\rangle = \lvert\downarrow\downarrow\rangle,
+\]
+and set $P_j := V_j^{\dagger} : \mathbb{C}^2\otimes\mathbb{C}^2 \to \mathbb{C}^3$, with matrix elements $P^{s}_{ab} := \langle s\rvert P_j\lvert a\,b\rangle$ ($s \in \{+,0,-\}$; $a$ refers to $L_j$, $b$ to $R_j$).
+
+\begin{enumerate}[label=\textbf{(\alph*)}]
+  \item \emph{From two spins-$\tfrac12$ to one spin-$1$.}
+        Show that $P_jP_j^{\dagger} = \mathbf{1}_{3}$ and that $P_j^{\dagger}P_j$ is the orthogonal projector onto the symmetric subspace of $\mathbb{C}^2\otimes\mathbb{C}^2$. Is $P_j$ injective? Identify its kernel.
+        Then prove that $P_j$ is an $\mathrm{SU}(2)$ intertwiner,
+        \[
+          P_j\,\big(S^{\alpha}_{L_j} + S^{\alpha}_{R_j}\big) \;=\; S^{\alpha}_{j}\,P_j, \qquad \alpha = x,y,z,
+        \]
+        and explain in one or two sentences why this property is the physical content of the choice of $V_j$. Finally, write the three $2\times2$ matrices $P^{s} = (P^{s}_{ab})_{a,b}$.
+
+  \item \emph{The matrix product state.}
+        Pair each $R_j$ with $L_{j+1}$ in the singlet
+        \[
+          \lvert\omega\rangle_{R_j L_{j+1}} = \tfrac{1}{\sqrt2}\big(\lvert\uparrow\rangle_{R_j}\lvert\downarrow\rangle_{L_{j+1}} - \lvert\downarrow\rangle_{R_j}\lvert\uparrow\rangle_{L_{j+1}}\big),
+          \qquad
+          \lvert\Omega\rangle := \bigotimes_{j=1}^{N} \lvert\omega\rangle_{R_j L_{j+1}},
+        \]
+        and define the physical state $\lvert\Phi\rangle := \big(P_1\otimes\cdots\otimes P_N\big)\lvert\Omega\rangle \in (\mathbb{C}^3)^{\otimes N}$.
+        Prove that
+        \[
+          \lvert\Phi\rangle = \sum_{s_1,\dots,s_N} \Tr\!\big[A^{s_1}A^{s_2}\cdots A^{s_N}\big]\,\lvert s_1 s_2\cdots s_N\rangle,
+          \qquad
+          A^{s} := \tfrac{1}{\sqrt2}\,P^{s}\varepsilon,
+        \]
+        so that $\lvert\Phi\rangle$ is a translation-invariant MPS of bond dimension $2$, and compute
+        \[
+          A^{+} = \tfrac{1}{\sqrt2}\,\sigma^{+}, \qquad A^{0} = -\tfrac12\,\sigma^{z}, \qquad A^{-} = -\tfrac{1}{\sqrt2}\,\sigma^{-}.
+        \]
+
+  \item \emph{The parent Hamiltonian.}
+        Let $\Pi^{(2)}_{j,j+1}$ be the orthogonal projector onto the subspace of $\mathbb{C}^3_j\otimes\mathbb{C}^3_{j+1}$ on which the total spin of sites $j,j+1$ equals $2$ (tensored with the identity elsewhere), and
+        \[
+          H = \sum_{j=1}^{N} \Pi^{(2)}_{j,j+1}.
+        \]
+        Prove that $H \geq 0$, that $\Pi^{(2)}_{j,j+1}\lvert\Phi\rangle = 0$ for every $j$, and that $\lvert\Phi\rangle \neq 0$. Conclude that $\lvert\Phi\rangle$ is a ground state of $H$. Your argument for $\Pi^{(2)}_{j,j+1}\lvert\Phi\rangle = 0$ must use the virtual-spin construction, not a brute-force expansion of $\lvert\Phi\rangle$.
+
+  \item \emph{(Optional.)} Show that, for two spin-$1$ particles,
+        \[
+          \Pi^{(2)}_{j,j+1} = \tfrac16\Big[\big(\vec S_j\cdot\vec S_{j+1}\big)^2 + 3\,\vec S_j\cdot\vec S_{j+1} + 2\Big],
+        \]
+        so that $H$ is a bilinear--biquadratic spin-$1$ Heisenberg chain.
+\end{enumerate}
+\end{problem}
+
+\subsection*{Solution}
+
+\begin{solution}[Part (a)]
+\TODO{write up}
+\end{solution}
+
+\begin{solution}[Part (b)]
+\TODO{write up}
+\end{solution}
+
+\begin{solution}[Part (c)]
+\TODO{write up}
+\end{solution}
+
+\begin{solution}[Part (d)]
+\TODO{write up}
+\end{solution}
+
+\begin{remark}
+\TODO{optional}
+\end{remark}
+
+\begin{takeaway}
+\TODO{one or two sentences}
+\end{takeaway}
+
+\subsection*{Attempt log}
+
+\noindent
+\begin{tabular}{@{}l l@{}}
+\textbf{Date}         & \TODO{dd/mm/2026} \\
+\textbf{Time taken}   & \TODO{} \\
+\textbf{Hints used}   & \TODO{} \\
+\textbf{Difficulty}   & \TODO{} \\
+\textbf{User Opinion} & \TODO{} \\
+\end{tabular}

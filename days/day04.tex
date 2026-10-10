@@ -1,0 +1,62 @@
+\daytitle{4}{A pure marginal forces a product}
+
+\begin{daymeta}
+  \item[Topic] Bipartite states; supports; positivity.
+  \item[Estimated time] $\sim 10$ minutes.
+  \item[Origin] Original. The result is folklore; the phrasing is mine.
+  \item[Source] Original problem.
+  \item[Prerequisites] Partial trace.
+\end{daymeta}
+
+\begin{problem}
+Let $\rho\in\Dop{\mathcal H_A\otimes\mathcal H_B}$, with $\mathcal H_A,\mathcal H_B$
+finite dimensional, and suppose the reduced state $\rho_A=\Tr_B\rho$ is \emph{pure},
+say $\rho_A=\proj{\psi_A}$. Prove that $\rho$ is a product state:
+\[
+  \rho \;=\; \proj{\psi_A}\otimes\rho_B,
+  \qquad \rho_B=\Tr_A\rho .
+\]
+\end{problem}
+
+% ============================================================== solutions ===
+\subsection*{Solution}
+
+\begin{solution}
+For $p=\ket{\phi}\bra{\phi}$ a pure state, suppose it is non-separable.
+We can look at its Schmidt decomposition, then 
+$p= \sum_i \lambda_i \ket{i_A}\ket{i_B}$ with Schmidt rank at least 2, the partial trace over B is 
+$p_A = \Tr_B p = \sum_i \lambda_i^2 \ket{i_A}\bra{i_A}$.
+
+Since we have that $\sum_i \lambda_i^2 =1$ and the Schmidt rank is greater than 1, we have that $\lambda_i^2 < 1$  (for a pure state, the Schmidt rank is 1, so we have only a $\lambda_1=1$ which is not altered when squared)
+So square each summand, $\lambda_i^2 \rightarrow \lambda_i^4$, will decrease the sum, so
+$\Tr( p_A^2) = \sum_i \lambda_i^4 < 1$, meaning it is not a pure state.  
+By contrapositive if $\rho$ is a pure state, and $\Tr_B(\rho)$ is  pure state, then is separable with $\rho =\ket{\psi_A}\otimes\ket{\psi_B}$.
+
+Now we got look into $\rho$ mixed. Let $\ket{i_A}$ the a orthogonal basis on $\mathcal{H}_A$ with $\ket{0_A}=\ket{\psi}$. 
+$\rho$ is diagonalizable, $\rho=\sum_i \rho_i \ket{\phi_i}\bra{\phi_i}$ with $\rho_i>0$ and $\sum_i \rho_i=1$.
+We have that
+\begin{equation}
+    \ket{0_A}\bra{0_A}=\sum_i \rho_i \Tr_B(\ket{\phi_i}\bra{\phi_i})=\sum_i \rho_i x_i
+    \label{check}
+\end{equation}
+where $x_i=\Tr_B(\ket{\phi_i}\bra{\phi_i}) \in \Dop{\mathcal H_A}$.
+
+Thus $\sum_i \rho_i \bra{k_A}x_i\ket{k_A}=0$
+for every $k>0$, but since each $\rho_i$ is positive, we need that $\bra{k_A}x_i\ket{k_A}=0$, so
+$x_i$ must be proportional to $\ket{0_A}\bra{0_A}$ due to $x_i$ positivity, and actually equal due to normalization (it is a state). Which is consistent with \eqref{check} and $\sum_i \rho_i=1$.
+
+But now this means that each pure state $\ket{\phi_i}$ has as partial trace a pure state $\ket{0_A}$, so we can use the result for pure states to guarantee that $\ket{\phi_i}=\ket{0_A} \otimes \ket{i_B}$
+$$\rho_A= \ket{0_A}\bra{0_A} \otimes \sum_i \rho_i \ket{i_B}\bra{i_B}.$$
+
+Notice $\ket{i_B}$ is not necessarily a basis of $\mathcal H_B$, it is just abuse of notation.
+$X$ positive, implies $X=Y^\dagger Y$, so $\bra{\psi}X\ket{\psi}=||Y\ket{\psi}||^2=0$, implies $X\ket{\psi}=Y^\dagger Y\ket{\psi}=0$.
+\end{solution}
+
+
+% =============================================================== bookkeeping =
+\begin{attemptlog}
+  \item[Date] 10/09/2026
+  \item[Time taken] 20 min
+  \item[Difficulty] 2
+  \item[User Opinion] successful insight
+\end{attemptlog}

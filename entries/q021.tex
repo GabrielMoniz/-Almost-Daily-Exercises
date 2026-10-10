@@ -1,0 +1,252 @@
+% -----------------------------------------------------------------------------
+%  entries/q022.tex
+% -----------------------------------------------------------------------------
+\begin{entry}{Q022}{A Wigner function without sums: displaced parity and the strange state}
+
+\entrymeta{
+  topic   = {Discrete Wigner function; phase-point operators; mana; link to the optical Wigner function},
+  est     = $\sim$30 minutes,
+  origin  = {Adapted. The definitions follow Eqs.~(1)--(9) of the first source and the qutrit state of part (b) is taken from Sec.~IV.D of the second; the three items were built for this routine.},
+  source  = {Y.~Zhang and Y.~Gu, \emph{Quantum magic dynamics in random circuits}, npj Quantum Inf.~\textbf{12}, 87 (2026); V.~Veitch, S.~A.~H.~Mousavian, D.~Gottesman and J.~Emerson, \emph{The resource theory of stabilizer quantum computation}, New J.~Phys.~\textbf{16}, 013009 (2014), arXiv:1307.7171},
+  url     = https://arxiv.org/abs/1307.7171,
+  prereq  = {Generalised Pauli (Weyl--Heisenberg) operators; for part (c), Fock states and the displacement operator of one mode},
+  status  = drafted,
+}
+
+\begin{problem}
+\emph{Context.} The Wigner function represents a quantum state as a real function on a
+phase space. It sums to one and has the correct marginals, like a probability
+distribution, but it can take negative values. For qudits of odd prime dimension, the
+pure states whose Wigner function is non-negative are exactly the stabilizer states
+(discrete Hudson theorem: D.~Gross, J.~Math.~Phys.~\textbf{47}, 122107 (2006)). Negativity
+is therefore a witness of magic, and its total amount defines a magic monotone, the mana.
+The practical point of this exercise is that the Wigner function is the expectation value
+of a \emph{displaced parity operator}. Read in this way, values that look like long sums
+(or, in optics, like long integrals) can often be written down directly.
+
+\emph{Setting.} Let $q$ be an odd prime and $\omega=e^{2\pi i/q}$. Indices are integers
+modulo $q$, and $2^{-1}:=(q+1)/2$ is the inverse of $2$ modulo $q$. On $\CC^q$ with basis
+$\ket0,\dots,\ket{q-1}$ define
+\[
+  X\ket j=\ket{j+1},\qquad Z\ket j=\omega^{j}\ket j .
+\]
+For a phase-space point $u=(m,n)\in\mathbb{Z}_q^2$ the \emph{displacement operator} is
+\[
+  T_u := \omega^{-(q+1)mn/2}\,Z^{m}X^{n}.
+\]
+You may use without proof that $T_u$ is unitary, that $T_u^{\dagger}=T_{-u}$, and the
+composition law
+\[
+  T_uT_v=\omega^{2^{-1}[u,v]}\,T_{u+v},\qquad [u,v]:=mn'-nm' \quad\text{for } v=(m',n').
+\]
+The \emph{parity operator}, the \emph{phase-point operators} and the \emph{Wigner
+function} of a state $\rho$ are
+\[
+  A_0:=\sum_{j}\ket{-j}\!\bra{j},\qquad
+  A_u:=T_uA_0T_u^{\dagger},\qquad
+  W_\rho(u):=\frac1q\Tr\bigl[A_u\rho\bigr].
+\]
+You may also use the normalisation $\sum_u W_\rho(u)=1$. The \emph{Wigner one-norm} and the
+\emph{mana} are
+\[
+  \normx{\rho}_W:=\sum_u\bigl|W_\rho(u)\bigr|,\qquad M(\rho):=\log_2\normx{\rho}_W .
+\]
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Show that $A_0T_uA_0=T_{-u}$, and deduce that $A_u=T_{2u}A_0$, so that
+        \[
+          W_\rho(u)=\frac1q\Tr\bigl[T_{2u}A_0\,\rho\bigr].
+        \]
+        Conclude two things. First, $-\tfrac1q\le W_\rho(u)\le\tfrac1q$ for every state and
+        every point. Second, if a pure state has definite parity, $A_0\ket\psi=s\ket\psi$
+        with $s=\pm1$, then
+        \[
+          W_\psi(u)=\frac{s}{q}\,\bra\psi T_{2u}\ket\psi ,
+        \]
+        that is, its Wigner function is, up to the sign $s$, its table of
+        displacement-operator expectation values read at the doubled point.
+  \item Take $q=3$. Find the state $\ket S$ with $A_0\ket S=-\ket S$. Using (a), compute
+        $W_S$ at all nine points and the mana of $\ket S$. Do the same for $\ket0$. Which
+        of the two is a stabilizer state according to Hudson's theorem, and which bound of
+        (a) does $\ket S$ saturate, and where?
+  \item \emph{Transfer to optics.} For one bosonic mode, with $\hbar=1$, the Wigner
+        function is
+        \[
+          W_\rho(x,p):=\frac1\pi\int_{-\infty}^{\infty}\!dy\;e^{2ipy}\,
+          \bra{x-y}\rho\ket{x+y},
+        \]
+        and it satisfies the identity (A.~Royer, Phys.~Rev.~A \textbf{15}, 449 (1977))
+        \[
+          W_\rho(x,p)=\frac1\pi\Tr\bigl[\rho\,D(x,p)\,\Pi\,D(x,p)^{\dagger}\bigr],
+          \qquad D(x,p):=e^{i(p\hat x-x\hat p)},\qquad \Pi:=(-1)^{a^{\dagger}a},
+        \]
+        where $\Pi$ acts on position eigenstates as $\Pi\ket x=\ket{-x}$. Without computing
+        any integral, give $W(0,0)$ for the Fock state $\ket n$ and the range of values a
+        Wigner function can take. The continuous-variable Hudson theorem states that the
+        pure states with $W\ge0$ are exactly the Gaussian states. Complete the dictionary
+        between the two settings: what are the optical counterparts of $T_u$, of the
+        stabilizer states, and of $\ket S$?
+\end{enumerate}
+\end{problem}
+
+\begin{solution}[a]
+The conjugation by $A_0$ acts inverting the generalized Pauli X and Z:
+\begin{equation*}
+\begin{split}
+    &A_0 X A_0 \ket{j} =   A_0 X \ket{-j}= A_0 \ket{-j+1} = \ket{j-1} = X^{-1}\ket{j}\ ;\\
+    &A_0 Z A_0 \ket{j} =   A_0 Z \ket{-j}= A_0 \omega^{-j}\ket{-j} =\omega^{-j}\ket{j} = Z^{-1}\ket{j}
+\end{split}
+\end{equation*}
+Moreover, we have that $A_0^2=\id$. Thus, for the powers of $X$ and $Z$ one can split them into products and insert the identity into consecutive factors 
+\begin{equation*}
+\begin{split}
+  A_0 Z^m X^n A_0
+  &= A_0\,\underbrace{Z\cdots Z}_{m}\,\underbrace{X\cdots X}_{n}\,A_0 \\
+  &= \underbrace{(A_0ZA_0)\cdots(A_0ZA_0)}_{m\ \text{factors}}\;
+     \underbrace{(A_0XA_0)\cdots(A_0XA_0)}_{n\ \text{factors}}
+   = Z^{-m}X^{-n}.
+\end{split}
+\end{equation*}
+
+And since the product $mn$ is invariant by $u\rightarrow -u$ we have the desired property
+\begin{equation}
+    A_0 T_u A_0 = T_{-u}.
+\end{equation}
+
+Applying this formula to the definition of the phase-point operator at $u$
+\begin{equation*}
+    A_u = T_uA_0T_{-u} = T_uA_0T_{-u} A_0A_0 = T_uT_u A_0
+\end{equation*}
+by the composition law $T_uT_u=T_{2u}$, hence
+\begin{equation}
+     A_u = T_{2u}A_0
+\end{equation}
+
+From the expression of the conjugation by $A_0$ on the translation operator, we can see that this operator is unitary $A_{u}^2= T_{2u}A_0T_{2u}A_0=T_{2u}T_{-2u}=\id$. This, together with $A_u$ being Hermitian, implies that $-\id \leq A_u \leq \id $ ($2(\id \pm A) = (A \pm \id)^2\geq 0$ \usetool{T5}), resulting in 
+\begin{equation}
+    -\frac1q =  \frac1q\Tr(-\rho) \le W_\rho(u)\le \frac1q\Tr(\rho)=\frac1q
+\end{equation}
+
+Finally, for a pure state satisfying $A_0\ket{\psi}=s\ket{\psi}$
+\begin{equation}
+    W_\rho(u)= \frac{1}{q} \Tr\left[ T_{2u}A_0 \proj{\psi} \right] = \frac{1}{q}\avg{\psi}{T_{2u}A_0}{\psi} =\frac{s}{q}\avg{\psi}{T_{2u}}{\psi}
+\end{equation}
+
+
+\end{solution}
+
+\begin{solution}[b]
+Let $\ket{S} = \sum_i c_i\ket{i}$, then $A_0\ket{S}=\sum_i c_i\ket{-i}=\sum_i c_{-i}\ket{i}$. In order to be an eigenstate with eigenvalue $s$, we need that $c_i = sc_{-i}$. 
+
+In general, one can take $c_1=\frac{1}{\sqrt{2}}$ and $c_{-1}=c_{q-1}=-\frac{1}{\sqrt{2}}$ while the other coefficients are zero to produce an eigenstate with eigenvalue $-1$. Meanwhile, the matrix elements of $T_u$ are 
+\begin{equation}
+\begin{split}
+    \avg{i}{T_u}{j}&=  \omega^{-(q+1)mn/2} \avg{i}{Z^mX^n}{j} \\
+    &= \omega^{-(q+1)mn/2} \omega^{im} \avg{i}{}{j+n}\\
+    &=  \omega^{-(q+1)mn/2} \omega^{im} \delta_{i,j+n}
+\end{split}
+\end{equation}
+
+For $q=3$, the corresponding state is
+\begin{equation}
+    \ket{S} = \frac{1}{\sqrt{2}} \left(\ket{1}- \ket{2}\right)
+\end{equation}
+which leads to 
+\begin{equation}
+    \avg{S}{T_u}{S}= \frac{\omega^{-2mn}}{2} \left(\omega^{m} \delta_{1,1+n} -  \omega^{m} \delta_{1,2+n}-  \omega^{2m} \delta_{2,1+n} +  \omega^{2m} \delta_{2,2+n} \right).
+\end{equation}
+
+For $n=0$, the expression reduces to $ \avg{S}{T_u}{S}= \frac{1}{2}(\omega^{m}+\omega^{2m})=\frac{1}{2}(3\delta_m -1)$ using the identity of the roots of the unity \usetool{T6}. It saturates the lower bound for the Wigner function inequality for $m=0$.
+
+
+For $n=1$, the expression reduces to 
+$$ \avg{S}{T_u}{S}= \frac{\omega^{-2m}}{2}(\omega^{2m})=-\frac{1}{2}$$ 
+Meanwhile, if $n=2$
+$$\avg{S}{T_u}{S}= \frac{\omega^{-m}}{2}(\omega^{m}) =-\frac{1}{2}$$
+
+
+Therefore, the Wigner one-norm is
+\begin{equation}
+\begin{split}
+    ||\rho||_W &=  \frac{1}{3} \left(\sum_{m=0}^{2} \left| \frac{1}{2}(3\delta_m -1) \right| + \sum_{m=0}^{2} \left| -\frac{1}{2} \right| + \sum_{m=0}^{2} \left| -\frac{1}{2} \right|\right)\\
+    &= \frac{5}{3}
+\end{split}
+\end{equation}
+indicating its magic.
+
+Nonetheless, the state $\ket{0}$ exhibits no magic. Since $\avg{0}{T_u}{0}=  \omega^{-(q+1)mn/2} \omega^{0m} \delta_{n}=1$. 
+
+\end{solution}
+
+\begin{solution}[c]
+Since the Fock state is a pure state,
+\begin{equation}
+    W_{\ket{n}}(x,p) = \frac{1}{\pi} \avg{n}{D(x,p)\,\Pi\,D(x,p)^{\dagger}}{n}
+\end{equation}
+Thus,
+\begin{equation}
+    W_{\ket{n}}(0,0) = \frac{1}{\pi} \avg{n}{\,(-1)^{\hat n}\,}{n} = \frac{(-1)^n}{\pi}
+\end{equation}
+
+So the optical counterpart is given by 
+\begin{itemize}
+    \item $A_0 \rightarrow \Pi$ which acts as the reflection through the origin on the phase space $x \rightarrow -x$ and $p \rightarrow -p$;
+    \item  $T_u \rightarrow D(x,p)$ acting as the displacement operator on the phase space.
+    \item  $\ket{S} \rightarrow \ket{n}$, with $n$ odd being the eigenvector with eigenvalues $-1$ of $\Pi$. 
+    \item  $A_u=T_{2u}A_0 \rightarrow D(\alpha)\Pi D(-\alpha)=D(2\alpha)\Pi$ being an analogous algebra in the continuum limit
+\end{itemize}
+
+To see the last item, notice that the displacement operator can be written in terms of a complex number $\alpha = (x+ip)/\sqrt{2}$, with $D(\alpha)=\exp(\alpha \hat a^\dagger -\alpha^*\hat a)$. Then, since 
+\begin{equation*}
+    \Pi a\Pi \ket{n} = (-1)^n \Pi a \ket{n}= (-1)^n \sqrt{n} \Pi  \ket{n-1}= -\sqrt{n}\ket{n-1}=-a\ket{n}
+\end{equation*}
+and just taking the hermitian conjugate, given that $\Pi$ is hermitian, $\Pi a^\dagger \Pi= -a^\dagger$ (and this is what actually proves the first item also), we have that 
+\begin{equation*}
+    \Pi D(\alpha)\Pi= D(-\alpha)
+\end{equation*}
+Therefore, $$D(\alpha)\Pi D(-\alpha)=D(\alpha)\Pi D(-\alpha)\Pi\Pi=D(\alpha)D(\alpha)\Pi=D(2\alpha)\Pi$$
+
+This indicates that the algebra itself is an essential aspect and must be preserved in the continuum limit. This expression allows a much easier calculation for the Wigner-Function of any Fock state than the integral.
+
+\begin{equation}
+    W_n(\alpha)  = \frac{(-1)^n}{\pi} \avg{n}{D(2\alpha)}{n}
+\end{equation}
+
+
+To simplify the expression, we can use \usetool{T7} 
+$$D(\alpha)=e^{-|\alpha|^2/2}e^{\alpha a^\dagger}e^{-\alpha^* a},$$ 
+and that 
+\begin{equation}
+    e^{-\alpha^* a}\ket{n}= \sum_{k=0}^{\infty}\frac{(-\alpha^*)^k}{k!} a^k \ket{n} = \sum_{k=0}^n\frac{(-\alpha^*)^k}{k!} \sqrt{\frac{n!}{(n-k)!}}\ket{n-k}
+\end{equation}
+which implies
+\begin{equation}
+    \bra{n}e^{\alpha a^\dagger}e^{-\alpha^* a}\ket{n} = \sum_{k=0}^n\frac{(-|\alpha|^2)^{k}}{k!^2} \frac{n!}{(n-k)!} = \mathbf{L}_n(|\alpha|^2)
+\end{equation}
+where $\mathbf L_n$ is the Laguerre polynomial. Therefore,
+
+\begin{equation}
+    W_n(\alpha) = \frac{(-1)^n}{\pi} e^{-2|\alpha|^2}\mathbf{L}_n(4|\alpha|^2)
+\end{equation}
+
+\end{solution}
+% \begin{remark}
+% \end{remark}
+
+\begin{takeaway}
+\end{takeaway}
+
+%  Everything below is optional.  An entry with no attempt block is complete.
+%  Record only what would change what you do next time: typos and arithmetic
+%  slips you caught yourself are artefacts of the medium, not facts about the
+%  mathematics.  Add "public," to show this block in the public build.
+% \attempt{
+%   date       = ,               % ISO, YYYY-MM-DD -- required if the block is used
+%   time       = ,
+%   difficulty = ,               % 1-5, perceived
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
+
+\end{entry}

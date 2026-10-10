@@ -1,0 +1,93 @@
+% Migrated from days/day06.tex.  Paste your original problem, solution,
+% remark and takeaway bodies into the slots below -- the wrappers are the only
+% thing that changed.  Replace "the Day 4 result" style cross-references with
+% \qref{Q004}, and recurring lemmas with \usetool{T1}.
+\begin{entry}{Q006}{No chain of singlets}
+
+\entrymeta{
+  topic   = {Many-body spin chains; monogamy of entanglement; reduced states},
+  est     = $\sim$10 minutes,
+  origin  = Original,
+  source  = {Original problem},
+  prereq  = {The singlet $\ket{\Psi^-}$; the \qref{Q004} result may be used without reproving it},
+  status  = written-up,
+}
+
+\begin{problem}
+Let $n\ge 2$ and let $\rho\in\Dop{(\CC^{2})^{\otimes n}}$ be an arbitrary state (pure or
+mixed) of $n$ spin-$\tfrac12$ particles. Label the particles, or \emph{sites},
+$1,\dots,n$, so that site $j$ carries the tensor factor $\mathcal H_j\cong\CC^{2}$.
+For $j\neq k$ write
+\[
+  \rho_{jk}:=\Tr_{\{1,\dots,n\}\setminus\{j,k\}}\,\rho
+\]
+for the reduced state of sites $j$ and $k$. The pairs $(j,j+1)$ with
+$j=1,\dots,n-1$ are called the \emph{nearest-neighbour bonds} of the chain; there are
+$n-1$ of them. A bond $(j,j+1)$ \emph{is a singlet} in the state $\rho$ if
+$\rho_{j,j+1}=\proj{\Psi^{-}}$, where
+$\ket{\Psi^{-}}=\tfrac{1}{\sqrt{2}}\bigl(\ket{01}-\ket{10}\bigr)$.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Show that two adjacent bonds cannot both be singlets: for $n\ge 3$ it is
+        impossible that $\rho_{12}=\proj{\Psi^{-}}$ and $\rho_{23}=\proj{\Psi^{-}}$
+        simultaneously.
+  \item Let
+        \[
+          S(\rho):=\bigl\{\,j\in\{1,\dots,n-1\}\ :\ \rho_{j,j+1}=\proj{\Psi^{-}}\,\bigr\}
+        \]
+        be the set of singlet bonds of $\rho$. Determine
+        \[
+          M(n):=\max_{\rho\in\Dop{(\CC^{2})^{\otimes n}}}\ \lvert S(\rho)\rvert ,
+        \]
+        proving both that $\lvert S(\rho)\rvert\le M(n)$ for every $\rho$ and that the
+        bound is attained by an explicit state.
+\end{enumerate}
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[Part (a)]
+Using the result from day 4, \usetool{T2}, if for a given $i$ we have that $\rho_{i,i+1}=\proj{\Psi^{-}}$, then the total state must be written as \begin{equation}
+    \rho = \proj{\Psi^{-}}_{i,i+1} \otimes \rho_{\{1,\dots,n\}\setminus\{i,i+1\}},
+    \label{reduced state}
+\end{equation} now since $\proj{\Psi^{-}}$ is entangled state when taking the partial to obtain $\rho_{i+1,i+2}$ or $\rho_{i-1,i}$ we don't get a pure state. To see this, from \eqref{reduced state}
+\begin{equation}
+    \rho_{i+1,i+2} = \frac{1}{2}\proj{1}_{i+1} \otimes \rho_{i+2} + \frac{1}{2}\proj{0}_{i+1} \otimes \rho_{i+2} = \frac{1}{2} \id \otimes \rho_{i+2} 
+\end{equation}
+for 
+\[
+  \rho_{j}:=\Tr_{\{1,\dots,n\}\setminus\{j\}}\,\rho
+\]
+which is clearly not a pure state, where $\Tr(\rho_{i+1,i+2}^2) = \frac{1}{2}\Tr(\rho_{i+2}^2) \leq \frac{1}{2} < 1$. Furthermore, the final state is separable, and 
+
+
+\end{solution}
+
+\begin{solution}[Part (b)]
+
+From part a) there should be no nearest-neighbour bonds of the chain having intersection, the best possible scenario is having pairs bonds $(1,2),(3,4),...$, with $i\rightarrow i+2$ to have the next singlet bond whenever $(i,i+1)$ is singlet bond, one can assume without lack of generality that it starts from $i=1$. Then for $n$ we have 
+$$S(\rho) \leq \left\lfloor \frac{n}{2} \right\rfloor,$$
+since for $n$ even, we can take as pairs $(2r-1,2r)$ with $r$ varying from $r=1$ until $r=\frac{n}{2}$, resulting in $\frac{n}{2}$ pairs, and for $n$ odd, the site $n$ will not be able to form a pair without having a intersection with another pair, so we have $\frac{n-1}{2}$ pairs.
+
+Now we only need to show there is a state that satisfies this, and by the construction imposed by item a) the state must be 
+\begin{equation}
+    \rho =  \begin{cases} 
+\otimes_{r=1}^{\frac{n}{2}} \proj{\Psi^{-}}_{2r-1,2r} & \text{if } n \text{ is even }, \\
+\otimes_{r=1}^{\frac{n-1}{2}} \proj{\Psi^{-}}_{2r-1,2r} \otimes \rho_n & \text{if } n \text{ is odd},
+\end{cases} 
+\end{equation}
+
+\end{solution}
+
+\begin{takeaway}
+Many-body system can impose non-trivial constraints on the states independet of the Hamiltonian
+\end{takeaway}
+
+\attempt{
+  date       = 2026-09-11,
+  time       = ,
+  difficulty = ,
+  howitwent  = ,
+}
+
+\end{entry}

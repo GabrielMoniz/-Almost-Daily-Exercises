@@ -1,0 +1,71 @@
+\begin{entry}{Q010}{The Tsirelson bound in one identity}
+
+\entrymeta{
+  topic   = {Bell nonlocality; operator norms; commutators.},
+  est     = $\sim$12 minutes,
+  origin  = {Adapted. The squaring identity is the standard argument of Tsirelson (1980),
+    later streamlined by Landau; the staging as a self-contained operator exercise is mine.},
+  source  = {B. S. Tsirelson, \emph{Quantum generalizations of Bell's inequality},
+    Lett. Math. Phys. \textbf{4}, 93 (1980).},
+  prereq  = {$\opnorm{\cdot}$ denotes the operator (spectral) norm.},
+  status  = open,
+}
+
+\begin{problem}
+Let $A_0,A_1,B_0,B_1$ be Hermitian operators on a Hilbert space $\mathcal H$ satisfying
+\[
+  A_i^{2}=B_j^{2}=\id
+  \qquad\text{and}\qquad
+  [A_i,B_j]=0 \quad\text{for all } i,j\in\{0,1\}.
+\]
+(These are the \emph{dichotomic observables} of two space-like separated parties: squaring
+to the identity encodes outcomes $\pm 1$, and commutation encodes locality.)
+
+Define the \emph{CHSH operator}
+\[
+  \mathcal{B} \;=\; A_0B_0+A_0B_1+A_1B_0-A_1B_1 .
+\]
+
+Prove that
+\[
+  \opnorm{\mathcal{B}} \;\le\; 2\sqrt{2}.
+\]
+Conclude that $\lvert\avg{\psi}{\mathcal{B}}{\psi}\rvert\le 2\sqrt{2}$ for every state
+$\ket{\psi}$, and state which step of your argument would have to fail for the value $4$
+--- the algebraic maximum of a sum of four terms each bounded by $1$ --- to be reachable.
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}
+Define $$B_{\pm} = \frac{1}{\sqrt{2}}(B_0 \pm B_1),$$ thus $$B_{\pm}^2=1\pm\frac{1}{2} \{B_0,B_1\} $$ where  $\{B_0,B_1\}$ is the anti-commutator. The sum of the square of the operators is 
+\begin{equation}
+    B_{+}^2+B_{-}^2=2
+    \label{square sum}
+\end{equation}
+Therefore, using \eqref{square sum} together with $A_i$ being dichotomic observables
+\begin{equation}
+    (A_0 + B_+)^2 +(A_1+B_-)^2= 4 + 2A_0B_+ + 2A_1B_- = 4 + \sqrt{2}\beta.
+\end{equation}
+The left side of the equation is clearly a positive operator, hence $\avg{\psi}{\beta}{\psi} \leq 2\sqrt{2}$ for any state $\ket{\psi}$. 
+
+We would need all 4 coefficients to be positive ($+1$) in order to $4$ be reachable, the $-$ sign forces the bell functional to be written in terms of the variables $B_{\pm}$, that counter balances each other.
+
+
+\end{solution}
+
+\begin{takeaway}
+If they are classical variables, one of them is certainly $0$. For the quantum case, you can make the operators have the same expected value (which is better than maximizing one, since it forces the other to be null), leading to a quantum bound greater than the classical one. If all coefficients are $+1$, the functional is trivial, a classical deterministic strategy where all variables acquire the value $+1$ achieves the bound, and even for the quantum case 
+\begin{equation}
+    ||\beta ||_{\infty} \leq ||A_0B_0||_{\infty}  + ||A_0B_1||_{\infty}  + ||A_1B_0||_{\infty}  - ||A_1B_1||_{\infty} = 4 
+\end{equation}
+\end{takeaway}
+
+\attempt{
+  date        = 2026-09-13,
+  time        = 12min,
+  difficulty  = 1,
+  howitwent = It was easy since I am really familiar with the result due to my research but the problems have a lot of subtitles
+}
+
+\end{entry}

@@ -1,0 +1,120 @@
+\begin{entry}{Q023}{The Wigner function of a continuous-variable hyperedge}
+
+\entrymeta{
+  topic   = {Continuous-variable hypergraph states; Wigner function; nullifiers; non-Gaussianity},
+  est     = {$\sim$35 minutes --- labelled stretch},
+  origin  = {Original. The states, the nullifiers and Lemma~1 are taken from the first
+    source; neither source evaluates the Wigner function.},
+  source  = {D.~W.~Moore, \emph{Quantum hypergraph states in continuous variables},
+    Phys.~Rev.~A \textbf{100}, 062301 (2019), Eq.~(2) and Lemma~1; A.~Ravikumar,
+    D.~W.~Moore and R.~Filip, \emph{Nonclassical nullifiers for quantum hypergraph
+    states}, Quantum (2026), arXiv:2502.02226},
+  url     = https://arxiv.org/abs/1909.03871,
+  prereq  = {The single-mode Wigner function of \qref{Q022}; the Fourier representation
+    of the delta function},
+  status  = drafted,
+}
+
+\begin{problem}
+\emph{Context.} Continuous-variable graph states are built by applying two-mode
+interactions $e^{i\hat q_j\hat q_k}$ to momentum eigenstates. They are Gaussian, so they
+cannot by themselves give a computational advantage. Hypergraph states add interactions
+among three or more modes, such as $e^{i\hat q_1\hat q_2\hat q_3}$, and a lattice of such
+hyperedges is a resource for universal computation using only homodyne measurements.
+These states are characterised by their \emph{nullifiers}, operators that annihilate the
+state, and experiments certify them through the variances of the nullifiers, which are
+second moments. Neither the definition nor the certification refers to the Wigner
+function. This exercise computes it for a single hyperedge and asks what it reveals.
+
+\emph{Setting.} Take $k$ bosonic modes with $[\hat q_j,\hat p_l]=i\delta_{jl}$ and
+$\hbar=1$. For a real polynomial $f$ on $\RR^{k}$ consider the (unnormalisable) state
+\[
+  \ket{\psi_f}:=e^{if(\hat q)}\ket{p=0}^{\otimes k},
+  \qquad
+  \braket{q}{\psi_f}=e^{if(q)} ,
+\]
+and extend the Wigner function of \qref{Q022} to $k$ modes,
+\[
+  W(q,p):=\frac{1}{\pi^{k}}\int_{\RR^{k}}d^{k}y\;e^{2ip\cdot y}\,
+  \psi_f(q-y)\,\psi_f^{*}(q+y),
+  \qquad q,p\in\RR^{k}.
+\]
+Since the state is not normalisable, $W$ is a distribution. You may manipulate the
+integrals formally, exchanging their order and using
+$\int_{\RR}dy\,e^{iky}=2\pi\,\delta(k)$. For $f=q_1q_2$ (one graph-state edge) and
+$f=q_1q_2q_3$ (one hyperedge) the nullifiers are
+\[
+  \hat n_i:=\hat p_i-\prod_{j\neq i}\hat q_j ,
+\]
+and we write $n_i(q,p):=p_i-\prod_{j\neq i}q_j$ for the corresponding functions on phase
+space. You may use the following identity, which follows from the integral
+representations of the Bessel functions $Y_0$ and $K_0$ (NIST DLMF, \S10.9 and
+\S10.32) after the substitution $t=e^{u}$. For real $a,b$ with $ab\neq0$,
+\[
+  \int_{0}^{\infty}\frac{dt}{t}\,\cos\!\Bigl(at+\frac{b}{t}\Bigr)
+  =\begin{cases}
+     -\pi\,Y_0\bigl(2\sqrt{ab}\bigr), & ab>0,\\[2pt]
+     2\,K_0\bigl(2\sqrt{-ab}\bigr), & ab<0 .
+   \end{cases}
+\]
+Here $K_0(x)>0$ for all $x>0$, decays like $e^{-x}$, and diverges like $-\ln x$ as
+$x\to0^{+}$. $Y_0(x)$ diverges like $\tfrac{2}{\pi}\ln x$ as $x\to0^{+}$ and oscillates
+with decaying amplitude; its first zeros are $x\approx0.894,\ 3.958,\ 7.086$, and it is
+positive between the first two.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item \emph{Graph states.} Show that
+        \[
+          W(q,p)=\frac{1}{\pi^{k}}\int d^{k}y\;
+          \exp\!\Bigl(i\bigl[2p\cdot y-f(q+y)+f(q-y)\bigr]\Bigr).
+        \]
+        Evaluate $W$ for $f=q_1q_2$ and describe it in terms of the nullifiers.
+        Explain in one sentence why the same structure holds for every quadratic $f$,
+        and why such a $W$ is non-negative.
+
+  \item \emph{The hyperedge.} Let $f=q_1q_2q_3$. Reduce $W$ to a one-dimensional
+        integral, and show that $W$ depends on the six phase-space coordinates only
+        through a single function of $n_1,n_2,n_3$.
+
+  \item \emph{Where the non-Gaussianity lives.} Using the identity above, write $W$ in
+        closed form. Identify the set on which $W$ is singular and the region where
+        it is negative, both in terms of the nullifiers. Compare with (a): where was
+        $W$ supported for the graph state, and where is it supported now? For contrast,
+        the single-mode cubic phase state $e^{i\gamma\hat q^{3}}\ket{p=0}$ has a Wigner
+        function that is an Airy function of $p-3\gamma q^{2}$. Which structural
+        feature of $f=q_1q_2q_3$ leads to a different special function?
+
+  \item \emph{Lemma~1 in phase space.} Measure $\hat q_3$ and obtain the outcome $m$.
+        You may use that $\int dp_3\,W(q_1,q_2,m;p_1,p_2,p_3)$ is the Wigner function
+        of the (unnormalised) conditional state of modes $1$ and $2$. Compute it, show
+        that it is non-negative, and identify the state. Which term of the exponent in
+        (a) carries the negativity of the three-mode $W$, and why does the integration
+        over $p_3$ remove it?
+\end{enumerate}
+\end{problem}
+
+\begin{solution}[Part (a)]
+\end{solution}
+
+\begin{solution}[Part (b)]
+\end{solution}
+
+\begin{solution}[Part (c)]
+\end{solution}
+
+\begin{solution}[Part (d)]
+\end{solution}
+
+\begin{takeaway}
+\end{takeaway}
+
+% \attempt{
+%   date       = ,
+%   time       = ,
+%   difficulty = ,
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
+
+\end{entry}

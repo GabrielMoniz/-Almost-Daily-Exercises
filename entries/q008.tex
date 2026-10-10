@@ -1,0 +1,136 @@
+% Migrated from days/day07.tex.  Paste your original problem, solution,
+% remark and takeaway bodies into the slots below -- the wrappers are the only
+% thing that changed.  Replace "the Day 4 result" style cross-references with
+% \qref{Q004}, and recurring lemmas with \usetool{T1}.
+\begin{entry}{Q008}{Why there is no phase transition in one dimension}
+
+\entrymeta{
+  topic   = {Classical statistical mechanics; transfer matrices; Perron--Frobenius;
+    analyticity.},
+  est     = $\sim$12 minutes,
+  origin  =  Original. The result is the classic transfer-matrix argument for the
+    one-dimensional Ising chain (Kramers--Wannier); the staging is mine.,
+  source  = {Original problem.},
+  prereq  = {Nothing beyond the eigenvalues of a $2\times 2$ matrix.
+    Perron--Frobenius may be quoted if preferred to a direct computation.},
+  status  = written-up,
+}
+
+\begin{problem}
+Consider $n$ classical spins on a ring. A \emph{configuration} is
+$s=(s_1,\dots,s_n)\in\{-1,+1\}^{n}$, with the convention $s_{n+1}=s_1$. Its
+\emph{energy} is
+\[
+  E(s)=-J\sum_{i=1}^{n}s_i s_{i+1}-h\sum_{i=1}^{n}s_i ,
+\]
+with coupling $J>0$ and external field $h\in\RR$. At inverse temperature $\beta$ the
+\emph{partition function} is $Z_n=\sum_{s}e^{-\beta E(s)}$ and the \emph{free energy per
+site} is
+\[
+  f(\beta,h)=-\frac{1}{\beta}\lim_{n\to\infty}\frac{1}{n}\ln Z_n .
+\]
+A \emph{phase transition} is a point at which $f$ fails to be real-analytic in its
+parameters.
+
+Define the $2\times 2$ \emph{transfer matrix} $T$, with rows and columns indexed by
+$s,s'\in\{-1,+1\}$, by
+\[
+  T_{s,s'}=\exp\!\Bigl[\beta\Bigl(Jss'+\tfrac{h}{2}(s+s')\Bigr)\Bigr].
+\]
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Show that $Z_n=\Tr\bigl(T^{n}\bigr)$.
+  \item Let $\lambda_{+}\ge\lambda_{-}$ be the eigenvalues of $T$. Show that
+        $f(\beta,h)=-\tfrac{1}{\beta}\ln\lambda_{+}$, and prove that $f$ is real-analytic
+        in $h$ for every fixed $0<\beta<\infty$. Conclude that the model has no phase
+        transition at any nonzero temperature.
+\end{enumerate}
+Identify precisely which property of $T$ is doing the work, and state what would have to
+change for the argument to fail.
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[Part (a)]
+Applying that periodic condition $\sum_i s_i = \sum_i s_{i+1}$, then
+\begin{equation}
+    \begin{split}
+        Z&= \sum_{s \in \{-1,1\}^n} \exp\left(\sum_{i=1}^{n}\beta(J(s_is_{i+1} + h/2 (s_i + s_{i+1}))\right)\\
+        &=\sum_{s \in \{-1,1\}^n} \prod_{i=1}^{n}\exp(\beta(J(s_is_{i+1} + h/2 (s_i + s_{i+1})))\\
+        &=\sum_{s \in \{-1,1\}^n} \prod_{i=1}^{n}T_{s_i,s_{i+1}} \\
+        &=
+\sum_{s \in \{-1,1\}^n}T_{s_1,s_2}T_{s_2,s_3}...T_{s_n,s_1} 
+    \end{split}
+\end{equation}
+
+The terms between are just matrix multiplication, $(T^2)_{a,b}= \sum_x T_{a,x}T_{x,b}$, and due to the periodic condition closing the chain, we have that the sum ends up being the trace of the resulting matrix, thus
+$$Z = \Tr{T^n}$$
+
+\end{solution}
+
+\begin{solution}[Part (b)]
+$T$ can be written in matrix form
+\begin{equation}
+   T= \begin{pmatrix}\
+        e^{\beta(J+h)} & e^{-\beta J} \\
+        e^{-\beta J} & e^{\beta(J-h)} \\
+        \end{pmatrix}
+\end{equation}
+the characteristic polynomial is
+\begin{equation}
+\begin{split}
+    \det(T -\lambda\id)&= (e^{\beta(J+h)}-\lambda)(e^{\beta(J-h)}-\lambda) - e^{-2 \beta J} \\
+    &=\lambda^2 - 2e^{\beta J}\cosh(\beta h)\lambda + e^{2\beta J} - e^{-2\beta J}\\
+    &=\lambda^2 - 2e^{\beta J}\cosh(\beta h)\lambda + 2\sinh(2\beta J)
+\end{split} 
+\end{equation}
+and the eigenvalues are
+\begin{equation}
+\begin{split}
+    \lambda_{\pm} &= e^{\beta J}\cosh(\beta h) \pm \sqrt{e^{2\beta J}\cosh(\beta h)^2 - 2 \sinh(2\beta J))}\\
+    &=e^{\beta J}\cosh(\beta h) \pm \sqrt{e^{2\beta J}\sinh(\beta h)^2 + e^{-2\beta J}}
+\end{split}
+\end{equation}
+
+$T$ can be diagonalized such that 
+\begin{equation}
+   T^n= \begin{pmatrix}\
+        \lambda_+^n & 0 \\
+        0 & \lambda_-^n \\
+        \end{pmatrix}
+\end{equation}
+resulting in $Z_n = \lambda_+^n + \lambda_-^n$. 
+Therefore, the free energy per site is
+\begin{equation}
+\begin{split}
+    f(\beta,h)&= -\frac{1}{\beta} \lim_{n\rightarrow \infty}\frac{1}{n} \left(\ln\lambda_+^n +\ln \left(1+ \frac{\lambda_-^n}{\lambda_+^n}\right)  \right)\\
+    &= -\frac{1}{\beta} \ln\lambda_+.
+\end{split}
+\end{equation}
+
+To analyze the function if the function is real-analytic we must first see if $\lambda_+$ vanishes, making the $\ln$ diverge. This does not happen since $\lambda_+ \geq \cosh(\beta J)\geq1$. 
+Now $\ln$ is real-analytic for positive input, on the other side composition of real-analytic functions is real-analytic, so we must only analyze whether $\lambda_+$ itself has the property.
+The $\sqrt{\cdot}$ function is real-analytic for positive input, and not even differentiable at $0$, so $\lambda_+$ is analytic since the argument of the square root is always positive for $\beta<\infty$. Thus, the model has no phase transition.
+
+
+\begin{theorem}
+Given $h \rightarrow T(h)$ a family real-analytic $n\times n$ matrices, and suppose $\lambda_0$ is simple (with multiplicity 1, or non-degenerate) eigenvalue of $T(\lambda_0)$
+\end{theorem} 
+
+\end{solution}
+
+
+\begin{takeaway}
+Determining the points where a function fails to be real-analytic is really difficult in general. It is worth developing intuition, memorizing properties of usual functions and work with composition of functions instead of trying to derive from a general perspective.  
+\end{takeaway}
+
+\attempt{
+  date       = 2026-09-12,
+  time       = 30min,
+  difficulty = 2,
+  howitwent  = good insight but failed to give a full argument to the function being real-analytic properly Didn't know formally what defined a phase transition and the most important theorem to verify it Most lectures and books treat it as alchemy 
+}
+
+\end{entry}
+
+

@@ -1,0 +1,58 @@
+% Migrated from days/day02.tex.  Paste your original problem, solution,
+% remark and takeaway bodies into the slots below -- the wrappers are the only
+% thing that changed.  Replace "the Day 4 result" style cross-references with
+% \qref{Q004}, and recurring lemmas with \usetool{T1}.
+\begin{entry}{Q002}{Squaring is not operator monotone}
+
+\entrymeta{
+  topic   = {Operator inequalities; matrix analysis; positivity vs.\ trace positivity},
+  est     = $\sim$12 minutes,
+  origin  = Adapted,
+  source  = {R.~Bhatia, \emph{Matrix Analysis}, Springer GTM 169 (1997), Ch.~V},
+  prereq  = {None beyond $M \geq 0$ meaning positive semidefinite},
+  status  = written-up,
+}
+
+\begin{problem}
+Let $A,B$ be Hermitian operators on $\CC^{d}$ with $0\le A\le B$, i.e.\ $A\ge 0$ and
+$B-A\ge 0$.
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Prove that $\Tr(A^{2})\le\Tr(B^{2})$.
+  \item Prove or disprove: $A^{2}\le B^{2}$.
+\end{enumerate}
+If you disprove it, exhibit an explicit counterexample in the smallest dimension where
+one exists, and verify all three required positivity conditions. Then state a nontrivial
+hypothesis on $A$ and $B$ under which the implication \emph{does} hold, and say in one
+line why your counterexample must violate it.
+\end{problem}
+
+\begin{solution}[Part (a)]
+Using \usetool{T4} $\Tr(A(B-A))= \Tr(AB)-\Tr(A^2)\geq 0$ and $\Tr((B-A)B= \Tr(B^2)-\Tr(AB) \geq 0$ we get $$\Tr(A^{2})\le\Tr(B^{2})$$ 
+\end{solution}
+
+\begin{solution}[Part (b)]
+Now, what allowed to derive the inequality was that the product of positive operators leads to a positive trace. However, a product of positive operators is not positive, since it might no even be hermitian $(AB)^\dagger=BA  \neq AB$ in general. We just have to find operators that are positive yet don't commute to see a violation. 
+
+The lowest dimension start from 2 to have non-commutativity. Take $A= \id  + \vec{a}\cdot\vec{\sigma}$ and $B= \id  + \vec{b}\cdot\vec{\sigma}$. For the positivity conditions, we only need that $|\vec a| \leq|\vec b| \leq 1$. Meanwhile, $[A,B]= (\vec{a}\times \vec b)\cdot\vec \sigma$, so to violate the inequality we just need $\vec{a},\vec b$ not to be parallel, furthermore "maximal non-commutativity" happens when $\vec{a}$ is orthogonal to $\vec b$. We should be able to testify the failure of $B^2-A^2\geq 0$ by evaluating the eigenstate of $(\vec{a}\times \vec b)\cdot\vec \sigma$.
+Take $\vec a = \hat x$, $\vec b = \hat z$, then we got look at the eigenstates of $\sigma_y$, which are $\ket{\psi_{\pm}}=\frac{1}{\sqrt{2}}(\ket{0}\pm i\ket{1})$
+\begin{equation}
+    B^2 -A^2 = |b|^2 - |a^2| + (\vec{b} -\vec a)\cdot\vec \sigma = \sigma_z -\sigma_x
+\end{equation}
+then 
+\begin{equation}
+    \avg{\psi_{\pm}}{B^2 -A^2}{\psi_{\pm}}= \avg{\psi_{\pm}}{\sigma_z}{\psi_{\pm}} - \avg{\psi_{\pm}}{\sigma_x}{\psi_{\pm}} = -i
+\end{equation}
+\end{solution}
+
+\begin{takeaway}
+Search for geometrical properties to find counter-examples
+\end{takeaway}
+
+\attempt{
+  date       = 2026-09-05,
+  time       = 35 min,
+  difficulty = 3,
+  howitwent  = ,
+}
+
+\end{entry}

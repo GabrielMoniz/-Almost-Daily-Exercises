@@ -1,0 +1,936 @@
+%% qiworkbook.sty -- shared style for the daily quantum-information workbook
+%%
+%% Usage:   \usepackage{qiworkbook}           % private build: attempt logs shown
+%%          \usepackage[public]{qiworkbook}   % public build: logs hidden unless opted in
+%%
+%% Intended document class: scrbook (see main.tex).
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{qiworkbook}[2026/09/12 v2.0 Daily QI workbook style]
+
+% ------------------------------------------------------------------ options --
+\newif\ifwb@public \wb@publicfalse
+\DeclareOption{public}{\wb@publictrue}
+\DeclareOption{private}{\wb@publicfalse}
+\ProcessOptions\relax
+
+% ----------------------------------------------------------------- packages --
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
+\RequirePackage{calc}
+\RequirePackage[margin=2.6cm,headsep=1.2em]{geometry}
+\RequirePackage{enumitem}
+\RequirePackage{xcolor}
+\RequirePackage{microtype}
+\RequirePackage{booktabs}
+\RequirePackage{longtable}
+\RequirePackage{array}
+\RequirePackage{tikz}
+\RequirePackage{scrlayer-scrpage}
+\RequirePackage[colorlinks=true,linkcolor=wbLink,citecolor=wbLink,%
+                urlcolor=wbLink,breaklinks=true,bookmarksnumbered=true,%
+                bookmarksopen=true,bookmarksopenlevel=0]{hyperref}
+\RequirePackage{bookmark}
+
+% =============================================================================
+%  PALETTE -- edit these seven lines to restyle the whole document.
+%
+%    wbBody    body text, and the "Problem."/"Solution." headwords
+%    wbInk     chapter and section headings ("Day 5", entry titles), toolbox
+%    wbLink    every hyperlink: TOC, \qref, \usetool, ledger titles, \href
+%    wbAccent  the rule under each day heading, filled calendar cells
+%    wbGrey    metadata block, attempt log, page header/footer, calendar labels
+%    wbFaint   empty calendar cells, the thin rule between entries
+%    wbTodo    \todo markers
+%
+%  For an entirely black-and-white document, set wbBody, wbInk and wbAccent to
+%  000000 and wbGrey to 333333.
+% =============================================================================
+\definecolor{wbBody}{HTML}{000000}
+\definecolor{wbInk}{HTML}{16283C}
+\definecolor{wbLink}{HTML}{1F4E79}
+\definecolor{wbAccent}{HTML}{2E6F8E}
+\definecolor{wbGrey}{HTML}{5A6470}
+\definecolor{wbFaint}{HTML}{DCE3E8}
+\definecolor{wbTodo}{HTML}{B00020}
+
+% Body colour is applied once, at the start of the document, so that nothing
+% depends on what happened to be in force beforehand.
+\AtBeginDocument{\color{wbBody}}
+
+% =============================================================================
+%  Dates.  Everything is stored ISO (YYYY-MM-DD) and rendered from that.
+% =============================================================================
+\ExplSyntaxOn
+
+\int_new:N \l__wb_y_int
+\int_new:N \l__wb_m_int
+\int_new:N \l__wb_d_int
+\int_new:N \l__wb_dow_int
+\int_new:N \l__wb_tmp_int
+
+\tl_new:N \g__wb_datelong_tl
+\tl_new:N \g__wb_dateshort_tl
+\tl_new:N \g__wb_dateiso_tl
+
+\cs_new:Npn \__wb_month_name:n #1
+  {
+    \int_case:nnF {#1}
+      {
+        {1}{January}   {2}{February} {3}{March}     {4}{April}
+        {5}{May}       {6}{June}     {7}{July}      {8}{August}
+        {9}{September} {10}{October} {11}{November} {12}{December}
+      }
+      { ?? }
+  }
+\cs_new:Npn \__wb_month_abbr:n #1
+  {
+    \int_case:nnF {#1}
+      {
+        {1}{Jan} {2}{Feb} {3}{Mar} {4}{Apr} {5}{May}  {6}{Jun}
+        {7}{Jul} {8}{Aug} {9}{Sep} {10}{Oct} {11}{Nov} {12}{Dec}
+      }
+      { ?? }
+  }
+% Sakamoto's table
+\cs_new:Npn \__wb_month_t:n #1
+  {
+    \int_case:nnF {#1}
+      {
+        {1}{0} {2}{3} {3}{2} {4}{5} {5}{0}  {6}{3}
+        {7}{5} {8}{1} {9}{4} {10}{6} {11}{2} {12}{4}
+      }
+      { 0 }
+  }
+\cs_new:Npn \__wb_dow_name:n #1
+  {
+    \int_case:nnF {#1}
+      {
+        {0}{Sunday}   {1}{Monday} {2}{Tuesday} {3}{Wednesday}
+        {4}{Thursday} {5}{Friday} {6}{Saturday}
+      }
+      { ?? }
+  }
+
+% expandable: day of week, 0 = Sunday
+\cs_new:Npn \__wb_dow:nnn #1#2#3
+  {
+    \int_mod:nn
+      {
+        \int_eval:n { #1 - ( \int_compare:nNnTF {#2} < {3} {1} {0} ) }
+        + \int_div_truncate:nn
+            { \int_eval:n { #1 - ( \int_compare:nNnTF {#2} < {3} {1} {0} ) } } { 4 }
+        - \int_div_truncate:nn
+            { \int_eval:n { #1 - ( \int_compare:nNnTF {#2} < {3} {1} {0} ) } } { 100 }
+        + \int_div_truncate:nn
+            { \int_eval:n { #1 - ( \int_compare:nNnTF {#2} < {3} {1} {0} ) } } { 400 }
+        + \__wb_month_t:n {#2} + #3
+      } { 7 }
+  }
+
+\cs_new_protected:Npn \__wb_date_split:w #1-#2-#3 \q_stop
+  {
+    \int_set:Nn \l__wb_y_int {#1}
+    \int_set:Nn \l__wb_m_int {#2}
+    \int_set:Nn \l__wb_d_int {#3}
+  }
+
+\tl_new:N \l__wb_iso_tl
+\cs_new_protected:Npn \wb_setdate:n #1
+  {
+    % expand first: the argument is usually a tl variable, and the splitter is
+    % delimited, so it must see the literal YYYY-MM-DD
+    \tl_set:Nx \l__wb_iso_tl {#1}
+    \tl_if_in:NnF \l__wb_iso_tl { - }
+      {
+        \msg_warning:nnn { qiworkbook } { bad-date } { \l__wb_iso_tl }
+        \tl_set:Nn \l__wb_iso_tl { 1970-01-01 }
+      }
+    \tl_gset_eq:NN \g__wb_dateiso_tl \l__wb_iso_tl
+    \exp_after:wN \__wb_date_split:w \l__wb_iso_tl \q_stop
+    \int_set:Nn \l__wb_dow_int
+      { \__wb_dow:nnn { \l__wb_y_int } { \l__wb_m_int } { \l__wb_d_int } }
+    \tl_gset:Nx \g__wb_dateshort_tl
+      {
+        \int_use:N \l__wb_d_int \c_space_tl
+        \__wb_month_name:n { \l__wb_m_int } \c_space_tl
+        \int_use:N \l__wb_y_int
+      }
+    \tl_gset:Nx \g__wb_datelong_tl
+      {
+        \__wb_dow_name:n { \l__wb_dow_int } ,
+        \c_space_tl \tl_use:N \g__wb_dateshort_tl
+      }
+  }
+
+\msg_new:nnn { qiworkbook } { bad-date } { Date~'#1'~is~not~ISO~YYYY-MM-DD. }
+\cs_new_eq:NN \wbsetdate   \wb_setdate:n
+\cs_new:Npn  \wbdateshort  { \tl_use:N \g__wb_dateshort_tl }
+\cs_new:Npn  \wbdatelong   { \tl_use:N \g__wb_datelong_tl }
+% Format an arbitrary ISO date inline, e.g. \wbdate{2026-09-11}
+\cs_new_protected:Npn \wbdate #1
+  { \group_begin: \wb_setdate:n {#1} \wbdateshort \group_end: }
+
+% ---- leap years and day-of-year, for the calendar ---------------------------
+\cs_new:Npn \__wb_isleap:n #1
+  {
+    \int_compare:nNnTF
+      { \int_mod:nn {#1} {400} } = {0} {1}
+      {
+        \int_compare:nNnTF { \int_mod:nn {#1} {100} } = {0} {0}
+          { \int_compare:nNnTF { \int_mod:nn {#1} {4} } = {0} {1} {0} }
+      }
+  }
+\cs_new:Npn \__wb_cumdays:n #1
+  {
+    \int_case:nnF {#1}
+      {
+        {1}{0}   {2}{31}  {3}{59}  {4}{90}  {5}{120} {6}{151}
+        {7}{181} {8}{212} {9}{243} {10}{273} {11}{304} {12}{334}
+      }
+      { 0 }
+  }
+% day of year (1-based)
+\cs_new:Npn \__wb_doy:nnn #1#2#3
+  {
+    \int_eval:n
+      {
+        \__wb_cumdays:n {#2} + #3
+        + \int_compare:nNnTF {#2} > {2} { \__wb_isleap:n {#1} } { 0 }
+      }
+  }
+\cs_new:Npn \__wb_pad:n #1
+  { \int_compare:nNnT {#1} < {10} {0} \int_eval:n {#1} }
+
+\ExplSyntaxOff
+
+% scrbook has no abstract environment; provide a quiet one.
+\providecommand{\abstractname}{Abstract}
+\@ifundefined{abstract}{%
+  \newenvironment{abstract}{%
+    \begin{center}\bfseries\color{wbInk}\abstractname\end{center}%
+    \begingroup\small\setlength{\leftskip}{2em}\setlength{\rightskip}{2em}%
+    \noindent\ignorespaces}{\par\endgroup\bigskip}}{}
+
+% =============================================================================
+%  Theorem-like environments
+% =============================================================================
+\theoremstyle{plain}
+\newtheorem{lemma}{Lemma}[chapter]
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{claim}[lemma]{Claim}
+
+\theoremstyle{definition}
+\newtheorem*{problem}{Problem}
+\newtheorem*{solution}{Solution}
+\newtheorem*{scratch}{Scratch}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{takeaway}{Takeaway}
+
+% =============================================================================
+%  Sectioning:  \daysession{n}{ISO date}  ->  chapter
+%               entry environment          ->  section
+% =============================================================================
+\setkomafont{section}{\normalfont\large\bfseries\color{wbInk}}
+\setkomafont{subsection}{\normalfont\normalsize\bfseries\color{wbInk}}
+
+\newcommand{\wbrule}{\par\nointerlineskip
+  {\color{wbAccent}\hrule height 0.9pt}\par}
+\newcommand{\wbthinrule}{\par\nointerlineskip
+  {\color{wbFaint}\hrule height 0.5pt}\par}
+
+\newcommand{\wb@curday}{0}
+
+% \daysession{5}{2026-09-11}
+\newcommand{\wb@sessiondate}{}
+\newcommand{\daysession}[2]{%
+  \wbsetdate{#2}%
+  \gdef\wb@sessiondate{#2}%
+  \cleardoublepage
+  \setcounter{chapter}{\numexpr#1-1\relax}%
+\stepcounter{chapter}%
+  \renewcommand{\wb@curday}{#1}%
+  \phantomsection
+  \hypertarget{day#1}{}%
+  \chapter*{\raggedright\color{wbInk}Day~#1}%
+  \vspace{-1.2\baselineskip}%
+  {\raggedleft\small\scshape\color{wbGrey}\wbdatelong\par}%
+  \wbrule
+  \addcontentsline{toc}{chapter}{Day~#1 \textemdash\ \wbdateshort}%
+  \markright{Day~#1 \quad\textbullet\quad \wbdateshort}%
+  \vspace{0.8\baselineskip}%
+}
+
+% link back to a day:  \dayref{4}
+\newcommand{\dayref}[1]{\hyperlink{day#1}{Day~#1}}
+% link back to a problem:  \qref{Q004}  ->  "Q004 (Day 4)"
+\newcommand{\qref}[1]{%
+  \hyperlink{#1}{#1}%
+  \expandafter\ifx\csname wb@qday@#1\endcsname\relax
+    \PackageWarning{qiworkbook}{Unknown problem id #1 (rerun LaTeX)}%
+  \else
+    \ (\dayref{\csname wb@qday@#1\endcsname})%
+  \fi}
+
+% =============================================================================
+%  Entry environment
+% =============================================================================
+\newcommand{\wb@cur@id}{}
+\newcommand{\wb@topicfrozen}{}
+\newcommand{\wb@cur@title}{}
+
+\ExplSyntaxOn
+\tl_new:N \l_wb_meta_topic_tl
+\tl_new:N \l_wb_meta_est_tl
+\tl_new:N \l_wb_meta_origin_tl
+\tl_new:N \l_wb_meta_source_tl
+\tl_new:N \l_wb_meta_url_tl
+\tl_new:N \l_wb_meta_prereq_tl
+\tl_new:N \l_wb_meta_status_tl
+
+\keys_define:nn { qiworkbook / meta }
+  {
+    topic       .tl_set:N = \l_wb_meta_topic_tl  ,
+    est         .tl_set:N = \l_wb_meta_est_tl    ,
+    origin      .tl_set:N = \l_wb_meta_origin_tl ,
+    source      .tl_set:N = \l_wb_meta_source_tl ,
+    url         .tl_set:N = \l_wb_meta_url_tl    ,
+    prereq      .tl_set:N = \l_wb_meta_prereq_tl ,
+    status      .tl_set:N = \l_wb_meta_status_tl ,
+    unknown     .code:n   =
+      { \PackageWarning{qiworkbook}{Unknown~meta~key~'\l_keys_key_str'} } ,
+  }
+
+\tl_new:N \l_wb_att_date_tl
+\tl_new:N \l_wb_att_time_tl
+\tl_new:N \l_wb_att_diff_tl
+\tl_new:N \l_wb_att_how_tl
+\tl_new:N \l_wb_att_ins_tl
+\tl_new:N \l_wb_att_note_tl
+\bool_new:N \l_wb_att_public_bool
+
+\keys_define:nn { qiworkbook / attempt }
+  {
+    date        .tl_set:N   = \l_wb_att_date_tl ,
+    time        .tl_set:N   = \l_wb_att_time_tl ,
+    difficulty  .tl_set:N   = \l_wb_att_diff_tl ,
+    howitwent   .tl_set:N   = \l_wb_att_how_tl  ,
+    insight     .tl_set:N   = \l_wb_att_ins_tl  ,
+    note        .tl_set:N   = \l_wb_att_note_tl ,
+    public      .bool_set:N = \l_wb_att_public_bool ,
+    public      .default:n  = true ,
+    unknown     .code:n     =
+      { \PackageWarning{qiworkbook}{Unknown~attempt~key~'\l_keys_key_str'} } ,
+  }
+
+\cs_new_protected:Npn \wb_reset_entry:
+  {
+    \tl_clear:N \l_wb_meta_topic_tl   \tl_clear:N \l_wb_meta_est_tl
+    \tl_clear:N \l_wb_meta_origin_tl  \tl_clear:N \l_wb_meta_source_tl
+    \tl_clear:N \l_wb_meta_url_tl     \tl_clear:N \l_wb_meta_prereq_tl
+    \tl_clear:N \l_wb_meta_status_tl
+    \tl_clear:N \l_wb_att_date_tl     \tl_clear:N \l_wb_att_time_tl
+    \tl_clear:N \l_wb_att_diff_tl     \tl_clear:N \l_wb_att_how_tl
+    \tl_clear:N \l_wb_att_ins_tl      \tl_clear:N \l_wb_att_note_tl
+    \bool_set_false:N \l_wb_att_public_bool
+    \cs_gset:Npn \wb@topicfrozen { }
+  }
+\cs_new_eq:NN \wbresetentry \wb_reset_entry:
+
+% row printer that skips empty fields
+\cs_new_protected:Npn \wb_metarow:nN #1#2
+  { \tl_if_empty:NF #2 { \item [#1] \tl_use:N #2 } }
+\cs_new_eq:NN \wbmetarow \wb_metarow:nN
+
+\cs_new_protected:Npn \wb_att_nonempty:
+  {
+    \bool_lazy_any:nTF
+      {
+        { ! \tl_if_empty_p:N \l_wb_att_date_tl }
+        { ! \tl_if_empty_p:N \l_wb_att_time_tl }
+        { ! \tl_if_empty_p:N \l_wb_att_diff_tl }
+        { ! \tl_if_empty_p:N \l_wb_att_how_tl  }
+        { ! \tl_if_empty_p:N \l_wb_att_ins_tl  }
+        { ! \tl_if_empty_p:N \l_wb_att_note_tl }
+      }
+      { \wb@attempttrue } { \wb@attemptfalse }
+  }
+\cs_new_eq:NN \wbattnonempty \wb_att_nonempty:
+\cs_new_protected:Npn \wb_att_showp:
+  { \bool_if:NTF \l_wb_att_public_bool { \wb@attpubtrue } { \wb@attpubfalse } }
+\cs_new_eq:NN \wbattshowp \wb_att_showp:
+\ExplSyntaxOff
+
+\newif\ifwb@attempt
+\newif\ifwb@attpub
+
+% ---------------------------------------------------------------- meta block --
+% \entrymeta{topic=..., est=..., origin=..., source=..., url=..., prereq=..., status=...}
+\newcommand{\entrymeta}[1]{%
+  \begingroup
+  \expandafter\wb@setmetakeys\expandafter{#1}%
+  \small\color{wbGrey}%
+  \begin{description}[leftmargin=!,labelwidth=\widthof{\bfseries Prerequisites},
+      font=\bfseries,itemsep=0.15em,topsep=0.4em,parsep=0pt,before=\raggedright]
+    \item[ID] \texttt{\wb@cur@id}%
+    \wbmetarow{Topic}{\wb@metatopic}%
+    \wbmetarow{Estimated time}{\wb@metaest}%
+    \wbmetarow{Origin}{\wb@metaorigin}%
+    \wb@sourcerow
+    \wbmetarow{Prerequisites}{\wb@metaprereq}%
+    \ifwb@public\else\wbmetarow{Status}{\wb@metastatus}\fi
+  \end{description}
+  \endgroup\medskip}
+
+\ExplSyntaxOn
+\cs_new_protected:Npn \wb@setmetakeys #1
+  {
+    \keys_set:nn { qiworkbook / meta } {#1}
+    \cs_set_eq:NN \wb@metatopic  \l_wb_meta_topic_tl
+    \cs_set_eq:NN \wb@metaest    \l_wb_meta_est_tl
+    \cs_set_eq:NN \wb@metaorigin \l_wb_meta_origin_tl
+    \cs_set_eq:NN \wb@metaprereq \l_wb_meta_prereq_tl
+    \cs_set_eq:NN \wb@metastatus \l_wb_meta_status_tl
+    % freeze under a plain (non-expl3) name so the ledger write can grab it
+    \cs_gset_eq:NN \wb@topicfrozen \l_wb_meta_topic_tl
+  }
+\cs_new_protected:Npn \wb@sourcerow
+  {
+    \tl_if_empty:NF \l_wb_meta_source_tl
+      {
+        \item [Source]
+        \tl_if_empty:NTF \l_wb_meta_url_tl
+          { \tl_use:N \l_wb_meta_source_tl }
+          {
+            \href { \l_wb_meta_url_tl } { \tl_use:N \l_wb_meta_source_tl }
+          }
+      }
+  }
+\ExplSyntaxOff
+
+% -------------------------------------------------------------------- entry --
+% \begin{entry}{Q005}{Two POVMs that never disagree} ... \end{entry}
+\newenvironment{entry}[2]{%
+  \wbresetentry
+  \renewcommand{\wb@cur@id}{#1}%
+  \renewcommand{\wb@cur@title}{#2}%
+  \phantomsection
+  \section[{#2}\ \textnormal{(#1)}]{#2}%
+  \hypertarget{#1}{}%
+  \protected@write\@auxout{}{\string\wb@setqday{#1}{\wb@curday}}%
+}{%
+  \wb@writeledgerrow
+  \par\medskip\wbthinrule\medskip
+}
+
+\newcommand{\wb@setqday}[2]{\global\@namedef{wb@qday@#1}{#2}}
+
+% =============================================================================
+%  Attempt log
+% =============================================================================
+\newcommand{\attempt}[1]{%
+  \begingroup
+  \wb@setattkeys{#1}%
+  \wbattnonempty \wbattshowp
+  \ifwb@attempt
+    \ifwb@public \ifwb@attpub \wb@printattempt \fi
+    \else \wb@printattempt \fi
+  \fi
+  \wb@stashattempt
+  \endgroup}
+
+\ExplSyntaxOn
+\cs_new_protected:Npn \wb@setattkeys #1
+  { \keys_set:nn { qiworkbook / attempt } {#1} }
+
+\cs_new_protected:Npn \wb@printattempt
+  {
+    \par\medskip
+    \group_begin:
+    \small
+    \noindent {\bfseries\color{wbInk} Attempt~log}\par\nobreak
+    \vspace{0.2em}
+    \begin{description}
+      [leftmargin=!,labelwidth=\widthof{\bfseries How~it~went},
+       font=\bfseries,itemsep=0.1em,topsep=0.2em,parsep=0pt,before=\raggedright]
+      \tl_if_empty:NF \l_wb_att_date_tl
+        { \item [Date] \wbdate { \l_wb_att_date_tl } }
+      \tl_if_empty:NF \l_wb_att_time_tl
+        { \item [Time] \tl_use:N \l_wb_att_time_tl }
+      \tl_if_empty:NF \l_wb_att_diff_tl
+        { \item [Difficulty] \tl_use:N \l_wb_att_diff_tl \c_space_tl / \c_space_tl 5 }
+      \tl_if_empty:NF \l_wb_att_how_tl
+        { \item [How~it~went] \tl_use:N \l_wb_att_how_tl }
+      \tl_if_empty:NF \l_wb_att_ins_tl
+        { \item [Insight] \tl_use:N \l_wb_att_ins_tl }
+      \tl_if_empty:NF \l_wb_att_note_tl
+        { \item [Note] \tl_use:N \l_wb_att_note_tl }
+    \end{description}
+    \group_end:
+    \par\medskip
+  }
+
+% stash the attempt data so \end{entry} can emit one ledger row
+\cs_new_protected:Npn \wb@stashattempt
+  {
+    \tl_gset_eq:NN \g_wb_stash_date_tl \l_wb_att_date_tl
+    \tl_gset_eq:NN \g_wb_stash_time_tl \l_wb_att_time_tl
+    \tl_gset_eq:NN \g_wb_stash_diff_tl \l_wb_att_diff_tl
+  }
+\tl_new:N \g_wb_stash_date_tl
+\tl_new:N \g_wb_stash_time_tl
+\tl_new:N \g_wb_stash_diff_tl
+\ExplSyntaxOff
+
+% =============================================================================
+%  Ledger.  Rows are written to the .aux and read back on the next run, which
+%  is why the table in the front matter needs two compilations to settle.
+% =============================================================================
+\newcommand{\wb@writeledgerrow}{%
+  \immediate\write\@auxout{%
+    \string\wbledgerrow
+      {\wb@cur@id}%
+      {\wb@curday}%
+      {\wb@effdate}%
+      {\unexpanded\expandafter{\wb@cur@title}}%
+      {\unexpanded\expandafter{\wb@topicfrozen}}%
+      {\wb@stashtime}%
+      {\wb@stashdiff}}%
+  \wb@clearstash}
+
+\ExplSyntaxOn
+\cs_new:Npn \wb@stashdate { \tl_use:N \g_wb_stash_date_tl }
+% The date an entry is filed under: whatever \attempt said, otherwise the date
+% of the session it sits in.  Expandable, because it is used inside \write.
+\cs_new:Npn \wb@effdate
+  {
+    \tl_if_empty:NTF \g_wb_stash_date_tl
+      { \wb@sessiondate }
+      { \tl_use:N \g_wb_stash_date_tl }
+  }
+\cs_new:Npn \wb@stashtime { \tl_use:N \g_wb_stash_time_tl }
+\cs_new:Npn \wb@stashdiff { \tl_use:N \g_wb_stash_diff_tl }
+
+\cs_new_protected:Npn \wb@clearstash
+  {
+    \tl_gclear:N \g_wb_stash_date_tl
+    \tl_gclear:N \g_wb_stash_time_tl
+    \tl_gclear:N \g_wb_stash_diff_tl
+  }
+\ExplSyntaxOff
+
+% small counters kept under macro names, used for the per-year tallies
+\newcommand{\wb@bump}[1]{%
+  \expandafter\ifx\csname #1\endcsname\relax
+    \global\@namedef{#1}{1}%
+  \else
+    \edef\wb@tmp{\the\numexpr\csname #1\endcsname+1\relax}%
+    \global\expandafter\let\csname #1\endcsname\wb@tmp
+  \fi}
+\newcommand{\wb@get}[1]{%
+  \expandafter\ifx\csname #1\endcsname\relax 0\else\csname #1\endcsname\fi}
+
+\ExplSyntaxOn
+\seq_new:N \g_wb_years_seq
+\cs_new_protected:Npn \wb@addyear #1
+  {
+    \tl_set:Nx \l_tmpa_tl { \str_range:nnn {#1} {1} {4} }
+    \seq_if_in:NVF \g_wb_years_seq \l_tmpa_tl
+      { \seq_gput_right:NV \g_wb_years_seq \l_tmpa_tl }
+    \use:x { \exp_not:N \wb@bump { wb@yp@ \l_tmpa_tl } }
+  }
+\cs_new_protected:Npn \wb@addday #1
+  {
+    \tl_set:Nx \l_tmpa_tl { \str_range:nnn {#1} {1} {4} }
+    \use:x { \exp_not:N \wb@bump { wb@yd@ \l_tmpa_tl } }
+  }
+% \wbcalendarauto -- one grid per year that has entries, oldest first
+\cs_new_protected:Npn \wbcalendarauto
+  {
+    \seq_if_empty:NTF \g_wb_years_seq
+      { \wb@ledgerempty }
+      {
+        \seq_sort:Nn \g_wb_years_seq
+          { \int_compare:nNnTF {##1} > {##2} { \sort_return_swapped: }
+            { \sort_return_same: } }
+        \seq_map_inline:Nn \g_wb_years_seq
+          {
+            \wbyearhead {##1}
+            \noindent \wbcalendar {##1} \par
+            \vspace { 1.8 \baselineskip }
+          }
+        \vspace { -1.2 \baselineskip }
+        \wbcalendarlegend
+      }
+  }
+\ExplSyntaxOff
+
+\newcommand{\wb@ledgerrows}{}
+\newcommand{\wb@datelist}{}
+\newcounter{wb@nentries}
+\newcounter{wb@ndays}
+
+% #1 id  #2 day  #3 ISO date  #4 title  #5 topic  #6 time  #7 difficulty
+\newcommand{\wbledgerrow}[7]{%
+  \stepcounter{wb@nentries}%
+  \ifx\relax#3\relax\else\wb@addyear{#3}\fi
+  \g@addto@macro\wb@ledgerrows{\wb@fmtrow{#1}{#2}{#3}{#4}{#5}{#6}{#7}}%
+  \ifx\relax#3\relax\else
+    \expandafter\ifx\csname wb@cnt@#3\endcsname\relax
+      \stepcounter{wb@ndays}\wb@addday{#3}%
+      \expandafter\g@addto@macro\expandafter\wb@datelist\expandafter{#3,}%
+      \global\@namedef{wb@cnt@#3}{1}%
+    \else
+      \edef\wb@tmp{\the\numexpr\csname wb@cnt@#3\endcsname+1\relax}%
+      \global\expandafter\let\csname wb@cnt@#3\endcsname\wb@tmp
+    \fi
+  \fi}
+
+% Two row macros rather than one with a conditional: an "&" inside \if...\fi
+% breaks alignment scanning.  \wb@fmtrow is \let to the right one at use time.
+\newcommand{\wb@dash}{\textcolor{wbGrey}{--}}
+\newcommand{\wb@fmtrowfull}[7]{%
+  \hyperlink{#1}{\texttt{#1}} & #2 &
+  \ifx\relax#3\relax\wb@dash\else\wbdate{#3}\fi &
+  \hyperlink{#1}{#4} & #5 &
+  \ifx\relax#6\relax\wb@dash\else#6\fi &
+  \ifx\relax#7\relax\wb@dash\else#7\fi \\}
+\newcommand{\wb@fmtrowpub}[7]{%
+  \hyperlink{#1}{\texttt{#1}} & #2 &
+  \ifx\relax#3\relax\wb@dash\else\wbdate{#3}\fi &
+  \hyperlink{#1}{#4} & #5 \\}
+\let\wb@fmtrow\wb@fmtrowfull
+
+\newcommand{\wb@headfull}{%
+  \textbf{ID} & \textbf{Day} & \textbf{Date} & \textbf{Title} & \textbf{Topic} &
+  \textbf{Time} & \textbf{D} \\}
+\newcommand{\wb@headpub}{%
+  \textbf{ID} & \textbf{Day} & \textbf{Date} & \textbf{Title} & \textbf{Topic} \\}
+\let\wb@ledgerhead\wb@headfull
+
+\newcommand{\wb@ledgerempty}{%
+  \noindent\textcolor{wbGrey}{\small The ledger is built from the \texttt{.aux}
+    file; run \LaTeX{} once more to populate it.}\par}
+
+% Two explicit tables: the column preamble cannot be hidden behind a macro.
+\newcommand{\wbledger}{%
+  \ifx\wb@ledgerrows\@empty \wb@ledgerempty \else
+    \begingroup\small
+    \setlength{\tabcolsep}{5pt}\renewcommand{\arraystretch}{1.15}%
+    \ifwb@public
+      \let\wb@fmtrow\wb@fmtrowpub \let\wb@ledgerhead\wb@headpub
+      \begin{longtable}{@{}l c l >{\raggedright\arraybackslash}p{0.34\linewidth} >{\raggedright\arraybackslash}p{0.26\linewidth}@{}}
+        \toprule \wb@ledgerhead \midrule \endfirsthead
+        \toprule \wb@ledgerhead \midrule \endhead
+        \bottomrule \endlastfoot
+        \wb@ledgerrows
+      \end{longtable}
+    \else
+      \let\wb@fmtrow\wb@fmtrowfull \let\wb@ledgerhead\wb@headfull
+      \begin{longtable}{@{}l c l >{\raggedright\arraybackslash}p{0.26\linewidth} >{\raggedright\arraybackslash}p{0.19\linewidth} l c@{}}
+        \toprule \wb@ledgerhead \midrule \endfirsthead
+        \toprule \wb@ledgerhead \midrule \endhead
+        \bottomrule \endlastfoot
+        \wb@ledgerrows
+      \end{longtable}
+    \fi
+    \endgroup
+  \fi}
+
+\newcommand{\wbstats}{%
+  \begingroup\noindent\small\color{wbGrey}%
+  \thewb@nentries\ problems over \thewb@ndays\ working days.\par\endgroup}
+
+% =============================================================================
+%  Calendar grid (the "album" page).  Purely visual; navigation is the ledger.
+% =============================================================================
+% Geometry in millimetres, as bare numbers so pgfmath can use them directly.
+\def\wbcellsize{2.35}
+\def\wbcellpitch{2.90}
+
+% Drawing helpers.  The picture sets x=y=pitch, so all coordinates below are
+% plain integers: column to the right, row downwards.
+\newcommand{\wb@rowlabel}[2]{%
+  \node[anchor=east,font=\tiny,text=wbGrey] at (-0.4,-#1+0.4) {#2};}
+\newcommand{\wb@monthlabel}[2]{%
+  \node[anchor=south west,font=\tiny,text=wbGrey] at (#1,0.9) {#2};}
+\newcommand{\wb@cell}[3]{%
+  \fill[#3,rounded corners=0.25mm]
+    (#1,-#2) rectangle ++(\wbcellsize mm,\wbcellsize mm);}
+
+\ExplSyntaxOn
+\int_new:N \l__wb_pos_int
+\int_new:N \l__wb_cnt_int
+\int_new:N \l__wb_jan_int
+
+\cs_new_protected:Npn \wb_cal_lookup:n #1
+  {
+    \cs_if_exist:cTF { wb@cnt@ #1 }
+      { \int_set:Nn \l__wb_cnt_int { \use:c { wb@cnt@ #1 } } }
+      { \int_zero:N \l__wb_cnt_int }
+  }
+\cs_generate_variant:Nn \wb_cal_lookup:n { x }
+
+% #1 = day of year, #2 = position index (0-based, column-major over weeks)
+\cs_new_protected:Npn \wb_cal_day:nn #1#2
+  {
+    \int_set:Nn \l__wb_m_int { 1 }
+    \int_step_inline:nnnn {1} {1} {12}
+      {
+        \int_compare:nNnT
+          {
+            \__wb_cumdays:n {##1}
+            + \int_compare:nNnTF {##1} > {2}
+                { \__wb_isleap:n { \l__wb_y_int } } {0}
+          }
+          < {#1}
+          { \int_set:Nn \l__wb_m_int {##1} }
+      }
+    \int_set:Nn \l__wb_d_int
+      {
+        #1 - \__wb_cumdays:n { \l__wb_m_int }
+        - \int_compare:nNnTF { \l__wb_m_int } > {2}
+            { \__wb_isleap:n { \l__wb_y_int } } {0}
+      }
+    \wb_cal_lookup:x
+      {
+        \int_use:N \l__wb_y_int - \__wb_pad:n { \l__wb_m_int }
+        - \__wb_pad:n { \l__wb_d_int }
+      }
+    \use:x
+      {
+        \exp_not:N \wb@cell
+          { \int_eval:n { \int_div_truncate:nn {#2} {7} } }
+          { \int_eval:n { \int_mod:nn {#2} {7} } }
+          {
+            \int_compare:nNnTF { \l__wb_cnt_int } = {0}
+              { wbFaint }
+              {
+                \int_compare:nNnTF { \l__wb_cnt_int } > {1}
+                  { wbAccent } { wbAccent!55 }
+              }
+          }
+      }
+  }
+
+\cs_new_protected:Npn \wb_calendar:n #1
+  {
+    \int_set:Nn \l__wb_y_int {#1}
+    \int_set:Nn \l__wb_jan_int { \__wb_dow:nnn {#1} {1} {1} }
+    \begin{tikzpicture}[ x = \wbcellpitch mm , y = \wbcellpitch mm , baseline ]
+      % weekday labels: Mon, Wed, Fri (rows 1, 3, 5 with Sunday = row 0)
+      \int_step_inline:nnnn {1} {2} {5}
+        { \wb@rowlabel {##1} { \int_case:nnF {##1} { {1}{Mon} {3}{Wed} {5}{Fri} } { } } }
+      % every day of the year
+      \int_step_variable:nnNn {1}
+        { \int_eval:n { 365 + \__wb_isleap:n {#1} } } \l_tmpa_tl
+        {
+          \int_set:Nn \l__wb_pos_int { \l__wb_jan_int + \l_tmpa_tl - 1 }
+          \wb_cal_day:nn { \l_tmpa_tl } { \l__wb_pos_int }
+        }
+      % month labels, above the column containing the 1st
+      \int_step_inline:nnnn {1} {1} {12}
+        {
+          \use:x
+            {
+              \exp_not:N \wb@monthlabel
+                {
+                  \int_eval:n
+                    {
+                      \int_div_truncate:nn
+                        { \l__wb_jan_int + \__wb_doy:nnn {#1} {##1} {1} - 1 } {7}
+                    }
+                }
+                { \__wb_month_abbr:n {##1} }
+            }
+        }
+    \end{tikzpicture}
+  }
+\cs_new_eq:NN \wbcalendar \wb_calendar:n
+\ExplSyntaxOff
+
+\newcommand{\wbyearhead}[1]{%
+  \begingroup
+  \edef\wb@np{\wb@get{wb@yp@#1}}\edef\wb@nd{\wb@get{wb@yd@#1}}%
+  \parfillskip=0pt\relax
+  \par\noindent
+  {\Large\bfseries\color{wbInk}#1}%
+  \hfill
+  {\small\color{wbGrey}%
+    \wb@np\ problem\ifnum\wb@np=1\relax\else s\fi
+    \ \textbullet\
+    \wb@nd\ day\ifnum\wb@nd=1\relax\else s\fi}%
+  \par
+  \vspace{0.25\baselineskip}%
+  {\color{wbFaint}\hrule height 0.5pt}%
+  \par\vspace{1.1\baselineskip}%
+  \endgroup}
+
+\newcommand{\wb@swatch}[1]{%
+  \tikz[baseline=-0.4ex]\fill[#1,rounded corners=0.25mm]
+    (0,0) rectangle (\wbcellsize mm,\wbcellsize mm);}
+
+\newcommand{\wbcalendarlegend}{%
+  \begingroup\noindent\small\color{wbGrey}%
+  \wb@swatch{wbFaint}\ no entry\quad
+  \wb@swatch{wbAccent!55}\ one\quad
+  \wb@swatch{wbAccent}\ two or more\par\endgroup}
+
+% =============================================================================
+%  Toolbox: recurring lemmas, with back-references to the entries that use them
+% =============================================================================
+\newcommand{\wb@tooluses}[2]{%
+  \expandafter\ifx\csname wb@tool@#1\endcsname\relax
+    \global\@namedef{wb@tool@#1}{#2}%
+  \else
+    \edef\wb@tmp{\csname wb@tool@#1\endcsname, #2}%
+    \global\expandafter\let\csname wb@tool@#1\endcsname\wb@tmp
+  \fi}
+
+% \usetool{T1} inside a solution
+\newcommand{\usetool}[1]{%
+  \hyperlink{tool:#1}{\textbf{#1}}%
+  \protected@write\@auxout{}{\string\wb@tooluses{#1}{\wb@cur@id}}}
+
+% \begin{tool}{T1}{Vanishing expectation} ... \end{tool}
+\newenvironment{tool}[2]{%
+  \par\medskip\phantomsection\hypertarget{tool:#1}{}%
+  \def\wb@thistool{#1}%
+  \noindent{\bfseries\color{wbInk}#1.\ #2.}\ \itshape\ignorespaces
+}{%
+  \upshape\par\nobreak\vspace{0.2em}%
+  {\small\color{wbGrey}Used in:\ %
+    \expandafter\ifx\csname wb@tool@\wb@thistool\endcsname\relax
+      not yet\else
+      \wb@linkids{\csname wb@tool@\wb@thistool\endcsname}\fi\par}%
+  \medskip}
+
+\ExplSyntaxOn
+\cs_new_protected:Npn \wb@linkids #1
+  {
+    \clist_set:Nn \l_tmpa_clist {#1}
+    \clist_remove_duplicates:N \l_tmpa_clist
+    \tl_clear:N \l_tmpa_tl
+    \clist_map_inline:Nn \l_tmpa_clist
+      {
+        \tl_if_empty:NF \l_tmpa_tl { \tl_put_right:Nn \l_tmpa_tl { ,~ } }
+        \tl_put_right:Nn \l_tmpa_tl { \hyperlink {##1} { \texttt {##1} } }
+      }
+    \tl_use:N \l_tmpa_tl
+  }
+\ExplSyntaxOff
+
+% =============================================================================
+%  Page style
+% =============================================================================
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\automark[section]{chapter}
+\ohead{\small\color{wbGrey}\headmark}
+\ofoot*{\small\color{wbGrey}\pagemark}
+\setkomafont{pageheadfoot}{\normalfont\small\color{wbGrey}}
+
+% =============================================================================
+%  Notation
+% =============================================================================
+\RequirePackage{dsfont}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\id}{\mathds{1}}                 % identity operator on H
+\newcommand{\idch}{\mathrm{id}}              % identity map on L(H)
+\newcommand{\iu}{\mathrm{i}}                 % imaginary unit
+\newcommand{\dd}{\mathop{}\!\mathrm{d}} 
+
+\newcommand{\Tr}{\operatorname{Tr}}          % partial trace: \Tr_{B}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\im}{\operatorname{im}}          % image = range
+\newcommand{\ran}{\im}                       % alias, see decision 1
+\newcommand{\spn}{\operatorname{span}}       % NOT \span, see decision 2
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\conv}{\operatorname{conv}}      % convex hull
+\newcommand{\vecop}{\operatorname{vec}}      % vectorisation
+
+%% ------------------------------------------------------------------
+%% 2. Hilbert spaces and sets of operators / maps
+%% ------------------------------------------------------------------
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\KK}{\mathcal{K}}
+ 
+\newcommand{\Lop}[1]{\mathcal{L}\!\left(#1\right)}          % linear operators
+\newcommand{\Dop}[1]{\mathcal{D}\!\left(#1\right)}          % density operators
+\newcommand{\Uop}[1]{\mathcal{U}\!\left(#1\right)}          % unitaries
+\newcommand{\Herm}[1]{\operatorname{Herm}\!\left(#1\right)} % Hermitian
+\newcommand{\Pos}[1]{\operatorname{Pos}\!\left(#1\right)}   % positive semidefinite
+\newcommand{\Pd}[1]{\operatorname{Pd}\!\left(#1\right)}     % positive definite
+\newcommand{\Projs}[1]{\operatorname{Proj}\!\left(#1\right)}% orthogonal projections
+\newcommand{\Tmap}[1]{\mathcal{T}\!\left(#1\right)}         % linear maps L(H)->L(K)
+\newcommand{\CP}[1]{\operatorname{CP}\!\left(#1\right)}     % completely positive maps
+\newcommand{\Chan}[1]{\mathcal{C}\!\left(#1\right)}         % channels (CPTP)
+
+\DeclarePairedDelimiter{\normx}{\lVert}{\rVert}
+\newcommand{\tnorm}[1]{\normx{#1}_{1}}
+\newcommand{\hsnorm}[1]{\normx{#1}_{2}}
+\newcommand{\opnorm}[1]{\normx{#1}_{\infty}}
+
+\newcommand{\ket}[1]{\lvert #1 \rangle}
+\newcommand{\bra}[1]{\langle #1 \rvert}
+\newcommand{\braket}[2]{\langle #1 \vert #2 \rangle}
+\newcommand{\proj}[1]{\lvert #1 \rangle\!\langle #1 \rvert}
+\newcommand{\avg}[3]{\langle #1 \vert #2 \vert #3 \rangle}
+\newcommand{\diverg}{\rightarrow \infty}
+
+
+\newcommand{\adj}{^{\dagger}}                % adjoint
+\newcommand{\trans}{^{\mathsf{T}}}           % transpose
+\newcommand{\inv}{^{-1}}
+\newcommand{\ortho}{^{\perp}}                % orthogonal complement
+\newcommand{\conj}[1]{\overline{#1}}         % complex conjugate
+\newcommand{\ot}{\otimes}
+\newcommand{\tpow}[1]{^{\otimes #1}}      
+
+
+\newcommand{\Choi}[1]{J\!\left(#1\right)}                 % Choi operator
+\newcommand{\fid}[2]{F\!\left(#1,#2\right)}               % fidelity
+\newcommand{\vN}[1]{S\!\left(#1\right)}                   % von Neumann entropy
+\newcommand{\relent}[2]{D\!\left(#1\,\middle\Vert\,#2\right)} % relative entropy
+
+\RequirePackage{graphicx,float}
+% \entryfig{file}{caption}  -- diagram pulled from the source material
+
+% -------------------------------------------------------------------- misc ---
+% \todo is suppressed in the public build, with a warning so nothing is lost
+% silently.
+\newcommand{\todo}[1]{%
+  \ifwb@public
+    \PackageWarning{qiworkbook}{Suppressed TODO in public build: #1}%
+  \else
+    \textcolor{wbTodo}{\textbf{[TODO:} #1\textbf{]}}%
+  \fi}
+\newcommand{\qedbox}{\hfill$\blacksquare$}
+
+% ---- colours by role: change them here, once ----
+\colorlet{tnplain}{black!12}   % generic tensors (A, B, T)
+\colorlet{tniso}{blue!18}      % unitaries / isometries (U, V)
+\colorlet{tndiag}{orange!45}   % diagonal matrices of singular values
+
+% ---- styles: each takes an optional fill colour ----
+\tikzset{
+  tn/.style        = {x=1.2cm, y=1.2cm, line width=0.6pt, font=\small},
+  tensor/.style    = {circle, draw, fill=#1, minimum size=6mm, inner sep=0pt},
+  tensor/.default  = tnplain,
+  btensor/.style   = {rectangle, draw, fill=#1, minimum size=6mm, inner sep=1pt},
+  btensor/.default = tnplain,
+  stensor/.style   = {circle, draw, fill=#1, minimum size=3.5mm, inner sep=0pt},
+  stensor/.default = tndiag,
+  cut/.style       = {dashed, red!70!black, line width=0.8pt},
+}
+\newcommand{\leg}[3]{\draw (#1) -- ++(#2:0.6) node[font=\scriptsize, anchor=#2+180] {#3};}
+
+\endinput

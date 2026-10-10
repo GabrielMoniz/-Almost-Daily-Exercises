@@ -1,0 +1,287 @@
+\begin{entry}{Q015}{From free to damped: the arc propagator at finite $\gamma$}
+
+\entrymeta{
+  topic   = {Discrete-time field theory; contour times; finite-difference Green
+    functions; quantum chaos.},
+  est     = $\sim$15 minutes,
+  origin  = {Adapted. Reconstructed from a lecture exercise; the index conventions,
+    the Heaviside convention and the structural part (a) are inlined so the statement
+    stands alone.},
+  source  = {T. Micklitz, lectures on \emph{Field-Theory Approach to Quantum Chaos},
+    School on Analytical and Numerical Methods for Disordered Quantum Systems.
+    Companion to \qref{Q016}.},
+  prereq  = {None beyond finite differences.},
+  status  = open,
+}
+
+\begin{problem}
+\textbf{What this describes.} In the field theory of the previous entry, the object of
+interest is not a single amplitude but a \emph{pair} of them: one propagating forward in
+time and one backward, whose phases cancel and which therefore survive an average over
+the random dynamics. The propagator $\Pi$ follows such a pair, and each of its legs
+carries two times, one on each branch. The free theory has no scale: once formed, a pair
+stays correlated forever. The interacting theory has one, $\gamma$, at which the two
+branches lose their correlation; the exercise is to see that scale appear, and to see
+what it means.
+
+\textbf{Conventions.} Time is discrete, $n\in\ZZ$. Each leg carries a pair of contour
+times $(n^{+},n^{-})$, forward and backward. Write the pair as a single label,
+\[
+  \mathbf n:=(n^{+},n^{-}),
+  \qquad
+  \Delta n:=n^{+}-n^{-}\ \ \text{(relative time)},
+  \qquad
+  \bar n:=\tfrac12\bigl(n^{+}+n^{-}\bigr)\ \ \text{(mean time)} ,
+\]
+so that $\mathbf n\mapsto(\Delta n,\bar n)$ is a change of coordinates on the set of
+pairs: $\Delta n$ records how far apart on the two branches the pair sits, and $\bar n$
+how far along both have travelled together.
+
+The propagator $\Pi_{\mathbf n_2,\mathbf n_1}$ is a kernel from the incoming pair
+$\mathbf n_1$ to the outgoing pair $\mathbf n_2$. Kernels compose by summation over the
+repeated pair,
+\[
+  (KL)_{\mathbf n_2,\mathbf n_1}
+  :=\sum_{\mathbf m}K_{\mathbf n_2,\mathbf m}\,L_{\mathbf m,\mathbf n_1},
+  \qquad
+  \bigl(\id\bigr)_{\mathbf n_2,\mathbf n_1}
+  =\delta_{n_2^{+},n_1^{+}}\,\delta_{n_2^{-},n_1^{-}} ,
+\]
+and act on the outgoing label only. Let $T$ be the kernel that advances \emph{both}
+contour times by one unit --- one step of the dynamics, applied to both branches at
+once,
+\[
+  T_{\mathbf n,\mathbf m}
+  :=\delta_{n^{+},\,m^{+}+1}\;\delta_{n^{-},\,m^{-}+1},
+\]
+and set $d:=\id-T$, the discrete counterpart of a time derivative. Write $\Theta(u)=1$
+for $u\ge0$ and $\Theta(u)=0$ for $u<0$, so that $\Pi$ is supported on outgoing times
+later than incoming ones. Finally let $D_0>0$ be the normalisation constant of the notes
+and $\gamma>0$ a damping rate.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Show that $T$ preserves the relative time and lowers the mean time by one:
+        in the coordinates $(\Delta n,\bar n)$,
+        \[
+          T_{\mathbf n,\mathbf m}
+          =\delta_{\Delta n,\Delta m}\;\delta_{\bar n,\,\bar m-1}.
+        \]
+        Deduce that if $K_{\mathbf n_2,\mathbf n_1}
+        =\delta_{\Delta n_2,\Delta n_1}\,f(\bar n_2-\bar n_1)$ for some
+        $f:\ZZ\to\CC$, then
+        \[
+          (dK)_{\mathbf n_2,\mathbf n_1}
+          =\delta_{\Delta n_2,\Delta n_1}\bigl[f(u)-f(u-1)\bigr],
+          \qquad u:=\bar n_2-\bar n_1 ,
+        \]
+        so that the problem reduces to a one-dimensional recursion in $u$.
+
+  \item \emph{Free theory.} Verify that the propagator for the free theory
+        \[
+          \Pi_{\mathbf n_2,\mathbf n_1}
+          =\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,\Theta(\bar n_2-\bar n_1)
+        \]
+        satisfies
+        \[
+          (d\,\Pi)_{\mathbf n_2,\mathbf n_1}
+          =\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \delta_{\bar n_2,\bar n_1} .
+        \]
+
+  \item \emph{Interacting theory.} The propagator for the interacting theory (with mass) is
+        \[
+          \Pi^{\mathrm{arc}}_{\mathbf n_2,\mathbf n_1}
+          =\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \frac{\Theta(\bar n_2-\bar n_1)}{(1+\gamma)^{\,\bar n_2-\bar n_1+1}} .
+        \]
+        Show that 
+        \[
+          \bigl[(d+\gamma)\,\Pi^{\mathrm{arc}}\bigr]_{\mathbf n_2,\mathbf n_1}
+          =\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \delta_{\bar n_2,\bar n_1} ,
+        \]
+        i.e.\ $\Pi^{\mathrm{arc}}$ is the Green function of $d+\gamma$ with the same
+        right-hand side as in the free case. Note where the factor
+        $(1+\gamma)^{-u}$ disappears from the final answer.
+
+   \item \emph{The lattice scale.} Fix the relative time and compare successive mean
+        times: show that for $\bar n_2\ge\bar n_1$ the ratio
+        \[
+          \frac{\Pi^{\mathrm{arc}}_{\,(\Delta n,\,\bar n_2+1),\,\mathbf n_1}}
+               {\Pi^{\mathrm{arc}}_{\,(\Delta n,\,\bar n_2),\,\mathbf n_1}}
+        \]
+        does not depend on $\bar n_2$, and identify it. The decay is therefore
+        geometric: the same fraction of the amplitude is lost at every step, regardless
+        of how long the pair has already survived.
+
+        Explain why this is the expected structure rather than a coincidence, by reading
+        it off the equation $\Pi^{\mathrm{arc}}=\bigl[(1+\gamma)\id-T\bigr]^{-1}$ that
+        (c) establishes: each application of $T$ advances both branches by one step of
+        the dynamics, and each such step is accompanied by the same factor. What
+        property of the underlying dynamics does this memorylessness reflect, and what
+        would have to change for the loss per step to depend on $\bar n_2-\bar n_1$?
+
+
+  \item \emph{The approximation.} Show that $(1+\gamma)^{-u}=e^{-\gamma u}$ up to a
+        relative error controlled by $\gamma^{2}u$, and say why it is this product,
+        rather than $\gamma$ alone, that must be small for the exponential form to hold. Determine also the sign of
+        the discrepancy: does the lattice decay faster or slower than the exponential?
+
+  \item \emph{The continuum limit.} Take as given that the Green function of
+        $\partial_{\mathcal T}+\Gamma$ is $\Theta(\mathcal T)\,e^{-\Gamma\mathcal T}$,
+        where the constant $\Gamma$ added to a first-order derivative is a \emph{mass
+        term} and fixes the only scale of the continuum theory, $\tau=1/\Gamma$. Let
+        $\delta t$ be the physical duration of one lattice step, so that
+        $\mathcal T=u\,\delta t$ and $\gamma=\Gamma\,\delta t$. Using~(e), show that
+        $\Pi^{\mathrm{arc}}$ converges to the continuum Green function as
+        $\delta t\to0$, and state precisely which quantity is held fixed in the limit
+        and which is sent to zero. Explain why the limit cannot be taken at fixed $u$,
+        nor at fixed $\gamma$, and why the physically meaningful statement is that
+        $\delta t$ disappears from the answer while $\tau$ does not: the scale belongs
+        to the theory, the lattice spacing to its description. How many lattice steps
+        does one lifetime $\tau$ contain, and what does that number have to be for the
+        continuum description to apply?
+\end{enumerate}
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[a]
+$n^+=m^+ - 1$ and $n^-=m^- - 1$ if and only if $n^+ - n^- = m^+ - m^-$ and $\frac{n^+ + n^-}{2} =\frac{m^+ + m^-}{2} -1$, thus
+\[
+          T_{\mathbf n,\mathbf m}
+          =\delta_{\Delta n,\Delta m}\;\delta_{\bar n,\,\bar m+1}.
+        \]
+Applying $T$ to such $K$
+\begin{equation}
+    \begin{split}
+        (TK)_{\mathbf n_2, \mathbf n_1} &= \sum_{\mathbf m} T_{\mathbf n_2,\mathbf{ m}}K_{\mathbf{ m}, \mathbf n_1}\\
+        &= \sum_{\Delta m, \bar m} \delta_{\Delta n_2,\Delta m}\;\delta_{\bar n_2,\,\bar m+1} \delta_{\Delta m,\Delta n_1}\,f(\bar m - \bar n_1) \\
+        &=  \delta_{\Delta n_2,\Delta n_1}f(\bar n_2 -1 -n_1)\\
+        &=  \delta_{\Delta n_2,\Delta n_1}f(u-1)
+    \end{split}
+\end{equation}
+Therefore, it follows directly when applying $d$
+
+\end{solution}
+
+\begin{solution}[b]
+From a)
+\begin{equation}
+   (d\,\Pi)_{\mathbf n_2,\mathbf n_1}
+          =\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \big(\Theta({\bar n_2-\bar n_1}) - \Theta({\bar n_2-\bar n_1}-1)\big)
+\end{equation}
+Now if $\bar n_2-\bar n_1-1 \geq 0$, both $\Theta$ are equal to 1, leading to a null for the finite difference. If $\bar n_2-\bar n_1<0$, both vanish. So the finite difference only survives when $\bar n_2-\bar n_1 = 0$. Therefore,
+\[
+          (d\,\Pi)_{\mathbf n_2,\mathbf n_1}
+          =\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \delta_{\bar n_2,\bar n_1} .
+        \]
+\end{solution}
+
+\begin{solution}[c]
+Applying item a) we get that 
+\begin{equation}
+  d \Pi^{\mathrm{arc}}_{\mathbf n_2,\mathbf n_1}
+          =\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \left(\frac{\Theta(\bar n_2-\bar n_1)}{(1+\gamma)^{\,\bar n_2-\bar n_1+1}}-\frac{\Theta(\bar n_2-\bar n_1-1)}{(1+\gamma)^{\,\bar n_2-\bar n_1}} \right) .
+\end{equation}
+Meanwhile 
+\begin{equation}
+\begin{split}
+    \gamma \Pi^{\mathrm{arc}}_{\mathbf n_2,\mathbf n_1}
+          &=\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \frac{\Theta(\bar n_2-\bar n_1)}{(1+\gamma)^{\,\bar n_2-\bar n_1}}\left(\frac{\gamma}{1+\gamma} \right) \\
+         &=\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \frac{\Theta(\bar n_2-\bar n_1)}{(1+\gamma)^{\,\bar n_2-\bar n_1}}\left(1-\frac{1}{1+\gamma} \right)  
+\end{split}
+\end{equation}
+ To conclude, we must notice that after summing both expressions, the delta makes the only non-zero contribution occur when $\bar n_2 = \bar n_1$, reducing the exponent of the denominator to 0
+ \begin{equation}
+ \begin{split}
+      (d+\gamma) \Pi^{\mathrm{arc}}_{\mathbf n_2,\mathbf n_1}
+          &=\frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \frac{\delta_{\bar n_2,\bar n_1}}{(1+\gamma)^{\,\bar n_2-\bar n_1}} \\
+            &= \frac{1}{D_0}\,\delta_{\Delta n_2,\Delta n_1}\,
+            \delta_{\bar n_2,\bar n_1} 
+ \end{split}
+ \end{equation}
+This can be seen as the mass term for the theory
+\end{solution}
+
+\begin{solution}[d]
+The ratio is given by 
+\begin{equation*}
+        (1+\gamma)^{-1}
+\end{equation*}
+which is smaller than $1$, reflecting the expected damping.
+Inverting the expression for item c) (the right-hand side can be seen as proportional to the identity) and applying the geometric series, which converges even we stop looking at finite time since $(1+\gamma)^{-1} <1$ for $\gamma>0$. 
+
+\begin{equation}
+\begin{split}
+    \Pi^{\text{arc}}=&\frac{1}{D_0} \bigl[(1+\gamma)\id-T\bigr]^{-1}\\
+    =& \frac{1}{D_0 (1+\gamma)} \bigl[\id- \frac{1}{(1+\gamma)}T\bigr]^{-1}\\
+    =& \frac{1}{D_0 (1+\gamma)} \sum_{k=0}^\infty \left(\frac{1}{(1+\gamma)}T\right)^k
+\end{split}
+\end{equation}
+
+such that $T^k$ is accompanied by a factor $\frac{1}{(1+\gamma)^k}$, i.e., each lattice evolution adds the damping.
+
+The memorylessness is a reflection that the circuit applies the same random matrix at each time step. Therefore, the theory itself must reflect through a memoryless Lagrangian $d + \gamma$, where both the finite difference and the constant $\gamma$ are translational invariant objects. To change that, we would need a function of $\bar n_2 -\bar n_1$ instead of a constant to the theory. 
+
+\end{solution}
+
+
+
+
+
+
+\begin{solution}[e]
+We can rewrite the binomial power as
+\begin{equation}
+    (1+\gamma)^{-u} = e^{-u\ln(1+\gamma)} = e^{-u \gamma } e^{u(\gamma -\ln (1+\gamma))}
+\end{equation}
+Analyzing the expansion for the logarithm, we see that, for $|\gamma|<1$,
+\begin{equation*}
+    \ln(1+\gamma)=\sum_{k=1}^{\infty} \frac{(-1)^{k+1}}{k} \gamma^k = \gamma - \sum_{k=2}^{\infty} \frac{(-1)^{k}}{k} \gamma^k 
+\end{equation*}
+for a more explicit visualization, notice that this implies
+\begin{equation}
+    \gamma - \ln(1+\gamma) = \frac{1}{2}\gamma^2 + O(\gamma^3) =  \frac{1}{2}\gamma^2 + \gamma^2O(\gamma).
+    \label{order magnitude}
+\end{equation}
+
+The relative error is measured by the exponential $e^{u(\gamma -\ln (1+\gamma))}$, which is smaller when the exponent is close to 0. From eq\eqref{order magnitude} one can see this is the case when both $u\gamma^2$ are $\gamma$, themselves are small. The first condition enforces the overall factor being small, while the latter makes the sum it multiplies, $\frac{1}{2} + O(\gamma)$ something of order $\sim 1$, not counterbalancing the decrease of $u\gamma^2$. 
+\begin{equation}
+\begin{split}
+    \frac{(1+\gamma)^{-u}-e^{-\gamma u }}{e^{-\gamma u }} &= e^{u(\gamma -\ln (1+\gamma))} -1 \\
+    &= e^{u\gamma^2\left(\frac{1}{2}+O(\gamma)\right)} -1\\
+    &= u\gamma^2\left(\frac{1}{2}+O(\gamma)\right) + \sum_{k=1}^{\infty} \frac{1}{k!} \left(u\gamma^2\left(\frac{1}{2}+O(\gamma)\right)\right)^k
+\end{split} 
+\end{equation}
+Which for small enough $\gamma$, can be seen as 
+\begin{equation}
+    O(u\gamma^2)
+\end{equation}
+And the relative errors is positive so the exponential (as one should expect) decays faster.
+\end{solution}
+
+\begin{solution}[f]
+    To go for the continuum limit, one needs that the lattice step duration $\delta t$ becomes infinitesimally small to reproduce the continuity. The previous item set the condition for mathematical convergence, nonetheless, the "limiting theory" only reproduces the same continuum theory if their scales are same, i.e., we set $\tau = \delta t/\gamma$ constant through the limit. 
+
+    The time it takes to complete $u$ lattice steps is $\mathcal T=u\delta t$, whereas the lifetime is $\tau = \delta t/\gamma$, so one lifetime requires $u= 1/\gamma$ time steps, which, as expected, should go to infinity in the continuum limit. $\delta t$ can be seen as a unit of measure, like meters or seconds, connecting the model to actual physical implementation. 
+    All quantities are dimensionless in the lattice theory. Thus, $\delta t$ is necessary to actually analyze the time the pairs take to survive, yet it does not dictate how quantities relate on a physical theory.
+    
+    To compare the theory with the continuum theory at time $\mathcal T$ (view it as point-wise approximation, though by the bound in (e), the convergence is in fact uniform on bounded intervals of $\mathcal{T}$), we approximate it by $u \delta t$, whereas the time scale itself must be held constant $\tau = \delta t/\gamma$, enforcing that $u\gamma = \mathcal T/ \tau$, through the limit. This makes everything consistent with the mathematical condition for convergence. $u \gamma$ is kept fixed, with $\gamma \rightarrow 0$, $u\rightarrow \infty$, such that $u\gamma^2 \rightarrow 0$ as required. 
+\end{solution}
+
+
+\attempt{
+  date        = 2026-09-17,
+  time        = the questions where answered through days and content was added (compared to the course) to develop a better understanding of the lectures,
+  difficulty  = 3,
+  howitwent = great to develop my intuition about field theory usually the huge calculation with more heuristic arguments than rigorous steps blurs any physical understanding to me
+}
+
+\end{entry}

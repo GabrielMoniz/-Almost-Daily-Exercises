@@ -1,0 +1,76 @@
+% Migrated from days/day01.tex.  Paste your original problem, solution,
+% remark and takeaway bodies into the slots below -- the wrappers are the only
+% thing that changed.  Replace "the Day 4 result" style cross-references with
+% \qref{Q004}, and recurring lemmas with \usetool{T1}.
+\begin{entry}{Q001}{Pure fixed points of a channel}
+
+\entrymeta{
+  topic   = {Quantum channels; Kraus operators; positive semidefinite arguments},
+  est     = $\sim$12 minutes,
+  origin  = Original,
+  source  = {Original problem},
+  prereq  = {Kraus representation of a channel},
+  status  = written-up,
+}
+
+\begin{problem}
+Let $\Phi$ be a quantum channel (CPTP map) on $\Lop{\CC^{d}}$, with Kraus decomposition
+\[
+  \Phi(X)=\sum_{i} K_i X K_i^{\dagger},
+  \qquad
+  \sum_i K_i^{\dagger} K_i = \id .
+\]
+Suppose $\Phi$ has a \emph{pure} fixed point: there is a unit vector
+$\ket{\psi}\in\CC^{d}$ with $\Phi(\proj{\psi})=\proj{\psi}$.
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Show that every Kraus operator satisfies $K_i\ket{\psi}=c_i\ket{\psi}$ for some
+        $c_i\in\CC$, and determine the constraint on the $c_i$. Show also that this
+        conclusion does not depend on which Kraus decomposition of $\Phi$ was chosen.
+  \item Prove that $\Phi$ can never decrease the overlap with $\ket{\psi}$: for
+        \emph{every} state $\sigma\in\Dop{\CC^{d}}$,
+        \[
+          \avg{\psi}{\Phi(\sigma)}{\psi} \;\ge\; \avg{\psi}{\sigma}{\psi} .
+        \]
+\end{enumerate}
+\end{problem}
+
+
+\begin{solution}[Part (a)]
+Define the orthonormal basis $\ket{k}$, $k=0,...,n-1$, with $\ket{0}=\ket{\psi}$, we than have that for any $k>0$ 
+\begin{equation}
+    \bra{k}\Phi(\proj{0})\ket{k} = \sum_i |\bra{k}K_i\ket{0}|^2 =0
+\end{equation}
+Thus $\bra{k}K_i\ket{0}=0, \forall k>0$, implying that $K_i\ket{0}$ can only have component in the $\ket{0}$ direction, i.e. there is $c_i \in \CC$ such that $K_i\ket{0}=c_i\ket{0}$, which must satisfy
+\begin{equation}
+    1 = \avg{0}{\sum_i K_i^{\dagger} K_i}{0} = \sum_i |c_i|^2
+\end{equation}
+
+\end{solution}
+
+\begin{solution}[Part (b)]
+\begin{equation}
+    \avg{0}{\Phi(\sigma)}{0} = \Tr(\proj{0}\Phi(\sigma))=\Tr(\sum_i\proj{0}K_i\sigma K_i^\dagger)=\Tr(\sum_iK_i^\dagger\proj{0}K_i\sigma )
+\end{equation}
+Define $A=\sum_iK_i^\dagger\proj{0}K_i$, thus $A\geq 0$ directly from its expression and $A \leq \id$ since $ \sum_i K_i^{\dagger} K_i = \id$. 
+
+Now, we have that $\avg{0}{A}{0}=\sum_i |c_i|^2=1$ combining this with $A\leq 1$, we get that this is only possible if $(\id - A) \ket{0}=0$, so $A\geq \proj{0}$, i.e. $A-\proj{0} \geq 0$. 
+
+But $\sigma \geq 0$ as well, so $\Tr((A-\proj{0})\sigma) \geq 0$, therefore
+\begin{equation}
+\avg{\psi}{\Phi(\sigma)}{\psi}= \Tr(A\sigma) \;\ge\; \Tr(\proj{0}\sigma)=\avg{\psi}{\sigma}{\psi}
+\end{equation}
+\end{solution}
+
+
+\begin{takeaway}
+Using operator inequalities and analyzing the rank might help even when the problem is not explicit about it
+\end{takeaway}
+
+\attempt{
+  date       = 2026-09-04,
+  time       = 45 min,
+  difficulty = 3,
+  howitwent  = Had difficulty in finding the correct argument due to lack of experience in operator inequality,
+}
+
+\end{entry}

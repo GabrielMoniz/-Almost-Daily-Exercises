@@ -1,0 +1,273 @@
+% =============================================================================
+%  Daily Problems in Quantum Information
+%
+%  Build:  latexmk -pdf main.tex          (private build -- attempt logs shown)
+%          latexmk -pdf -jobname=public \
+%             "\PassOptionsToPackage{public}{qiworkbook}\input{main}"
+%
+%  The ledger table and the calendar are assembled from the .aux file, so the
+%  first run after adding an entry leaves them one step behind.  latexmk sorts
+%  this out; a manual build needs two passes.
+% =============================================================================
+\documentclass[11pt,a4paper,oneside,open=any,numbers=noenddot]{scrbook}
+
+\usepackage{qiworkbook}
+% \usepackage[public]{qiworkbook}   % public build: attempt logs hidden
+
+\hypersetup{
+  pdftitle={Daily Problems in Physics},
+  pdfauthor={Gabriel M. Arantes},
+  pdfsubject={Quantum information, matrix analysis, mathematical physics},
+}
+
+\title{(almost) Daily Problems in Physics\\[0.3em]
+       \large A worked collection}
+\author{Gabriel M.\ Arantes}
+\date{\today}
+
+\begin{document}
+\frontmatter
+\maketitle
+
+\begin{abstract}
+\noindent
+A running collection of short problems in quantum information, matrix analysis and
+mathematical physics, each intended to be solvable in roughly ten to fifteen minutes
+once the central idea is found, together with worked solutions. Each entry records its
+origin (sourced, extracted, adapted, or original) and, where applicable, a precise
+reference. Solutions are my own unless stated otherwise; errors are mine.
+
+\medskip\noindent
+A \emph{day} here means a day on which I worked, not a calendar day since starting:
+the numbering is contiguous, the dates are not. Every problem carries a permanent
+identifier \texttt{Q\textit{nnn}} which never changes, so it can be cited from
+anywhere --- another entry, the toolbox, or the website --- independently of where it
+sits in this book.
+\end{abstract}
+
+\cleardoublepage
+\tableofcontents
+
+% ---------------------------------------------------------------- the album --
+% ---------------------------------------------------------------- the album --
+\cleardoublepage
+\chapter*{The record}
+\addcontentsline{toc}{chapter}{The record}
+\markright{The record}
+
+\noindent
+\wbcalendarauto
+
+% ------------------------------------------------------------------ entries --
+\mainmatter
+
+\daysession{1}{2026-09-04}
+\input{entries/q001}
+
+\daysession{2}{2026-09-05}
+\input{entries/q002}
+
+\daysession{3}{2026-09-09}
+\input{entries/q003}
+
+\daysession{4}{2026-09-10}
+\input{entries/q004}
+
+\daysession{5}{2026-09-11}
+\input{entries/q005}
+\input{entries/q006}
+
+\daysession{6}{2026-09-12}
+\input{entries/q007}
+\input{entries/q008}
+
+\daysession{7}{2026-09-13}
+\input{entries/q009}
+\input{entries/q010}
+
+\daysession{8}{2026-09-14}
+\input{entries/q011}
+\input{entries/q012}
+
+\daysession{9}{2026-09-15}
+\input{entries/q013}
+
+\daysession{10}{2026-09-17}
+\input{entries/q014}
+\input{entries/q015}
+
+\daysession{11}{2026-09-20}
+\input{entries/q016}
+
+\daysession{12}{2026-09-21}
+\input{entries/q017}
+
+\daysession{13}{2026-10-04}
+\input{entries/q018}
+\input{entries/q019}
+
+\daysession{14}{2026-10-05}
+\input{entries/q020}
+
+
+\daysession{15}{2026-10-08}
+\input{entries/q021}
+
+
+% ------------------------------------------------------------------ toolbox --
+\appendix
+\cleardoublepage
+\chapter{Toolbox}
+\markright{Toolbox}
+
+\noindent
+Results that have earned a name by recurring. Cite them with \verb|\usetool{T1}|;
+the back-references below are collected automatically.
+
+\medskip
+
+\begin{tool}{T1}{Vanishing expectation of a positive operator}
+If $A \geq 0$ and $\avg{\psi}{A}{\psi} = 0$, then $A\ket{\psi} = 0$, and hence also
+$\bra{\psi}A = 0$.
+\end{tool}
+
+\begin{tool}{T2}{Purity of a marginal forces a product}
+If $\rho \in \Dop{\mathcal{H}_A \otimes \mathcal{H}_B}$ has a pure marginal
+$\rho_A = \proj{\psi_A}$, then $\rho = \proj{\psi_A} \otimes \rho_B$.
+\end{tool}
+
+
+\begin{tool}{T3}{Perron-Frobenius}
+    \begin{theorem}[Perron-Frobenius for strictly positive matrices]
+        Let $A \in \RR^{n\times n}$ have positive entries, $A_{ij}>0, \forall i,j$ let $\rho(A)=\max \big\{|\lambda|: \lambda \in \spec(A)\big\}$ be the spectral radius, then
+        \begin{enumerate}
+            \item  $\rho(A)>0$ and $\rho(A)$ is a simple eigenvalue (multiplicity 1) of $A$
+            \item  It is strictly dominant: every other eigenvalue satisfies $|\lambda|<\rho(A)$ 
+            \item The eigenspace associated with the eigenvalue $\rho(A)$ is spaned by a vector $v$ with all entries positive $v_i>0$
+            \item No other eigenvalue has a nonnegative eigenvector.
+        \end{enumerate}
+    \end{theorem}
+\end{tool}
+
+\begin{tool}{T4}{Vanishing trace of a product of positive operators}
+Let $A,B\ge 0$ on a finite-dimensional Hilbert space. Then $\Tr(AB) \geq 0$ and
+\[
+  \Tr(AB)=0 \iff AB=0 .
+\]
+\end{tool}
+
+\begin{proof}
+($\Leftarrow$) immediate. ($\Rightarrow$) Since $A\ge0$ it has a unique positive square
+root $A^{1/2}$, and by cyclicity $\Tr(AB)=\Tr\bigl(A^{1/2}BA^{1/2}\bigr)$. The operator
+$A^{1/2}BA^{1/2}=(B^{1/2}A^{1/2})^{\dagger}(B^{1/2}A^{1/2})$ is positive, and a positive
+operator with vanishing trace is zero, because its trace is the sum of its
+(non-negative) eigenvalues. Hence $(B^{1/2}A^{1/2})^{\dagger}(B^{1/2}A^{1/2})=0$, and
+since $\normx{X^{\dagger}X}=\normx{X}^{2}$ this gives $B^{1/2}A^{1/2}=0$. Therefore
+$BA=B^{1/2}\bigl(B^{1/2}A^{1/2}\bigr)A^{1/2}=0$, and $AB=(BA)^{\dagger}=0$.
+\end{proof}
+
+\begin{remark}
+Two consequences used repeatedly: $\Tr(AB)\ge0$ for $A,B\ge0$ (same first step), and
+$\Tr(AB)=0$ forces the ranges to be orthogonal, $\operatorname{ran}B\subseteq\ker A$.
+\end{remark}
+
+\begin{tool}{T5}{Inequality for Hermitian unitary operators}
+    For $X$ hermitian such that $X^2=\id$ we have that $-\id\leq X \leq \id $
+
+    \begin{proof}
+        \begin{equation*}
+            1 \pm X =\frac{1}{2}(\id \pm X)^2 \geq0 
+        \end{equation*}
+    \end{proof}
+\end{tool}
+
+\begin{tool}{T6}{Roots of unity sum to zero}
+    Let $q\geq 2$ be an integer and $\omega=e^{2i\pi/q}$. Then
+    \begin{equation}
+        \sum_{k=0}^{q-1} \omega^k = 0 .
+    \end{equation}
+    More generally, for every $m\in\mathbb{Z}$,
+    \begin{equation}
+        \sum_{k=0}^{q-1} \omega^{mk} =
+        \begin{cases}
+            q, & q \mid m,\\
+            0, & q \nmid m.
+        \end{cases}
+    \end{equation}
+
+    \begin{proof}
+        Recall that $e^{i\theta}=1$ if and only if $\theta\in 2\pi\mathbb{Z}$.
+        Fix $m\in\mathbb{Z}$ and set $z=\omega^m=e^{2i\pi m/q}$, so that
+        $z=1$ if and only if $q\mid m$, and
+        $z^q=e^{2i\pi m}=1$ in either case.
+
+        If $q\mid m$, every term of the sum equals $z^k=1$, and the sum is $q$.
+
+        If $q\nmid m$, let $S=\sum_{k=0}^{q-1}z^k$. Shifting the summation index,
+        \begin{equation*}
+            zS=\sum_{k=1}^{q}z^k = S - z^0 + z^q = S ,
+        \end{equation*}
+        hence $(z-1)S=0$. Since $z\neq 1$, we conclude $S=0$.
+
+        The first identity is the case $m=1$, where $q\nmid 1$ because $q\geq 2$.
+    \end{proof}
+\end{tool}
+
+
+\begin{tool}{T7}{Displacement operator: ordering and product law}
+Let $[a,a^{\dagger}]=\id$, $\hat x=(a+a^{\dagger})/\sqrt2$, $\hat p=(a-a^{\dagger})/(i\sqrt2)$,
+and for $\alpha\in\CC$ define $D(\alpha):=e^{\alpha a^{\dagger}-\alpha^{*}a}$.
+With $\alpha=(x+ip)/\sqrt2$, $D(\alpha)$ displaces phase space by $(x,p)$.
+
+\emph{(BCH, central commutator.)} If $[A,B]$ commutes with both $A$ and $B$, then
+\[
+  e^{A}e^{B}=e^{A+B}\,e^{\frac12[A,B]} .
+\]
+\emph{Consequences.}
+\begin{enumerate}[label=(\roman*)]
+  \item Normal and anti-normal ordering:
+        \[
+          D(\alpha)=e^{-|\alpha|^{2}/2}\,e^{\alpha a^{\dagger}}e^{-\alpha^{*}a}
+                   =e^{+|\alpha|^{2}/2}\,e^{-\alpha^{*}a}e^{\alpha a^{\dagger}} .
+        \]
+  \item Product law:
+        \[
+          D(\alpha)D(\beta)=e^{\frac12(\alpha\beta^{*}-\alpha^{*}\beta)}\,D(\alpha+\beta)
+                           =e^{\,i\operatorname{Im}(\alpha\beta^{*})}\,D(\alpha+\beta) .
+        \]
+        In particular $D(\alpha)^{\dagger}=D(-\alpha)=D(\alpha)^{-1}$,
+        $D(\alpha)D(\alpha)=D(2\alpha)$, and
+        $D(\alpha)D(\beta)=e^{2i\operatorname{Im}(\alpha\beta^{*})}D(\beta)D(\alpha)$.
+  \item Action on the mode: $D(\alpha)^{\dagger}aD(\alpha)=a+\alpha$.
+\end{enumerate}
+\end{tool}
+
+\begin{proof}
+\emph{BCH.} Let $F(t)=e^{tA}e^{tB}$. Then
+$F'(t)=\bigl(A+e^{tA}Be^{-tA}\bigr)F(t)=\bigl(A+B+t[A,B]\bigr)F(t)$, since all higher
+nested commutators vanish. Because $[A,B]$ commutes with $A+B$, the unique solution with
+$F(0)=\id$ is $F(t)=e^{t(A+B)+\frac{t^{2}}{2}[A,B]}=e^{t(A+B)}e^{\frac{t^{2}}{2}[A,B]}$;
+set $t=1$.
+
+\emph{(i)} Take $A=\alpha a^{\dagger}$, $B=-\alpha^{*}a$: $[A,B]=-|\alpha|^{2}[a^{\dagger},a]
+=|\alpha|^{2}$, a scalar, so
+$e^{\alpha a^{\dagger}}e^{-\alpha^{*}a}=D(\alpha)e^{|\alpha|^{2}/2}$. Exchanging the roles
+of $A$ and $B$ gives the anti-normal form.
+
+\emph{(ii)} Take $A=\alpha a^{\dagger}-\alpha^{*}a$, $B=\beta a^{\dagger}-\beta^{*}a$:
+$[A,B]=-\alpha\beta^{*}[a^{\dagger},a]-\alpha^{*}\beta[a,a^{\dagger}]
+=\alpha\beta^{*}-\alpha^{*}\beta=2i\operatorname{Im}(\alpha\beta^{*})$, a scalar.
+The particular cases follow from $\operatorname{Im}(\alpha\alpha^{*})=0$.
+
+\emph{(iii)} Hadamard's lemma: $e^{-A}ae^{A}=a-[A,a]$ when $[A,a]$ is central, and
+$[\alpha a^{\dagger}-\alpha^{*}a,\,a]=-\alpha$.
+\end{proof}
+
+\begin{remark}
+Reference: C.~Gerry and P.~Knight, \emph{Introductory Quantum Optics} (CUP, 2005),
+Ch.~3. The phase $e^{i\operatorname{Im}(\alpha\beta^{*})}$ in (ii) is the continuous
+counterpart of the phase in the composition law of the discrete translations $T_u$;
+it vanishes for collinear displacements, which is why $T_uT_u=T_{2u}$ and
+$D(\alpha)D(\alpha)=D(2\alpha)$ hold exactly.
+\end{remark}
+\end{document}

@@ -1,0 +1,56 @@
+% Migrated from days/day07.tex.  Paste your original problem, solution,
+% remark and takeaway bodies into the slots below -- the wrappers are the only
+% thing that changed.  Replace "the Day 4 result" style cross-references with
+% \qref{Q004}, and recurring lemmas with \usetool{T1}.
+\begin{entry}{Q007}{How large can a heat capacity be?}
+
+\entrymeta{
+  topic   = {Classical statistical mechanics; transfer matrices; Perron--Frobenius;
+    analyticity.},
+  est     = $\sim$12 minutes,
+  origin  =  Original. The result is the classic transfer-matrix argument for the
+    one-dimensional Ising chain (Kramers--Wannier); the staging is mine.,
+  source  = {Original problem.},
+  prereq  = {Nothing beyond the eigenvalues of a $2\times 2$ matrix.
+    Perron--Frobenius may be quoted if preferred to a direct computation.},
+  status  = written-up,
+}
+
+\begin{problem}
+Let $\Delta=E_{\max}-E_{\min}$ denote the spectral width of $H$. Prove that for every
+Hamiltonian $H$ on $\CC^{d}$ and every temperature $T>0$,
+\[
+  C \;\le\; \frac{k_B\,\beta^{2}\,\Delta^{2}}{4}.
+\]
+State also the condition for equality.
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}
+From the internal energy definition
+$U(\beta)= - \frac{ d ln(Z)}{d\beta}$
+then
+$C= \frac{dU}{dT}= k_b\beta^2 \frac{d^2 ln(Z)}{d\beta^2}.$
+However, such second order derivative relates to the variance of the energy 
+$$\frac{d^2 ln(Z)}{d\beta^2} = \text{var}(H)= \avg{}{H^2}{} - \avg{}{H}{}^2 $$
+
+Now we know that the variance is bigger when the points are more sparse. Having the energies fixed, the probability distribution that would create the biggest variance is one localized at $E_1$ and another at $E_d$, each with probability $1/2$, in such case 
+$$\text{var}(H) = \frac{E_1^2}{2} + \frac{E_d^2}{2} - \frac{(E_1 + E_d)^2}{4} = \Delta^2/4$$
+Any other probability distribution have a lower variance, so for our Gibbs distribution we will have
+$$C \leq \frac{k_b E_d^2\Delta^2}{4}$$
+In order to achieve the bound, we would need a degenerate Hamiltonian where $E_1$ and $E_d$ are the only distinct eigenvalues and the variance inequality becomes tighter as $\beta \rightarrow 0$, but that would make C vanish. So the bound is never saturated for any canonical thermal state $\rho_\beta$.
+\end{solution}
+
+\begin{takeaway}
+Understanding what variance is the valuable thing in the exercise
+\end{takeaway}
+
+\attempt{
+  date       = 2026-09-12,
+  time       = 15min,
+  difficulty = 1,
+  howitwent  = good insight where qualitative understanding proves the most valuable thing
+}
+
+\end{entry}

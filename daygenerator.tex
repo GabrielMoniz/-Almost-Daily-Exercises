@@ -1,0 +1,41 @@
+% =============================================================================
+%  One day on its own.
+%
+%  Paste the same two lines you have in main.tex between \mainmatter and
+%  \end{document}, then compile this file.  No title page, no preface, no
+%  calendar, no contents, no toolbox -- just the day.  Attempt logs are
+%  suppressed by the "public" option.
+%
+%      latexmk -pdf daygenerator.tex
+%
+%  Swap the \usepackage line for the commented one to get statements only,
+%  with no solutions, remarks or takeaways.
+% =============================================================================
+\documentclass[11pt,a4paper,oneside,open=any,numbers=noenddot]{scrbook}
+ 
+\usepackage[public]{qiworkbook}
+% \usepackage[problemsonly]{qiworkbook}
+ 
+% --------------------------------------------------------------- byline ------
+% A running head on every page, including the one the day opens on (KOMA puts
+% chapter-opening pages in "plain" by default, which has no head -- and a
+% one-day PDF is usually exactly that one page, so the line below is what makes
+% the header appear at all).
+\clearpairofpagestyles
+\KOMAoptions{headsepline=true}
+\ihead{\small Gabriel Moniz\ Arantes}
+\ohead{\small\itshape Daily Problems in Physics}
+\ofoot*{\small\pagemark}
+\renewcommand*{\chapterpagestyle}{scrheadings}
+ 
+% The book leaves a wide gap above a chapter head; on a one-page share that is
+% just dead space.  Pull the day heading up to the header.
+\RedeclareSectionCommand[beforeskip=0pt,afterskip=0.8\baselineskip]{chapter}
+ 
+\begin{document}
+\mainmatter
+ 
+\daysession{14}{2026-10-10}
+\input{entries/q022}
+ 
+\end{document}

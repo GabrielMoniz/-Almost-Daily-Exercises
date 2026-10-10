@@ -1,0 +1,307 @@
+\begin{entry}{Q020}{Norms and bisections}
+
+\entrymeta{
+  topic   = {Tensor networks; index bisections; operator norm vs Frobenius norm.},
+  origin  = {Sourced. Essentially the original exercise; only the definitions have been
+    inlined so the statement stands alone.},
+  source  = {J.~C. Bridgeman and C.~T. Chubb, \emph{Hand-waving and Interpretive Dance:
+    An Introductory Course on Tensor Networks}, J.~Phys.~A \textbf{50}, 223001 (2017),
+    \href{https://arxiv.org/abs/1603.03039}{arXiv:1603.03039}, Section~1.6,
+    Problem~4.},
+  prereq  = {Section~1.2.4 (grouping and splitting) and Aside~1 (SVD).},
+  status  = open,
+}
+
+
+\begin{problem}
+\emph{Context.} Grouping the indices of a tensor into two sets turns it into a matrix.
+For a state, the singular values of that matrix are the Schmidt coefficients across the
+corresponding cut. The question is which matrix quantities depend on the cut.
+
+Let $T$ be a tensor with entries $T_{i_1 i_2\cdots i_n}\in\CC$, where
+$i_k\in\{0,\dots,d_k-1\}$. A \emph{bisection} of $T$ is a partition
+$\mathcal{P}=\{I,J\}$ of the index positions $\{1,\dots,n\}$ into two non-empty sets,
+$I=\{a_1<\dots<a_p\}$ and $J=\{b_1<\dots<b_q\}$. Let $e_0,\dots,e_{d-1}$ denote the
+standard basis of $\CC^d$, and set
+\[
+  e_{i_I} := e_{i_{a_1}}\otimes\cdots\otimes e_{i_{a_p}}, \qquad
+  e_{i_J} := e_{i_{b_1}}\otimes\cdots\otimes e_{i_{b_q}} .
+\]
+The matrix of $T$ relative to $\mathcal{P}$ is
+\[
+  M^{\mathcal{P}} := \sum_{i_1,\dots,i_n} T_{i_1 i_2\cdots i_n}\; e_{i_I}\, e_{i_J}^{T},
+  \qquad\text{that is,}\qquad
+  \bigl(M^{\mathcal{P}}\bigr)_{i_I,\,i_J} = T_{i_1 i_2\cdots i_n},
+\]
+a $d_I\times d_J$ matrix with $d_I:=\prod_{a\in I}d_a$ and $d_J:=\prod_{b\in J}d_b$.
+A tuple in a row or column slot thus stands for the corresponding basis vector; with
+the standard Kronecker product this is the lexicographic order, for instance
+$e_i\otimes e_j\in\CC^{d}\otimes\CC^{d}$ has its $1$ in position $i+d\,j$.
+
+Exchanging $I$ and $J$ transposes $M^{\mathcal{P}}$, and reordering the tensor factors
+permutes its rows or columns. Neither changes the singular values, so the quantities
+\[
+  \opnorm{T_{\mathcal{P}}} := \opnorm{M^{\mathcal{P}}}
+    = \text{largest singular value of } M^{\mathcal{P}},
+  \qquad
+  \normx{T}_{F,\mathcal{P}} := \sqrt{\Tr\bigl[(M^{\mathcal{P}})^{\dagger}M^{\mathcal{P}}\bigr]}
+\]
+depend only on the unordered partition $\{I,J\}$.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Take $n=4$ and $d_1=\dots=d_4=d$. Let $A,B$ be non-zero $d\times d$ matrices with
+        singular values $\alpha_1\ge\dots\ge\alpha_d\ge 0$ and
+        $\beta_1\ge\dots\ge\beta_d\ge 0$, and set
+        \[
+          T_{i_1 i_2 i_3 i_4} := A_{i_1 i_2}\,B_{i_3 i_4}.
+        \]
+        Consider the three bisections
+        \[
+          \mathcal{P}_1=\{\{1,2\},\{3,4\}\},\qquad
+          \mathcal{P}_2=\{\{1,3\},\{2,4\}\},\qquad
+          \mathcal{P}_3=\{\{1,4\},\{2,3\}\}.
+        \]
+        For each one, write $M^{\mathcal{P}_k}$ as a matrix built from $A$ and $B$ using
+        $\otimes$, transposition and the vectorisation
+        $\operatorname{vec}(A):=\sum_{i_1,i_2}A_{i_1 i_2}\,e_{i_1}\otimes e_{i_2}\in\CC^{d^2}$.
+        Then list its non-zero singular values in terms of the $\alpha$'s and
+        $\beta$'s. Finally, draw $T$ as a tensor network and mark the three bisections
+        as cuts through the diagram: which feature of the picture decides whether
+        $M^{\mathcal{P}_k}$ has rank one?
+  \item Does the operator norm depend on the bisection? That is, are
+        $\opnorm{T_{\mathcal{P}}}$ and $\opnorm{T_{\mathcal{Q}}}$ necessarily equal for
+        two bisections $\mathcal{P},\mathcal{Q}$ of the same tensor? Prove it or give an
+        explicit counterexample.
+  \item Same question for the Frobenius norm. If it can differ, give an example; if not,
+        exhibit a tensor network diagram that makes the independence manifest.
+\end{enumerate}
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[a]
+
+
+For the first partition $ \mathcal{P}_1=\{\{1,2\},\{3,4\}\}$, you just apply the vectorization of A and B to find
+\begin{equation}
+    M_{(i_1,i_2),(i_3,i_4)}
+    = \operatorname{vec}(A)_{(i_1,i_2)}\operatorname{vec}(B)_{(i_3,i_4)}
+    \iff M = \operatorname{vec}(A) \operatorname{vec}(B)^T.
+    \label{M_parition1}
+\end{equation}
+\begin{center}
+\begin{tikzpicture}[tn]
+  \node[btensor] (A) at (0,1) {$A$};
+  \node[btensor] (B) at (0,0) {$B$};
+  \leg{A}{180}{$i_1$}
+  \leg{A}{0}{$i_2$}
+  \leg{B}{180}{$i_3$}
+  \leg{B}{0}{$i_4$}
+  \draw[cut] (-1.3,0.5) -- (1.3,0.5);
+  \node[right] at (1.4,1) {$I=\{1,2\}$};
+  \node[right] at (1.4,0) {$J=\{3,4\}$};
+\end{tikzpicture}
+\end{center}
+
+When this matrix is applied to a general vector $v \in \CC^{d^2}$ we see
+\begin{equation}
+    Mv = \operatorname{vec}(A) \operatorname{vec}(B)^Tv = \langle\operatorname{vec}(B)^*,v \rangle \operatorname{vec}(A)
+\end{equation}
+(for the Euclidean inner product on a complex vector space $\langle u,v\rangle=u^\dagger v$)
+Then the image of $M$, $\im(M)=  \spn \{ \operatorname{vec}(A)\}$ (equality since $B$ is non-null), is one dimensional on the direction of $ \operatorname{vec}(A)$, with a scaling depending on the inner product between $\operatorname{vec}(B)^*$ and the vector. So the matrix has only rank one.
+
+Now, the singular value decomposition is such that for some set of orthonormal vectors $(x^{(k)})$ and $(x^{(k)})$ we have
+\begin{equation}
+    M = \sum_{k=1}^{r}  \sigma_k x^{(k)}(y^{(k)})^\dagger
+\end{equation}
+for $\sigma_k>0$ where $r$ is the rank $M$. Nonetheless, $\rank(M)=1$, so there is only one term of the sum, precisely as in  the expression on \eqref{M_parition1}. We only need to normalize the vectors to see that the only singular value of $M$ is 
+\begin{equation}
+    \sigma=\normx{\operatorname{vec}(A)}\normx{\operatorname{vec}(B)}
+\end{equation}
+
+The norm of $\operatorname{vec}(A)$ is the Frobenius norm of $A$. Indeed, the entries
+of $\operatorname{vec}(A)$ are the entries of $A$, so
+\begin{equation}
+\begin{split}
+     \normx{\operatorname{vec}(A)}^2
+     = \langle\operatorname{vec}(A), \operatorname{vec}(A) \rangle
+     = \sum_{i_1,i_2} |\operatorname{vec}(A)_{(i_1,i_2)}|^2
+     = \sum_{i_1,i_2} |A_{i_1 i_2}|^2
+     = \Tr(A^\dagger A) = \sum_k \alpha_k^2
+\end{split}
+\end{equation}
+where the third equality is the definition
+$\operatorname{vec}(A)_{(i_1,i_2)}=A_{i_1 i_2}$; the sum runs over all entries of the
+vector because $(i_1,i_2)\mapsto d\,i_1+i_2$ is a bijection onto $\{0,\dots,d^2-1\}$.
+The same is clearly valid for $B$, therefore 
+\begin{equation}
+    \sigma=\sqrt{\left(\sum_k \alpha_k^2\right) \left(\sum_k \beta_k^2\right) }
+\end{equation}
+
+
+For the second partition $\mathcal{P}_2=\{\{1,3\},\{2,4\}\}$
+
+\begin{center}
+\begin{tikzpicture}[tn]
+  % --- left panel: T with the cut P_2 ---
+  \node[btensor] (A) at (0,1) {$A$};
+  \node[btensor] (B) at (0,0) {$B$};
+  \leg{A}{180}{$i_1$}
+  \leg{A}{0}{$i_2$}
+  \leg{B}{180}{$i_3$}
+  \leg{B}{0}{$i_4$}
+  \draw[cut] (0,1.7) -- (0,-0.7);
+  \node at (-0.9,-1) {$I=\{1,3\}$};
+  \node at ( 0.9,-1) {$J=\{2,4\}$};
+  % --- arrow between the panels ---
+  \draw[->, thick] (1.6,0.5) -- (2.6,0.5);
+  % --- right panel: A and B replaced by their decompositions ---
+  \begin{scope}[shift={(4.9,0)}]
+     \node[btensor=tniso] (UA) at (-1,1) {$U_A$};
+    \node[stensor]       (SA) at ( 0,1) {};
+    \node[btensor=tniso] (VA) at ( 1,1) {$V_A^{\dagger}$};
+    \node[btensor=tniso] (UB) at (-1,0) {$U_B$};
+    \node[stensor]       (SB) at ( 0,0) {};
+    \node[btensor=tniso] (VB) at ( 1,0) {$V_B^{\dagger}$};
+    \draw (UA) -- (SA) -- (VA);
+    \draw (UB) -- (SB) -- (VB);
+    \node[font=\scriptsize, above right] at (SA.north east) {$S_A$};
+    \node[font=\scriptsize, above right] at (SB.north east) {$S_B$};
+    \leg{UA}{180}{$i_1$}
+    \leg{VA}{0}{$i_2$}
+    \leg{UB}{180}{$i_3$}
+    \leg{VB}{0}{$i_4$}
+    \draw[cut] (0,1.7) -- (0,-0.7);
+    \node at (-1.1,-1) {$I=\{1,3\}$};
+    \node at ( 1.1,-1) {$J=\{2,4\}$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+
+Write the singular value decompositions $A=U_A S_A V_A^{\dagger}$ and
+$B=U_B S_B V_B^{\dagger}$, with $S_A=\operatorname{diag}(\alpha_1,\dots,\alpha_d)$ and
+$S_B=\operatorname{diag}(\beta_1,\dots,\beta_d)$. Then
+\begin{equation}
+\begin{split}
+     M_{(i_1,i_3),(i_2,i_4)} &= A_{i_1 i_2}B_{i_3 i_4}
+     = \sum_{a,b} (U_A)_{i_1 a}\,(U_B)_{i_3 b}\;\alpha_a\beta_b\;(V_A^{\dagger})_{a\,i_2}\,(V_B^{\dagger})_{b\,i_4}. \iff \\ 
+     M &= (U_A \otimes U_B)(S_A\otimes S_B)(V^\dagger_A \otimes V^\dagger_B) = A\otimes B
+\end{split}
+\label{M_partition2}
+\end{equation}
+Considering that $(X\otimes Y)_{(i,k),(j,l)}=X_{ij}Y_{kl}$
+
+From that, the square of the absolute value is
+\begin{equation}
+\begin{split} 
+     M^\dagger M &= (V_A \otimes V_B)(S_A\otimes S_B)(U^\dagger_A \otimes U^\dagger_B) (U_A \otimes U_B)(S_A\otimes S_B)(V^\dagger_A \otimes V^\dagger_B) \\
+     &= (V_A \otimes V_B)(S_A^2\otimes S_B^2)(V^\dagger_A \otimes V^\dagger_B)
+\end{split}
+\label{M_partition2}
+\end{equation}
+Which has as eigenvalues the porducts of the squares of the singular values of $A$ and $B$, hence $\alpha^2_i\beta^2_j$, and therefore the singular values of $M$ are the products $\alpha_i\beta_j$.
+
+For the third partition $\mathcal{P}_3=\{\{1,4\},\{2,3\}\}$ we just need to take the transpose of $B$
+\begin{center}
+\begin{tikzpicture}[tn]
+  % --- left panel: T with the cut P_2 ---
+  \node[btensor] (A) at (0,1) {$A$};
+  \node[btensor] (B) at (0,0) {$B^T$};
+  \leg{A}{180}{$i_1$}
+  \leg{A}{0}{$i_2$}
+  \leg{B}{180}{$i_4$}
+  \leg{B}{0}{$i_3$}
+  \draw[cut] (0,1.7) -- (0,-0.7);
+  \node at (-0.9,-1) {$I=\{1,4\}$};
+  \node at ( 0.9,-1) {$J=\{2,3\}$};
+  % --- arrow between the panels ---
+  \draw[->, thick] (1.6,0.5) -- (2.6,0.5);
+  % --- right panel: A and B replaced by their decompositions ---
+  \begin{scope}[shift={(4.9,0)}]
+     \node[btensor=tniso] (UA) at (-1,1) {$U_A$};
+    \node[stensor]       (SA) at ( 0,1) {};
+    \node[btensor=tniso] (VA) at ( 1,1) {$V_A^{\dagger}$};
+    \node[btensor=tniso] (UB) at (-1,0) {$V^*_B$};
+    \node[stensor]       (SB) at ( 0,0) {};
+    \node[btensor=tniso] (VB) at ( 1,0) {$U_B^{T}$};
+    \draw (UA) -- (SA) -- (VA);
+    \draw (UB) -- (SB) -- (VB);
+    \node[font=\scriptsize, above right] at (SA.north east) {$S_A$};
+    \node[font=\scriptsize, above right] at (SB.north east) {$S_B$};
+    \leg{UA}{180}{$i_1$}
+    \leg{VA}{0}{$i_2$}
+    \leg{UB}{180}{$i_4$}
+    \leg{VB}{0}{$i_3$}
+    \draw[cut] (0,1.7) -- (0,-0.7);
+    \node at (-1.1,-1) {$I=\{1,4\}$};
+    \node at ( 1.1,-1) {$J=\{2,3\}$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+leading to a matrix 
+\begin{equation}
+    M = A\otimes B^T
+\end{equation}
+and since the singular values are invariant to the transpose, we still have that the singualr values of $M$ are products $\alpha_i\beta_j$.
+
+Which defined the rank of the matrix to be one was the cut to being such that the matrix were in the opposite sides of the cut. One can see that this is generazible. 
+
+\end{solution}
+
+\begin{solution}[b]
+From the previous example, it is clear that the largest singular depends on the cut. For partitions 2 and 3, we have $\opnorm{M}=\max(\alpha_i\beta_j)$, whereas for partition 1 it is $\opnorm{M}=\sqrt{\left(\sum_k \alpha_k^2\right) \left(\sum_k \beta_k^2\right) }$, since we have only one singular value.
+\end{solution}
+
+
+\begin{solution}[c]
+From the previous example, we can see that the Frobenius norm is invariant to the cut. To see this holds in general. Consider the diagram 
+\begin{center}
+$\hsnorm{M}^2=$
+\begin{tikzpicture}[tn, baseline=-0.5ex]
+  % --- lines first, so that the boxes are drawn on top of them ---
+  % product M^dagger M: the two indices of i_I
+  \draw (0, 0.2) -- (1.8, 0.2);
+  \draw (0,-0.2) -- (1.8,-0.2);
+  % trace: the two indices of i_J, one loop above and one below
+  \draw[rounded corners=6pt]
+    (1.8, 0.2) -- (2.8, 0.2) -- (2.8, 1.0) -- (-1.0, 1.0) -- (-1.0, 0.2) -- (0, 0.2);
+  \draw[rounded corners=6pt]
+    (1.8,-0.2) -- (2.8,-0.2) -- (2.8,-1.0) -- (-1.0,-1.0) -- (-1.0,-0.2) -- (0,-0.2);
+  % --- boxes ---
+  \node[btensor, minimum height=10mm, minimum width=8mm] (Md) at (0,0)   {$M^{\dagger}$};
+  \node[btensor, minimum height=10mm, minimum width=8mm] (M)  at (1.8,0) {$M$};
+  % --- labels ---
+\end{tikzpicture}
+\end{center}
+which precisely represents the square of the Frobenius norm. Since every index is contracted and the partition may establish an ordering among the index, it is a manifestly invariant object to the partition. To see algebraically   
+\begin{equation}
+    \hsnorm{M}^2=\sum_{i_I,i_J} |M_{i_I,i_J}|^2= \sum_{i_1,...,i_n} |T_{i_1,...,i_n}|^2.
+\end{equation}
+
+\begin{equation*}
+  \hsnorm{M}^2=\normx{T}_{F}^{2} \;=\;
+  \begin{tikzpicture}[tn, baseline={([yshift=-0.5ex]0,0.75)}]
+    % --- legs first, so that the boxes are drawn on top of them ---
+    \draw (0,0)   -- node[right, font=\scriptsize] {$i_1$} (0,1.5);
+    \draw (0.8,0) -- node[right, font=\scriptsize] {$i_2$} (0.8,1.5);
+    \draw (2.4,0) -- node[right, font=\scriptsize] {$i_n$} (2.4,1.5);
+    % --- the legs that are not drawn ---
+    \node at (1.7,0.75) {$\cdots$};
+    % --- the tensor and its complex conjugate ---
+    \node[btensor, minimum width=36mm, minimum height=7mm] (T)  at (1.2,1.5) {$T$};
+    \node[btensor, minimum width=36mm, minimum height=7mm] (Tb) at (1.2,0)   {$T^*$};
+  \end{tikzpicture}
+\end{equation*}
+
+\end{solution}
+
+
+
+\attempt{
+  date        = 2026-10-04,
+  time        = 45min,
+  difficulty  = 2,
+  how it went = the example helped and it was helpful to learn to draw tensor network on latex,
+}
+
+\end{entry}

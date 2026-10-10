@@ -1,0 +1,302 @@
+\begin{entry}{Q017}{The AKLT state}
+
+\entrymeta{
+  topic   = {Matrix product states; AKLT model; valence bonds; parent Hamiltonians;
+    addition of angular momentum.},
+  est     = $\sim$50 minutes --- a multi-session entry. Natural split: (a)--(f), the
+    construction; (g)--(i), the MPS and its parent Hamiltonian; (j) optional.,
+  origin  = {Sourced. Questions~1--9 and the bonus of the source problem, restated with
+    the basis ordering, the construction of the state and the Hamiltonian made explicit
+    so the statement stands alone.},
+  source  = {J.~E.~Nava~Sejas and D.~Rosa, \emph{The AKLT state}, lecture notes
+    (minicourse), 21~September~2026. Original model:
+    I.~Affleck, T.~Kennedy, E.~H.~Lieb and H.~Tasaki, Phys.~Rev.~Lett.~\textbf{59}, 799
+    (1987).},
+  prereq  = {Addition of angular momentum; the definition of an MPS.},
+  status  = open,
+}
+
+\begin{problem}
+\textbf{Setting.} Consider a chain of $N\ge 2$ spin-$1$ particles with periodic boundary
+conditions, $N+1\equiv 1$. The local Hilbert space at site $j$ is $\CC^{3}$, with basis
+$\{\ket{+_j},\ket{0_j},\ket{-_j}\}$. Each site is represented by a pair of
+\emph{virtual} spin-$\tfrac12$ particles $(L_j,R_j)$, the ``left'' and ``right''
+components, each with basis $\{\ket{\uparrow},\ket{\downarrow}\}$, ordered as
+$(\uparrow,\downarrow)$ whenever an index is written as a matrix row or column. Write
+$\sigma^{\pm}:=\tfrac12(\sigma^{x}\pm i\sigma^{y})$, and let $\hat S_j^{\alpha}$,
+$\alpha=x,y,z$, be the spin-$1$ operators at site $j$.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item Is the map from the virtual pair $(L_j,R_j)$ to the spin-$1$ site one-to-one?
+
+  \item Given (a), adopt the identification
+        \[
+          \ket{+_j}\equiv\ket{\uparrow_j\uparrow_j},
+          \qquad
+          \ket{-_j}\equiv\ket{\downarrow_j\downarrow_j},
+          \qquad
+          \ket{0_j}\equiv\tfrac{1}{\sqrt2}\bigl(\ket{\uparrow_j\downarrow_j}
+            +\ket{\downarrow_j\uparrow_j}\bigr).
+        \]
+        What is the physical motivation for this choice?
+
+  \item Write the identification as a single operator
+        $\hat P_j: \CC^{2}\otimes\CC^{2} \to \CC^{3}$ from the virtual space of site $j$ to
+        its physical space. Verify that $\hat P_j\hat P_j^{\dagger}=\id_{3}$, that
+        $\hat P_j^{\dagger}\hat P_j$ is the orthogonal projector onto the triplet
+        subspace of $L_j\otimes R_j$, and identify $\ker\hat P_j$.
+
+  \item Define the matrix elements
+        $P^{(j)s}_{ab}:=\bra{s_j}\hat P_j\ket{a_j b_j}$, with
+        $s_j\in\{+_j,0_j,-_j\}$ and $a_j,b_j\in\{\uparrow,\downarrow\}$. Show that
+        \[
+          P^{(j)+}_{ab}=\delta_{a\uparrow}\delta_{b\uparrow},
+          \qquad
+          P^{(j)0}_{ab}=\tfrac{1}{\sqrt2}\bigl(\delta_{a\uparrow}\delta_{b\downarrow}
+            +\delta_{a\downarrow}\delta_{b\uparrow}\bigr),
+          \qquad
+          P^{(j)-}_{ab}=\delta_{a\downarrow}\delta_{b\downarrow}.
+        \]
+
+  \item The right virtual spin of site $j$ and the left virtual spin of site $j+1$ are
+        required to form the singlet
+        \[
+          \ket{\omega}_{R_j,L_{j+1}}
+          =\tfrac{1}{\sqrt2}\bigl(\ket{\uparrow}_{R_j}\ket{\downarrow}_{L_{j+1}}
+            -\ket{\downarrow}_{R_j}\ket{\uparrow}_{L_{j+1}}\bigr).
+        \]
+        Show that this can be written as
+        \[
+          \ket{\omega}_{R_j,L_{j+1}}
+          =\tfrac{1}{\sqrt2}\sum_{b,c\in\{\uparrow,\downarrow\}}\epsilon_{bc}\,
+            \ket{b}_{R_j}\ket{c}_{L_{j+1}},
+          \qquad
+          \epsilon=i\sigma^{y},
+        \]
+        and check that $\epsilon$ is the fully antisymmetric tensor in two dimensions.
+
+  \item The state of the chain is built by first placing every bond $(R_j,L_{j+1})$ in
+        the singlet, then mapping each site to its physical space:
+        \[
+          \ket{\Phi}
+          :=\Bigl(\textstyle\bigotimes_{j=1}^{N}\hat P_j\Bigr)
+            \Bigl(\textstyle\bigotimes_{j=1}^{N}\ket{\omega}_{R_j,L_{j+1}}\Bigr).
+        \]
+        Argue that the two constraints --- the on-site map $\hat P_j$ and the bond
+        singlet --- combine, site by site, into the single tensor
+        \[
+          A^{[j]s}_{ac}=\tfrac{1}{\sqrt2}\sum_{b\in\{\uparrow,\downarrow\}}
+            P^{(j)s}_{ab}\,\epsilon_{bc},
+        \]
+        and state which virtual spin each of the indices $a$ and $c$ refers to.
+
+  \item Show that
+        \[
+          \braket{s_1s_2\cdots s_N}{\Phi}
+          =\Tr\bigl[A^{s_1}A^{s_2}\cdots A^{s_N}\bigr],
+        \]
+        where $A^{s}$ denotes the $2\times2$ matrix $(A^{[j]s}_{ac})_{a,c}$, which does
+        not depend on $j$. Conclude that $\ket{\Phi}$ is a translation-invariant MPS of
+        bond dimension $\chi=2$, and derive
+        \[
+          A^{+}=\tfrac{1}{\sqrt2}\,\sigma^{+},
+          \qquad
+          A^{0}=-\tfrac12\,\sigma^{z},
+          \qquad
+          A^{-}=-\tfrac{1}{\sqrt2}\,\sigma^{-}.
+        \]
+
+  \item Consider the Hamiltonian
+        \[
+          \hat H=\sum_{j=1}^{N}\hat\Pi^{S=2}_{j,j+1},
+        \]
+        where $\hat\Pi^{S=2}_{j,j+1}$ is the hermitian projector onto the subspace of
+        $\CC^{3}_j\otimes\CC^{3}_{j+1}$ on which
+        $(\hat{\vec S}_j+\hat{\vec S}_{j+1})^{2}=2(2+1)$, i.e.\ total spin $2$, tensored
+        with the identity on all other sites. Argue that the spectrum of $\hat H$ is
+        non-negative.
+
+  \item Using the construction in terms of the virtual spins, show that
+        \[
+          \hat\Pi^{S=2}_{j,j+1}\ket{\Phi}=0\quad\text{for all } j,
+          \qquad\text{hence}\qquad
+          \hat H\ket{\Phi}=0 ,
+        \]
+        and conclude, using (h), that $\ket{\Phi}$ is a ground state of $\hat H$. (You may take for
+        granted that $\ket{\Phi}\neq 0$ for $N\ge 2$.)
+
+  \item \emph{Bonus.} Show that $\hat H$ can be rewritten as
+        \[
+          \hat H=\frac16\sum_{i=1}^{N}\Bigl[\bigl(\hat{\vec S}_i\cdot\hat{\vec S}_{i+1}
+            \bigr)^{2}+3\,\hat{\vec S}_i\cdot\hat{\vec S}_{i+1}+2\Bigr].
+        \]
+\end{enumerate}
+\end{problem}
+
+% ============================================================== solutions ===
+
+\begin{solution}[Part (a)]
+The two spin-1/2 particles live in a 4-dimensional space, meanwhile, for one spin-1 live in a 3-dimensional one, hence the map is not injective
+\end{solution}
+
+\begin{solution}[Part (b)]
+It follows usual Clebsch-Gordan coefficients for spin summation from different particle subspaces.
+\end{solution}
+
+\begin{solution}[Part (c)]
+\begin{equation}
+    P_j\ket{\uparrow_L\uparrow_R}_j = \ket{+_j} = \begin{pmatrix}
+        1\\
+        0\\
+        0
+    \end{pmatrix}\quad P_j \ket{\downarrow_L\downarrow_R}_j = \ket{-_j} = \begin{pmatrix}
+        0\\
+        0\\
+        1
+    \end{pmatrix} \quad P_j\frac{1}{\sqrt2}\bigl(\ket{\uparrow_j\downarrow_j}
+            +\ket{\downarrow_j\uparrow_j}\bigr). = \ket{0_j} = \begin{pmatrix}
+        0\\
+        1\\
+        0
+    \end{pmatrix}
+\end{equation}
+\end{solution}
+
+\begin{solution}[Part (d)]
+We can see that
+\begin{equation}
+    P_j = \begin{pmatrix}
+    \bra{\uparrow_L\uparrow_R}_j\\
+    \frac{1}{\sqrt{2}}(\bra{\uparrow_L\downarrow_R}_j+\bra{\downarrow_L\uparrow_R}_j)\\
+    \bra{\downarrow_L\downarrow_R}_j
+    \end{pmatrix}= \begin{pmatrix}
+    1 & 0 & 0 &0\\
+    0 & \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} &0\\
+    0 & 0 & 0 &1
+    \end{pmatrix}
+\end{equation}
+
+
+Just take the hermitian conjugate to see
+\begin{equation}
+    P_j^\dagger= \begin{pmatrix}
+    1 & 0 & 0 &\\
+    0 & \frac{1}{\sqrt{2}} & 0 \\
+    0 & \frac{1}{\sqrt{2}} & 0 & \\
+    0 & 0  & 1
+    \end{pmatrix}
+\end{equation}
+that their multiplication leads to the identity.
+
+\end{solution}
+
+\begin{solution}[Part (e)]
+Follows directly from the summation expression
+\end{solution}
+
+\begin{solution}[Part (f)]
+We can think constructively, where $P_j$ is an action on each site and anti-symmetric tensor $\epsilon_{a,b}$ determines the link between different sites. In that sense we can think of a tensor connecting $L_j$ to $L_{j+i}$ that represents the projection and the link between sites, naturally represented by $P^{(j)s}$ contracted with $\epsilon$ on the degrees of freedom corresponding to $R_j$
+\end{solution}
+
+\begin{solution}[Part (g)]
+Let
+$$\ket{(a,b)}=\ket{a_1b_1a_2b_2...a_nb_n}$$ for $a,b \in \{+,-\}^N$, such that $a_i$ refers to the $L_i$ spin-1/2 virtual particle and $b_i$ refers to $R_i$ spin-1/2 virtual particle. Also take $s\in \{-1,0,1\}^N$
+Using that notation, the matrix elements of the tensor product of the projector can be written as 
+$$\avg{s}{\bigotimes_{j=1}^N P_j}{(a,b)}= \prod_j P^{(j)s}_{a_j,b_j}$$
+whereas, considering the periodic boundary condition where N+1=1,
+$$\bra{(a,b)}\bigotimes_{j=1}^N\ket{\omega_j}= \frac{1}{\sqrt{2^N}}\prod_i \epsilon_{b_i,a_{i+1}}$$
+The state $\ket{\Phi}$ lives in the space of N spin-1 particles, hence can be written as 
+\begin{equation}
+    \ket{\Phi} = \sum_{s } c_s \ket{s}
+\end{equation}
+where the coefficients are given by 
+\begin{equation}
+\begin{split}
+    c_s =& \bra{s}\ket{\Phi}\\
+    =& \bra{s} \left( \bigotimes_{j=1}^N P_j \right) \sum_{(a,b)} \proj{(a,b)} \left(\bigotimes_{l=1}^N\ket{\omega_l}\right)\\
+    =& \sum_{a,b \in \{+,-\}^N}\prod_jP^{(j)s}_{a_j,b_j} \prod_l \epsilon_{a_l,b_{l+1}}\\
+    =&(-1)^N \sum_{a,b \in \{+,-\}^N}\prod_jP^{(j)s}_{a_j,b_j} \epsilon_{b_j,a_{j-1}}\\
+    =& (-1)^N \sum_{a} \prod_j (A^{[j]s})_{a_j,a_{j-1}}\\
+    =& \Tr \left( \prod_j(A^{[j]s})\right)
+\end{split}
+\end{equation}
+Now, we see that each matrix $A^{[j]s}_{a,c}$ is a 2x2 matrix establishing the bound dimension. Moreover, the cyclic property of the trace provides the translation invariant property on spin-1 lattice sites on the chain. 
+
+By its expression
+
+\begin{equation}
+    A^{[j]+}_{ac}=\tfrac{1}{\sqrt2}\sum_{b\in\{\uparrow,\downarrow\}}
+            \delta_{a\uparrow}\delta_{b \downarrow}\,\epsilon_{bc} = \frac{1}{\sqrt{2}}\delta_{a\uparrow}\epsilon_{\downarrow c}
+\end{equation}
+For the row $a= \downarrow$ the right-hand side is always zero. For $a=\uparrow$, the only entry that survives is when $c=\uparrow$, so
+\begin{equation}
+A^{+} = \frac{1}{\sqrt{2}} \sigma^+
+\end{equation}
+
+The other cases follow similarly.
+
+
+
+\end{solution}
+
+
+
+
+\begin{solution}[Part (h)]
+Each Hermitian projector is a positive operator, hence their sum (the Hamiltonian) is positive also.
+\end{solution}
+
+\begin{solution}[Part (i)]
+
+The spin-2 sector generated from the sum of spin-1 particles on sites $j$ and $j+1$, can be rewritten as the sum of four virtual spin-1/2 particles $L_j,R_j,L_{j+1},R_{j+1}$. The projector $\Pi^{S=2}_{j,j+1}$ is an operator on the two spin-1 particles, the corresponding projector on the four virtual spin-1/2 particle is denoted $$\Pi^{S=2}_{L_j,R_j,L_{j+1},R_{j+1}} \equiv \Pi^{S=2}_{4\ \text{spin-1/2}},$$ such that, being $\hat P_j: \CC^{2}\otimes\CC^{2} \to \CC^{3}$ just an identification, 
+\begin{equation}
+   (P_jP_{j+1}) \circ \Pi^{S=2}_{L_j,R_j,L_{j+1},R_{j+1}}  =\Pi^{S=2}_{j,j+1} \circ(P_jP_{j+1}) : \CC^{2}\otimes\CC^{2} \to \CC^{3}  
+\end{equation}
+
+Consider 
+\begin{equation} 
+    \ket{\Omega}= \bigotimes_{l=1}^N\ket{\omega_l}.
+\end{equation}
+Verifying that $\hat\Pi^{S=2}_{j,j+1}\ket{\Phi}=0$ is equivalent to $\Pi^{S=2}_{4\ \text{spin-1/2}}\ket{\Omega}=0$, by the previous identification
+
+To proceed, one must notice that the singlet has total spin-0. So the only contribution for the total spin for the four virtual spin-1/2 particles $L_j,R_j,L_{j+1},R_{j+1}$, is from $L_j$ and $R_{j+1}$ and the sum of two spin-1/2 particles can generate at most a total spin 1, thus, the total sum of spin from all four virtual particles can never achieve $2$. Therefore, $\hat\Pi^{S=2}_{j,j+1}\ket{\Phi}=\Pi^{S=2}_{4\ \text{spin-1/2}}\ket{\Omega}=0$ as desired.
+
+\end{solution}
+
+\begin{solution}[Part (j)]
+Let $\vec{J}_i= \vec{S}_i + \vec{S}_{i+1}$ be the total spin of the sum of spin-1 particles from two neighbours sites. Now, from the expression of the total spin
+\begin{equation}
+\begin{split}
+    J_i^2 &= ( \vec{S}_i + \vec{S}_{i+1})\cdot( \vec{S}_i + \vec{S}_{i+1})\\
+    &= \vec{S}_i^2 + 2  \vec{S}_i\cdot \vec{S}_{i+1}  + \vec{S}_{i+1}^2\\
+    &= 4+ 2  \vec{S}_i\cdot \vec{S}_{i+1}
+\end{split}
+\end{equation}
+where in the last line it was used that for spin-1 particles $\vec{S}_{i+1}^2=1(1+1)=2$. 
+
+The eigenvalues of the total spin $J_i^2$ are $j_i(j_i+1)$ for $j_i=0,1,2$. Now, for an eigenstate with $j_i=0$, the total spin itself already nullifies that component, leaving only the direction associated with $j_i=1,2$. Nonetheless, in general you can apply the same reasoning to notice that $J_i^2-j_i(j_i+1)\id$ is an operator that nullifies the eigenspace associated with the eigenvalue $j_i(j_i+1)$ of $J_i$.
+
+So in order to construct an projector orthogonal both to the total spin 1 and total spin 0, one can just consider the operator $J_i^2 (J_i^2 - 2)$ ($J_i$ forces orthogonality with spin-0 and $J_i^2 - 2$ to spin-1), yet, one must normalize for $j_i=2$ to construct an actual total spin-2 projector
+
+Therefore,
+\begin{equation}
+    \begin{split}
+        \Pi^{S=2}_{i,i+1} &= \frac{1}{6\cdot4} J_i^2 (J_i^2 - 2)\\
+        &= \frac{1}{6\cdot4} \left( 4+ 2  \vec{S}_i\cdot \vec{S}_{i+1}\right) \left(2+ 2  \vec{S}_i\cdot \vec{S}_{i+1}\right)\\
+        &= \frac{1}{6}\left( 2 + 3\vec{S}_i\cdot \vec{S}_{i+1} + \left(\vec{S}_i\cdot \vec{S}_{i+1}\right)^2\right).
+    \end{split}
+\end{equation}
+The expression for the Hamiltonian follows directly
+
+\end{solution}
+
+
+
+\attempt{
+  date        = 2026-09-21,
+  time        = took days to finish it intertwined with others and the school,
+  difficulty  = 3,
+  how it went = ,
+}
+
+\end{entry}
