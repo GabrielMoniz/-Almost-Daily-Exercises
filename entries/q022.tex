@@ -1,4 +1,4 @@
-\begin{entry}{Q023}{The Wigner function of a continuous-variable hyperedge}
+\begin{entry}{Q022}{The Wigner function of a continuous-variable hyperedge}
 
 \entrymeta{
   topic   = {Continuous-variable hypergraph states; Wigner function; nullifiers; non-Gaussianity},
@@ -26,19 +26,41 @@ state, and experiments certify them through the variances of the nullifiers, whi
 second moments. Neither the definition nor the certification refers to the Wigner
 function. This exercise computes it for a single hyperedge and asks what it reveals.
 
-\emph{Setting.} Take $k$ bosonic modes with $[\hat q_j,\hat p_l]=i\delta_{jl}$ and
-$\hbar=1$. For a real polynomial $f$ on $\RR^{k}$ consider the (unnormalisable) state
+\emph{Setting.} Take $k$ bosonic modes with $[\hat q_j,\hat p_l]=i\delta_{jl}$,
+$\hbar=1$, and write $q=(q_1,\dots,q_k)$, $p=(p_1,\dots,p_k)$ for points of phase space
+$\RR^{2k}$. The Wigner function of \qref{Q022} extends to $k$ modes as
+\begin{equation}
+     W_\rho(q,p):=\frac{1}{\pi^{k}}\int_{\RR^{k}}d^{k}y\;e^{2ip\cdot y}\,
+  \bra{q-y}\rho\ket{q+y},
+  \label{wigner k modes}
+\end{equation}
+
+where $\ket{q}=\ket{q_1}\otimes\cdots\otimes\ket{q_k}$ are joint position
+eigenstates. Royer's identity extends as well:
 \[
-  \ket{\psi_f}:=e^{if(\hat q)}\ket{p=0}^{\otimes k},
+  W_\rho(q,p)=\frac{1}{\pi^{k}}\Tr\bigl[\rho\,D(q,p)\,\Pi\,D(q,p)^{\dagger}\bigr],
   \qquad
-  \braket{q}{\psi_f}=e^{if(q)} ,
+  D(q,p):=e^{\,i\sum_j(p_j\hat q_j-q_j\hat p_j)}=\bigotimes_{j=1}^{k}D_j(q_j,p_j),
 \]
-and extend the Wigner function of \qref{Q022} to $k$ modes,
 \[
-  W(q,p):=\frac{1}{\pi^{k}}\int_{\RR^{k}}d^{k}y\;e^{2ip\cdot y}\,
-  \psi_f(q-y)\,\psi_f^{*}(q+y),
-  \qquad q,p\in\RR^{k}.
+  \Pi:=(-1)^{\sum_j a_j^{\dagger}a_j}=\bigotimes_{j=1}^{k}\Pi_j,
+  \qquad
+  \Pi\ket{q}=\ket{-q}.
 \]
+Both $D$ and $\Pi$ factorise over the modes. Both sides of the identity are linear in
+$\rho$, so it follows from the single-mode case applied to product operators
+$\ket{a_1}\!\bra{b_1}\otimes\cdots\otimes\ket{a_k}\!\bra{b_k}$, even when $\rho$ is
+entangled. For a pure state, $\bra{q-y}\rho\ket{q+y}=\psi(q-y)\,\psi^{*}(q+y)$.
+
+For a real polynomial $f$ on $\RR^{k}$ consider the (unnormalisable) state
+\[
+  \ket{\psi_f}:=e^{if(\hat q)}\ket{\Omega}^{\otimes k},
+  \qquad
+  \ket{\Omega}:=\int_{\RR}dq\,\ket{q}=\sqrt{2\pi}\,\ket{p=0},
+  \qquad
+  \braket{q}{\psi_f}=e^{if(q)} .
+\]
+
 Since the state is not normalisable, $W$ is a distribution. You may manipulate the
 integrals formally, exchanging their order and using
 $\int_{\RR}dy\,e^{iky}=2\pi\,\delta(k)$. For $f=q_1q_2$ (one graph-state edge) and
@@ -63,24 +85,30 @@ with decaying amplitude; its first zeros are $x\approx0.894,\ 3.958,\ 7.086$, an
 positive between the first two.
 
 \begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
-  \item \emph{Graph states.} Show that
-        \[
-          W(q,p)=\frac{1}{\pi^{k}}\int d^{k}y\;
+  \item \emph{One edge.} Show that for a pure phase state
+        \begin{equation}
+            W(q,p)=\frac{1}{\pi^{k}}\int d^{k}y\;
           \exp\!\Bigl(i\bigl[2p\cdot y-f(q+y)+f(q-y)\bigr]\Bigr).
-        \]
-        Evaluate $W$ for $f=q_1q_2$ and describe it in terms of the nullifiers.
-        Explain in one sentence why the same structure holds for every quadratic $f$,
-        and why such a $W$ is non-negative.
+          \label{Wigner general polynomial}
+        \end{equation}
+        Evaluate $W$ for $f=q_1q_2$ and describe it in terms of the nullifiers. 
 
-  \item \emph{The hyperedge.} Let $f=q_1q_2q_3$. Reduce $W$ to a one-dimensional
-        integral, and show that $W$ depends on the six phase-space coordinates only
-        through a single function of $n_1,n_2,n_3$.
+  \item \emph{Phase states in general.} Using a Taylor expansion of the one-variable
+        function $t\mapsto f(q+ty)$, derive an exact expression for $f(q+y)-f(q-y)$,
+        valid for a polynomial $f$ of any degree, and insert it into the formula of (a).
+        Deduce that $$W(q,p)=\prod_i\delta\bigl(n_i(q,p)\bigr),$$
+        where where $n_i(q,p)$ is the Weyl symbol of the nullifier $\hat n_i=\hat p_i-\partial_i f(\hat q)$, holds for every quadratic
+        $f$, and determine whether it can hold for any polynomial of higher degree.
+
+  \item \emph{The hyperedge.} Let $f=q_1q_2q_3$. Using (b), reduce $W$ to a
+        one-dimensional integral, and show that $W$ depends on the six phase-space
+        coordinates only through a single function of $n_1,n_2,n_3$.
 
   \item \emph{Where the non-Gaussianity lives.} Using the identity above, write $W$ in
         closed form. Identify the set on which $W$ is singular and the region where
         it is negative, both in terms of the nullifiers. Compare with (a): where was
         $W$ supported for the graph state, and where is it supported now? For contrast,
-        the single-mode cubic phase state $e^{i\gamma\hat q^{3}}\ket{p=0}$ has a Wigner
+        the single-mode cubic phase state $e^{i\gamma\hat q^{3}}\ket{\Omega}$ has a Wigner
         function that is an Airy function of $p-3\gamma q^{2}$. Which structural
         feature of $f=q_1q_2q_3$ leads to a different special function?
 
@@ -88,18 +116,93 @@ positive between the first two.
         You may use that $\int dp_3\,W(q_1,q_2,m;p_1,p_2,p_3)$ is the Wigner function
         of the (unnormalised) conditional state of modes $1$ and $2$. Compute it, show
         that it is non-negative, and identify the state. Which term of the exponent in
-        (a) carries the negativity of the three-mode $W$, and why does the integration
+        (b) carries the negativity of the three-mode $W$, and why does the integration
         over $p_3$ remove it?
 \end{enumerate}
 \end{problem}
 
 \begin{solution}[Part (a)]
+The integral form derives directly from Eq.\eqref{wigner k modes} and by $\braket{q}{\psi_f}=e^{if(q)}$. For the graph state
+
+\begin{equation}
+\begin{split}
+    W(q,p)&= \frac{1}{\pi^2} \int d^2y \exp\left(i[2p_1y_1 +2p_2y_2- (q_1+y_1)(q_2+y_2)+(q_1-y_1)(q_2-y_2)]\right)\\
+    &= \frac{1}{\pi^2} \int d^2y \exp\left(2i[p_1y_1 +p_2y_2- q_1y_2- q_2y_1]\right)\\
+    &= \frac{1}{\pi^2} \int d^2y \exp\left(2i[y_1\ n_1 +y_2\ n_2]\right)\\
+    &= \left(\frac{1}{\pi} \int dy \exp(2iyn_1)\right) \left(\frac{1}{\pi} \int dy \exp(2iyn_2)\right)\\
+    &= \left(\frac{1}{2\pi} \int dy \exp(iyn_1)\right) \left(\frac{1}{2\pi} \int dy \exp(iyn_2)\right)\\
+    &= \delta(n_1)\delta(n_2)
+\end{split}
+\end{equation}
+The crucial step is that $f(q+y)-f(q-y)$ kills the quadratic terms on $q$ or $y$ alone for $f=q_1q_2$, leaving only the cross terms, allowing this simple form in terms of the nullifier with factorized integrals. 
 \end{solution}
 
 \begin{solution}[Part (b)]
+Fix $q,y \in \RR^k $ and define $g(t)=f(q+ty)$. If $f$ is of degree $r$, then $g$ itself is a one-variable polynomial of degree $r$. Moreover, one can Taylor expand in the real variable $t$ to see
+\begin{equation}
+    g(t)= \sum_{m=0}^r \frac{g^{(m)}(0)}{m!} t^m= \sum_{m} \frac{1}{m!} \left(y\cdot\nabla \right)^mf(q)  t^m
+\end{equation}
+for $$\nabla = \left(\frac{\partial}{\partial q_1},\cdots,\frac{\partial}{\partial q_k}\right)\equiv\left(\partial_1,\cdots,\partial_k\right).$$
+
+Then, noticing that $f(q+y)-f(q-y)=g(1)-g(-1)$, one can see that the even terms in $y$ cancel. Only the odd terms survive, where taking $u=\lfloor  \frac{r-1}{2}\rfloor$,
+\begin{equation}
+    f(q+y)-f(q-y) = 2\sum_{l=0}^{u} \frac{1}{(2l+1)!} \left(y\cdot\nabla \right)^{2l+1}f(q) 
+    \label{general function}
+\end{equation}
+
+For a quadratic polynomial $f$, this is simply $2(y\cdot\nabla)f(q)$, substituting into the integral of the Wigner-Function \eqref{Wigner general polynomial} we get
+\begin{equation}
+\begin{split}
+     W(q,p)&=\frac{1}{\pi^{k}}\int d^{k}y\;
+          \exp\!\Bigl(2i\bigl[p\cdot y-(y\cdot\nabla)f(q)\bigr]\Bigr)\\
+          &=\frac{1}{\pi^{k}}\int d^{k}y\;
+          \exp\!\Bigl(2i y\cdot \bigl[p-\nabla f(q)\bigr]\Bigr)\\
+          &=\frac{1}{\pi^{k}}\int d^{k}y\;
+          \exp\!\Bigl(2i \sum_j y_j (p_j-\partial_j f(q)\Bigr)\\
+          &= \prod_j^{k} \frac{1}{2\pi} \int dy \exp(iy n_j(q,p))\\
+          &= \prod_j^{k} \delta(n_j(q,p))
+\end{split}
+\end{equation}
+
+So we can see that for any quadratic $f$ the Wigner function is non-negative.
 \end{solution}
 
 \begin{solution}[Part (c)]
+For a degree $3$ polynomial, given difference expression \eqref{general function}, we must take into account the previous first order derivative, but also 
+\begin{equation*}
+    2 \frac{1}{3!} \left(y\cdot\nabla \right)^{3}f(q) 
+\end{equation*}
+which is just added to the exponent
+\begin{equation}
+\begin{split}
+     W(q,p)&=\frac{1}{\pi^{k}}\int d^{k}y\;
+          \exp\!\Bigl(2i\bigl[p\cdot y-(y\cdot\nabla)f(q)- \frac{1}{3!} \left(y\cdot\nabla \right)^{3}f(q) \bigr]\Bigr).
+\end{split}
+\end{equation}
+
+Calculating the third-order derivative for the given function that represents only one hyperedge $f=q_1q_2q_3$, we can see that the only combination of partial derivatives that survives are 
+$\partial_1\partial_2\partial_3$.
+Thus, the Wigner function reduces to
+
+\begin{equation}
+\begin{split}
+   W(q,p)&=\frac{1}{\pi^{3}}\int d^{3}y\;
+          \exp\!\Bigl(2i\bigl[ y_1n_1 + y_2n_2 + y_3n_3- \frac{1}{3!} y_1y_2y_3 \bigr]\Bigr).\\
+          &= \frac{1}{\pi^{3}}\int dy_3dy_2\;\exp\left(2i(y_2n_2+y_3n_3)\right)
+          \int dy_1\exp\!\Bigl(2i y_1\bigl[  n_1- \frac{1}{3!} y_2y_3 \bigr]\Bigr).\\
+          &= \frac{1}{\pi^{2}}\int dy_3dy_2\;\exp\left(2i(y_2n_2+y_3n_3)\right)
+          \left(\frac{1}{2\pi}\int dx\exp\!\Bigl(i x\bigl[  n_1- \frac{1}{3!} y_2y_3 \bigr]\Bigr)\right)\\
+          &= \frac{1}{\pi^{2}}\int dy_3dy_2\;\exp\left(2i(y_2n_2+y_3n_3)\right)
+          \delta(n_1-y_2y_3/6)\\
+          &= \frac{1}{\pi^{2}}\int dy_3dy_2\;\exp\left(2i(y_2n_2+y_3n_3)\right)
+          \frac{6}{y_3}\delta\left(\frac{6n_1}{y_3}-y_2\right)\\
+          &= \frac{1}{\pi^{2}}\int dy_3\;\exp\left(2i\left(\frac{6n_1}{y_3}n_2+y_3n_3\right)\right)
+          \frac{6}{y_3}\\
+\end{split}
+\end{equation}
+
+
+
 \end{solution}
 
 \begin{solution}[Part (d)]
