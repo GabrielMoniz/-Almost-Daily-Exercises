@@ -1,416 +1,151 @@
 % -----------------------------------------------------------------------------
 %  entries/q023.tex
-%  Issued 09/10/2026. ID suggested by Claude; Gabriel's own numbering is the
-%  authority. Neither source computes the Wigner function; the closed form was
-%  derived analytically and the Bessel identity checked numerically.
+%  Issued 14/10/2026. ID suggested by Claude; Gabriel's own numbering is the
+%  authority. Built from the 50%-rule step of the research brief
+%  (claude/research/cv-hypergraph-negativity/brief.md, section 2(b)).
+%  All items solved before issue; identities (a)-(b) and the single-photon
+%  output of (c) checked numerically by direct quadrature.
 % -----------------------------------------------------------------------------
-% -----------------------------------------------------------------------------
-%  entries/q023.tex
-%  Issued 09/10/2026. ID suggested by Claude; Gabriel's own numbering is the
-%  authority. Neither source computes the Wigner function; the closed form was
-%  derived analytically and the Bessel identity checked numerically.
-%  11/10/2026: items (c)-(e) reworded; every equation cited in a solution is
-%  numbered; all labels carry the prefix q023: so they cannot collide with
-%  other entries.
-% -----------------------------------------------------------------------------
-\begin{entry}{Q023}{The Wigner function of a continuous-variable hyperedge}
+\begin{entry}{Q023}{Fifty per cent loss and the Husimi function}
 
 \entrymeta{
-  topic   = {Continuous-variable hypergraph states; Wigner function; nullifiers; non-Gaussianity},
-  est     = {multi-session --- labelled stretch},
-  origin  = {Original. The states, the nullifiers and Lemma~1 are taken from the first
-    source; neither source evaluates the Wigner function.},
-  source  = {D.~W.~Moore, \emph{Quantum hypergraph states in continuous variables},
-    Phys.~Rev.~A \textbf{100}, 062301 (2019), Eq.~(2) and Lemma~1; A.~Ravikumar,
-    D.~W.~Moore and R.~Filip, \emph{Nonclassical nullifiers for quantum hypergraph
-    states}, Quantum \textbf{10}, 2091 (2026), arXiv:2502.02226},
-  url     = https://arxiv.org/abs/1909.03871,
-  prereq  = {The single-mode Wigner function of \qref{Q022}; the Fourier representation
-    of the delta function},
-  status  = written-up,
+  topic   = {Wigner function; optical loss and thermal noise; Husimi function; nonclassicality},
+  est     = {$\sim$40 minutes },
+  origin  = Original,
+  source  = {Original problem. The converse half of the threshold is proved in
+    B.~Nugmanov, N.~Zunikov and F.~Ya.~Khalili, \emph{Robustness of negativity of the
+    Wigner function to dissipation}, arXiv:2201.03257 (2022)},
+  url     = https://arxiv.org/abs/2201.03257,
+  prereq  = {The single-mode Wigner function of \qref{Q022}; Gaussian convolutions},
+  status  = drafted,
 }
 
 \begin{problem}
-\emph{Context.} Continuous-variable graph states are built by applying two-mode
-interactions $e^{i\hat q_j\hat q_k}$ to momentum eigenstates. They are Gaussian, so they
-cannot by themselves give a computational advantage. Hypergraph states add interactions
-among three or more modes, such as $e^{i\hat q_1\hat q_2\hat q_3}$, and a lattice of such
-hyperedges is a resource for universal computation using only homodyne measurements.
-These states are characterised by their \emph{nullifiers}, operators that annihilate the
-state, and experiments certify them through the variances of the nullifiers, which are
-second moments. Neither the definition nor the certification refers to the Wigner
-function. This exercise computes it for a single hyperedge and asks what it reveals.
+\emph{Context.} The ideal hyperedge of \qref{Q023} has a Wigner function that is
+negative on part of phase space, and that negativity is what makes such states a
+computational resource: if every state in a computation built from Gaussian operations
+and homodyne measurements has a non-negative Wigner function, the computation can be
+simulated efficiently on a classical computer (A.~Mari and J.~Eisert, Phys.~Rev.~Lett.\
+\textbf{109}, 230503 (2012)). Every optical or microwave experiment, however, loses
+photons to its environment and picks up thermal noise. This exercise asks how much loss
+or noise a negative Wigner function can survive, whatever the input state. The answer
+is a universal threshold at $50\%$ transmission. It is one half of the ``$50\%$ rule'';
+the other half, that every pure non-Gaussian state stays negative above the threshold,
+is proved in the source.
 
-\emph{Setting.} Take $k$ bosonic modes with $[\hat q_j,\hat p_l]=i\delta_{jl}$,
-$\hbar=1$, and write $q=(q_1,\dots,q_k)$, $p=(p_1,\dots,p_k)$ for points of phase space
-$\RR^{2k}$. The Wigner function of \qref{Q022} extends to $k$ modes as
+\emph{Setting.} Take one bosonic mode with $[\hat q,\hat p]=i$, $\hbar=1$, write
+$z=(q,p)$, and use the Wigner function $W$ of \qref{Q022}, normalised to
+$\int dq\,dp\,W=1$. The vacuum has $W_{0}(z)=\pi^{-1}e^{-(q^2+p^2)}$, so each quadrature of
+the vacuum has variance $\tfrac12$, the \emph{vacuum variance}. For $v>0$ let
 \begin{equation}
-  W_\rho(q,p):=\frac{1}{\pi^{k}}\int_{\RR^{k}}d^{k}y\;e^{2ip\cdot y}\,
-  \bra{q-y}\rho\ket{q+y},
-  \label{q023:wigner}
+  N(x;v):=\frac{1}{\sqrt{2\pi v}}\,e^{-x^{2}/(2v)},\qquad x\in\RR,
+  \label{q023:gaussian}
 \end{equation}
-where $\ket{q}=\ket{q_1}\otimes\cdots\otimes\ket{q_k}$ are joint position
-eigenstates, and Royer's identity extends as
-\[
-  W_\rho(q,p)=\frac{1}{\pi^{k}}\Tr\bigl[\rho\,D(q,p)\,\Pi\,D(q,p)^{\dagger}\bigr],
-  \qquad
-  D(q,p):=e^{\,i\sum_j(p_j\hat q_j-q_j\hat p_j)}=\bigotimes_{j=1}^{k}D_j(q_j,p_j),
-\]
-\[
-  \Pi:=(-1)^{\sum_j a_j^{\dagger}a_j}=\bigotimes_{j=1}^{k}\Pi_j,
-  \qquad
-  \Pi\ket{q}=\ket{-q}.
-\]
-Both $D$ and $\Pi$ factorise over the modes, and both sides of the identity are linear in
-$\rho$, so it follows from the single-mode case applied to product operators
-$\ket{a_1}\!\bra{b_1}\otimes\cdots\otimes\ket{a_k}\!\bra{b_k}$, even for entangled $\rho$.
-For a pure state, $\bra{q-y}\rho\ket{q+y}=\psi(q-y)\,\psi^{*}(q+y)$.
+be the centred Gaussian probability density of variance $v$, and set
+$N_v(z):=N(q;v)\,N(p;v)$, so that $W_0=N_{1/2}$.
+The convolution of two functions on $\RR^2$ is $(F*G)(z):=\int d^2u\,F(u)\,G(z-u)$, and you
+may use $N_a*N_b=N_{a+b}$ (variances of independent Gaussian variables add).
 
-For a real polynomial $f$ on $\RR^{k}$ consider the (unnormalisable) \emph{phase state}
+We consider two noise models.
+\begin{itemize}
+  \item \emph{Pure loss.} The mode enters one port of a beam splitter of power
+        transmissivity $T\in(0,1]$, the other port is in the vacuum, and the second
+        output is discarded. With $\hat b$ the annihilation operator of the second port,
+        the beam splitter is a unitary $U$ with $U\ket{0,0}=\ket{0,0}$ and
+        \begin{equation}
+          U\hat a^{\dagger}U^{\dagger}=\sqrt T\,\hat a^{\dagger}+\sqrt{1-T}\,\hat b^{\dagger}.
+          \label{q023:beam-splitter}
+        \end{equation}
+  \item \emph{Additive (thermal) noise.} The mode is displaced at random,
+        $(q,p)\mapsto(q+\xi_q,\,p+\xi_p)$, with $\xi_q,\xi_p$ independent centred Gaussian
+        variables of variance $\bar n$ each. This adds $\bar n$ photons on average.
+\end{itemize}
+Because the Wigner function transforms under a beam splitter by the corresponding linear
+change of phase-space variables, and a partial trace becomes a marginal, both channels act
+on $W$ exactly as rescaling plus independent Gaussian noise acts on a probability density:
 \begin{equation}
-  \ket{\psi_f}:=e^{if(\hat q)}\ket{\Omega}^{\otimes k},
-  \qquad
-  \ket{\Omega}:=\int_{\RR}dq\,\ket{q}=\sqrt{2\pi}\,\ket{p=0},
-  \qquad
-  \braket{q}{\psi_f}=e^{if(q)} .
-  \label{q023:phase-state}
+  W_{ out}(q,p)=\int du\,dw\;W(u,w)\,N\bigl(q-\sqrt T\,u;\,v\bigr)\,N\bigl(p-\sqrt T\,w;\,v\bigr),
+  \label{q023:channel}
 \end{equation}
-Since the state is not normalisable, $W$ is a distribution. You may manipulate the
-integrals formally, exchanging their order and using
-$\int_{\RR}dy\,e^{iky}=2\pi\,\delta(k)$. Since
-$\hat p_i\ket{\psi_f}=\partial_i f(\hat q)\ket{\psi_f}$, the state is annihilated
-by the \emph{nullifiers}
 \begin{equation}
-  \hat n_i:=\hat p_i-\partial_i f(\hat q),
-  \label{q023:nullifier}
+  \text{pure loss: }v=\tfrac{1-T}{2};
+  \qquad
+  \text{additive noise: }T=1,\ v=\bar n .
+  \label{q023:variances}
 \end{equation}
-and we write $n_i(q,p):=p_i-\partial_i f(q)$ for the corresponding functions on phase
-space (their Weyl symbols). For $f=q_1q_2$ (one graph-state edge) and $f=q_1q_2q_3$ (one
-hyperedge) this gives $n_i=p_i-\prod_{j\neq i}q_j$.
 
-You may use the following identity, which follows from the integral
-representations of the Bessel functions $Y_0$ and $K_0$ (NIST DLMF, \S10.9 and
-\S10.32) after the substitution $t=e^{u}$. For real $a,b$ with $ab\neq0$,
+The \emph{Husimi function} of a state $\rho$ is
+$Q(q,p):=\bra{\alpha}\rho\ket{\alpha}/(2\pi)$, where $\ket\alpha$ is the coherent state
+with $\alpha=(q+ip)/\sqrt2$. It is normalised to $\int dq\,dp\,Q=1$ and satisfies $Q\ge0$
+for every state, since $\rho\ge0$. A standard fact (K.~E.~Cahill and R.~J.~Glauber,
+Phys.~Rev.\ \textbf{177}, 1882 (1969)) relates it to the Wigner function:
 \begin{equation}
-  \int_{0}^{\infty}\frac{dt}{t}\,\cos\!\Bigl(at+\frac{b}{t}\Bigr)
-  =\begin{cases}
-     -\pi\,Y_0\bigl(2\sqrt{ab}\bigr), & ab>0,\\[2pt]
-     2\,K_0\bigl(2\sqrt{-ab}\bigr), & ab<0 .
-   \end{cases}
-  \label{q023:bessel}
+  Q=W*N_{1/2}.
+  \label{q023:husimi}
 \end{equation}
-Here $K_0(x)>0$ for all $x>0$, decays like $e^{-x}$, and diverges like $-\ln x$ as
-$x\to0^{+}$. $Y_0(x)$ diverges like $\tfrac{2}{\pi}\ln x$ as $x\to0^{+}$ and oscillates
-with decaying amplitude; its first zeros are $x\approx0.894,\ 3.958,\ 7.086$, and it is
-positive between the first two.
+A state is \emph{classical} if $\rho=\int d^2\alpha\,P(\alpha)\,\ket\alpha\!\bra\alpha$ with
+$P$ a probability density, that is, a statistical mixture of coherent states. Every
+classical state has a photon-number variance at least as large as its mean
+(L.~Mandel, Opt.~Lett.\ \textbf{4}, 205 (1979)):
+\begin{equation}
+  \rho\ \text{classical}\ \Longrightarrow\ \operatorname{Var}(\hat n)\ \ge\ \langle\hat n\rangle,
+  \qquad \hat n=\hat a^{\dagger}\hat a .
+  \label{q023:mandel}
+\end{equation}
 
 \begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
-  \item \emph{One edge.} Show that for a pure phase state
+  \item \emph{Rescaling.} Change variables in \eqref{q023:channel} to show that
         \begin{equation}
-          W(q,p)=\frac{1}{\pi^{k}}\int d^{k}y\;
-          \exp\!\Bigl(i\bigl[2p\cdot y-f(q+y)+f(q-y)\bigr]\Bigr).
-          \label{q023:phase-wigner}
+          W_{out}(z)=\frac1T\,\bigl[W*N_{v/T}\bigr]\!\Bigl(\frac{z}{\sqrt T}\Bigr),
+          \label{q023:rescaled}
         \end{equation}
-        Evaluate $W$ for $f=q_1q_2$ and describe it in terms of the nullifiers.
+        that is, the output is the input blurred with variance $v/T$ per quadrature,
+        then evaluated at rescaled coordinates.
 
-  \item \emph{Phase states in general.} Using a Taylor expansion of the one-variable
-        function $t\mapsto f(q+ty)$, derive an exact expression for $f(q+y)-f(q-y)$,
-        valid for a polynomial $f$ of any degree, and insert it into
-        \eqref{q023:phase-wigner}. Deduce that
-        $W(q,p)=\prod_i\delta\bigl(n_i(q,p)\bigr)$ holds for every quadratic $f$.
+  \item \emph{The threshold.} Using \eqref{q023:rescaled} and \eqref{q023:husimi}, show
+        that additive noise with $\bar n=\tfrac12$ gives $W_{out}=Q$, and that pure loss
+        with $T=\tfrac12$ gives $W_{ out}(z)=2\,Q(\sqrt2\,z)$. Then show that
+        $W_{out}\ge0$ for every input state whenever $T\le\tfrac12$ or
+        $\bar n\ge\tfrac12$. The variance $v/T$ is the added noise referred back to the
+        input: how large is it at each threshold, in units of the vacuum variance?
 
-  \item \emph{The hyperedge.} Let $f=q_1q_2q_3$. Using (b), reduce $W$ to a
-        one-dimensional integral, and using the identity \eqref{q023:bessel}, write
-        $W$ in closed form. Show that $W$ depends on the six phase-space
-        coordinates only through a single function of $n_1,n_2,n_3$.
-
-  \item \emph{Where the non-Gaussianity lives.} Identify, in terms of the nullifiers,
-        the set on which $W$ is singular and the region where it is negative. In (a),
-        $W$ vanishes outside $\{n_1=n_2=0\}$. Show that
-        $\int d^{k}p\,W\,n_i^{2}=0$ at every $q$ for every phase state, and explain
-        why, for the hyperedge, this is compatible with the closed form of (c) only
-        because $W$ takes negative values.
-
-  \item \emph{Measuring one mode (Lemma~1 in phase space).} A homodyne measurement of
-        $\hat q_3$ with outcome $m$ leaves modes $1$ and $2$ in the unnormalised state
-        with wavefunction $\psi_m(q_1,q_2):=\psi(q_1,q_2,m)$. Show from the definition
-        \eqref{q023:wigner} that its Wigner function is
-        \begin{equation}
-          W_m(q_1,q_2;p_1,p_2)=\int dp_3\,W(q_1,q_2,m;p_1,p_2,p_3),
-          \label{q023:conditional}
-        \end{equation}
-        that is, the measured coordinate is set to the outcome and its conjugate
-        momentum is integrated out. For the hyperedge, compute $W_m$ from the
-        three-dimensional integral form of (c), without using the closed form. Which
-        state of modes $1$ and $2$ is this, and is it Gaussian? The three-mode $W$ is
-        negative on part of phase space and $W_m$ is not: which term of the exponent
-        carries the negativity, and why does the integration over $p_3$ remove it?
+  \item \emph{Positive is not classical.} Let the input be the one-photon state
+        $\ket1$. Using \eqref{q023:beam-splitter}, show that the output of pure loss is
+        $\rho_T=T\ket1\!\bra1+(1-T)\ket0\!\bra0$, so that by (b) its Wigner function is
+        non-negative for $T\le\tfrac12$. Using \eqref{q023:mandel}, show that $\rho_T$ is
+        not classical for any $T>0$. What does a non-negative Wigner function therefore
+        fail to certify?
 \end{enumerate}
 \end{problem}
 
 \begin{solution}[Part (a)]
-The integral form derives directly from Eq.~\eqref{q023:wigner} and by $\braket{q}{\psi_f}=e^{if(q)}$, Eq.~\eqref{q023:phase-state}. For the graph state
-
+From \eqref{q023:gaussian} we see that $N(x\sqrt{\gamma},v\gamma)=N(x,v)$ for any rescaling factor $\gamma$. So the Wigner function \eqref{q023:channel} can be written as (take $\gamma=1/T$)
 \begin{equation}
 \begin{split}
-    W(q,p)&= \frac{1}{\pi^2} \int d^2y \exp\left(i[2p_1y_1 +2p_2y_2- (q_1+y_1)(q_2+y_2)+(q_1-y_1)(q_2-y_2)]\right)\\
-    &= \frac{1}{\pi^2} \int d^2y \exp\left(2i[p_1y_1 +p_2y_2- q_1y_2- q_2y_1]\right)\\
-    &= \frac{1}{\pi^2} \int d^2y \exp\left(2i[y_1\ n_1 +y_2\ n_2]\right)\\
-    &= \left(\frac{1}{\pi} \int dy \exp(2iyn_1)\right) \left(\frac{1}{\pi} \int dy \exp(2iyn_2)\right)\\
-    &= \left(\frac{1}{2\pi} \int dy \exp(iyn_1)\right) \left(\frac{1}{2\pi} \int dy \exp(iyn_2)\right)\\
-    &= \delta(n_1)\delta(n_2)
+     W_{ out}(q,p)&=\int du\,dw\;W(u,w)\,N\bigl(\frac{q}{\sqrt{T}}-\,u;\,\frac{v}{T}\bigr)\,N\bigl(\frac{p}{\sqrt{T}}-\,w;\,\frac{v}{T}\bigr)\\
+     &=\int du\,dw\;W(u,w)\,N_{v/T}\left( \frac{q}{\sqrt{T}}-\,u, \frac{p}{\sqrt{T}}-\,w\right)
 \end{split}
-\label{q023:graph-wigner}
 \end{equation}
-The crucial step is that $f(q+y)-f(q-y)$ kills the quadratic terms on either $q$ or $y$ for $f=q_1q_2$, leaving only the cross terms. This allows this simple form in terms of the nullifier with factorized integrals.
+which can be written in terms of elements of $\RR^2$, the desired expression clearer by taking $z=\left(\frac{q}{\sqrt{T}}-\frac{p}{\sqrt{T}} \right)$
+\begin{equation}
+\begin{split}
+     W_{ out}(z)&= \int d^2u\, W(u)\,N_{v/T}\left( z-\,u\right)\\
+     &= \frac1T\,\bigl[W*N_{v/T}\bigr]\!\Bigl(\frac{z}{\sqrt T}\Bigr)
+\end{split}
+\end{equation}
+
 \end{solution}
 
 \begin{solution}[Part (b)]
-Fix $q,y \in \RR^k$ and define $g(t)=f(q+ty)$. If $f$ is of degree $r$, then $g$ itself is a one-variable polynomial of degree $r$. Moreover, one can Taylor expand in the real variable $t$ to see
+For this additive noise we precisely get that  $W_{out}=W * N_{1/2}$, which is precisely the $Q$ function by \eqref{q023:husimi}. Now, for pure loss with $T=1/2 \implies v= 1/4$, then we get $W_{out}= 2 W * N_{1/2}(\sqrt{2}z)=2Q(\sqrt{2})$. For the additive noise, $\bar n = 1/2 + \delta n$, with $\delta n\geq0$, such that 
 \begin{equation}
-    g(t)= \sum_{m=0}^r \frac{g^{(m)}(0)}{m!} t^m= \sum_{m} \frac{1}{m!} \left(y\cdot\nabla \right)^mf(q)  t^m
+    W_{out}=W * N_{\bar n} = (W * N_{1/2}) * N_{\delta n},
 \end{equation}
-for
-\[
-  \nabla = \left(\frac{\partial}{\partial q_1},\cdots,\frac{\partial}{\partial q_k}\right)\equiv\left(\partial_1,\cdots,\partial_k\right).
-\]
-
-Then, noticing that $f(q+y)-f(q-y)=g(1)-g(-1)$, one can see that the even terms in $y$ cancel. Only the odd terms survive, where taking $u=\lfloor  \frac{r-1}{2}\rfloor$,
-\begin{equation}
-    f(q+y)-f(q-y) = 2\sum_{l=0}^{u} \frac{1}{(2l+1)!} \left(y\cdot\nabla \right)^{2l+1}f(q)
-    \label{q023:odd-expansion}
-\end{equation}
-(but we can drop the $u$ and consider the summation to infinity, since for $l>u$, we have $\left(y\cdot\nabla \right)^{2l+1}f(q)=0$ for any $y$, because $f$ is a polynomial of degree $r$).
-
-For a quadratic polynomial $f$, this is simply $2(y\cdot\nabla)f(q)$, substituting into the integral of the Wigner function \eqref{q023:phase-wigner} we get
-\begin{equation}
-\begin{split}
-     W(q,p)&=\frac{1}{\pi^{k}}\int d^{k}y\;
-          \exp\!\Bigl(2i\bigl[p\cdot y-(y\cdot\nabla)f(q)\bigr]\Bigr)\\
-          &=\frac{1}{\pi^{k}}\int d^{k}y\;
-          \exp\!\Bigl(2i y\cdot \bigl[p-\nabla f(q)\bigr]\Bigr)\\
-          &=\frac{1}{\pi^{k}}\int d^{k}y\;
-          \exp\!\Bigl(2i \sum_j y_j \bigl(p_j-\partial_j f(q)\bigr)\Bigr)\\
-          &= \prod_{j=1}^{k} \frac{1}{2\pi} \int dy \exp(iy n_j(q,p))\\
-          &= \prod_{j=1}^{k} \delta(n_j(q,p))
-\end{split}
-\label{q023:quadratic-wigner}
-\end{equation}
-
-So we can see that for any quadratic $f$ the Wigner function is non-negative.
+and $W * N_{1/2}$ is always non-negative, since it equals the Husimi function at the same time $N_{\delta n}$ is also a non-positive function, so the convolution of both is also non-negative (integral of the product of two non-negative functions)
+The analogous arguments follow for $T\leq 1/2$ for the pure loss. $T\leq 1/2 \implies v/T = \frac{1}{2} + \frac{1-2T}{2T} \geq 1/2$ and we can be the same argument for $\frac{1-2T}{2T}\geq0$.
 \end{solution}
 
 \begin{solution}[Part (c)]
-For a degree $3$ polynomial, given the difference expression \eqref{q023:odd-expansion}, we must take into account the previous first order derivative, but also
-\begin{equation*}
-    2 \frac{1}{3!} \left(y\cdot\nabla \right)^{3}f(q)
-\end{equation*}
-which is just added to the exponent
-\begin{equation}
-     W(q,p)=\frac{1}{\pi^{k}}\int d^{k}y\;
-          \exp\!\Bigl(2i\bigl[p\cdot y-(y\cdot\nabla)f(q)- \frac{1}{3!} \left(y\cdot\nabla \right)^{3}f(q) \bigr]\Bigr).
-     \label{q023:cubic-wigner}
-\end{equation}
-
-Calculating the third-order derivative for the given function that represents only one hyperedge $f=q_1q_2q_3$, we can see that the only combination of partial derivatives that survives are
-$\partial_1\partial_2\partial_3$ and its $3!$ permutations ($f$ is smooth).
-Thus, the Wigner function reduces to
-\begin{equation}
-\begin{split}
-   W(q,p)&=\frac{1}{\pi^{3}}\int d^{3}y\;
-          \exp\!\Bigl(2i\bigl[ y_1n_1 + y_2n_2 + y_3n_3-  y_1y_2y_3 \bigr]\Bigr)\\
-          &= \frac{1}{\pi^{3}}\int dy_3dy_2\;\exp\left(2i(y_2n_2+y_3n_3)\right)
-          \int dy_1\exp\!\Bigl(2i y_1\bigl[  n_1-  y_2y_3 \bigr]\Bigr)\\
-          &= \frac{1}{\pi^{2}}\int dy_3dy_2\;\exp\left(2i(y_2n_2+y_3n_3)\right)
-          \left(\frac{1}{2\pi}\int dx\exp\!\Bigl(i x\bigl[  n_1-  y_2y_3 \bigr]\Bigr)\right)\\
-          &= \frac{1}{\pi^{2}}\int dy_3dy_2\;\exp\left(2i(y_2n_2+y_3n_3)\right)
-          \delta(n_1-y_2y_3)\\
-          &= \frac{1}{\pi^{2}}\int dy_3dy_2\;\exp\left(2i(y_2n_2+y_3n_3)\right)
-          \frac{1}{|y_3|}\delta\left(\frac{n_1}{y_3}-y_2\right)\\
-          &= \frac{1}{\pi^{2}}\int dx\;\exp\left(2i\left(\frac{n_1n_2}{x}+xn_3\right)\right)
-          \frac{1}{|x|}
-\end{split}
-\label{q023:reduction}
-\end{equation}
-
-We can separate the integral in the regions $x<0$ and $x>0$, and make $x\rightarrow -x$ over the integral in negative domain
-\begin{equation}
-\begin{split}
-   W(q,p)&= \frac{1}{\pi^{2}}\int^{\infty}_0 dx\;\exp\left(2i\left(\frac{n_1n_2}{x}+xn_3\right)\right)
-          \frac{1}{x} - \frac{1}{\pi^{2}}\int_{-\infty}^0 dx\;\exp\left(2i\left(\frac{n_1n_2}{x}+xn_3\right)\right)
-          \frac{1}{x}\\
-          &= \frac{1}{\pi^{2}}\int^{\infty}_0 dx\;\exp\left(2i\left(\frac{n_1n_2}{x}+xn_3\right)\right)
-          \frac{1}{x} -\frac{1}{\pi^{2}}\int_{\infty}^0 dx\;\exp\left(-2i\left(\frac{n_1n_2}{x}+xn_3\right)\right)
-          \frac{1}{x}\\
-          &= \frac{1}{\pi^{2}}\int_{0}^{\infty} dx\;\left[\exp\left(2i\left(\frac{n_1n_2}{x}+xn_3\right)\right) + \exp\left(-2i\left(\frac{n_1n_2}{x}+xn_3\right)\right) \right] \frac{1}{x}\\
-          &= \frac{2}{\pi^{2}}\int_{0}^{\infty}
-          dx\;\cos\left(2\frac{n_1n_2}{x}+2xn_3 \right)  \frac{1}{x}
-\end{split}
-\label{q023:cosine-form}
-\end{equation}
-
-Thus, from the identity of the Bessel Functions \eqref{q023:bessel}, the Wigner Function can be written as
-\begin{equation}
-   W(q,p) =\begin{cases}
-     -\frac{2}{\pi}\,Y_0\bigl(4\sqrt{n_1n_2n_3}\bigr), & n_1n_2n_3>0,\\[2pt]
-     \frac{4}{\pi^2}\,K_0\bigl(4\sqrt{-n_1n_2n_3}\bigr), & n_1n_2n_3<0 .
-   \end{cases}
-   \label{q023:closed-form}
-\end{equation}
-So the formula, in a surprisingly interesting way, reduces to a function of the product of the (Weyl symbols of) the nullifiers $n_1n_2n_3$.
-
-\end{solution}
-
-\begin{solution}[Part (d)]
-
-Since $K_0(x)$ is always positive, the Wigner function is positive whenever $n_1n_2n_3$ is negative. The Wigner function can only be negative in the region where $n_1n_2n_3>0$, and in that region it has the opposite sign of $Y_0$, then it is negative if and only if $Y_0$ is positive.
-
-Labeling $x_m$ the $m$-th zero of $Y_0$, it is given that $Y_0(x)>0,  x_1<x<x_2$. The oscillatory behavior around the $x$ axis implies $Y_0(x)$ is positive in the open intervals $(x_{1+2l} , x_{2+2l})$, i.e., the Wigner function is negative whenever $x_{1+2l}<4\sqrt{n_1n_2n_3}<x_{2+2l}$ for some $l\geq 0$. And it is clearly singular at $n_1n_2n_3=0$, since the integral diverges.
-
-Now to show that the second moment of the nullifier always vanishes for any phase state we must recall \eqref{q023:phase-wigner} is such that the integrand can be split into the product of one function that depends purely on the phase momentum $p$ and other on $q$.
-\[
-  e^{2ip\cdot y} e^{i(f(q-y)-f(q+y))}.
-\]
-
-From the expression \eqref{q023:odd-expansion} for $f(q+y)-f(q-y)$, we can separate the lowest order term of the Taylor expansion and express the remaining terms as an arbitrary function that depends only on the $q,y$, not on $p$, $R(q,y)$
-\[
-  f(q+y)-f(q-y)= 2 (y\cdot\nabla)f(q) + R(q,y),
-\]
-such that the integrand becomes
-\begin{equation}
-\begin{split}
-    &e^{2ip\cdot y} e^{-i[2 (y\cdot\nabla)f(q) + R(q,y)]}= e^{2iy\cdot(p-\nabla f(q))} e^{-iR(q,y)}\ ;\\
-    &R(q,y)=  2\sum_{l=1}^{u} \frac{1}{(2l+1)!} \left(y\cdot\nabla \right)^{2l+1}f(q)
-\end{split}
-    \label{q023:remainder}
-\end{equation}
-
-Then the relation with the nullifier becomes explicit, since $y\cdot(p-\nabla f(q))= \sum_j y_j n_j$, such that
-\[
-  \frac{\partial^2}{\partial y_j^2} e^{2iy\cdot(p-\nabla f(q))}= -4n_j^2 e^{2iy\cdot(p-\nabla f(q))}.
-\]
-
-Then, to finally start the demonstration, another observation required. For $q=q_0$ held constant, integrating over $dp_i$ is equivalent to integrating over $dn_i$ (we are integrating from $-\infty$ to $\infty$ and subtracting by $\partial_jf(q_0)$ is subtracting by a constant).
-
-So starting from the desired expression and using our facts
-\begin{equation}
-\begin{split}
-    \int d^{k}p\,W(q_0,p)\,n_j^{2}(q_0,p)&= \int d^{k}n\,W(q_0,p)\,n_j^{2}(q_0,p) \\
-    &= \frac{1}{\pi^{k}}\int d^{k}n\, \int d^{k}y\;
-          \exp\!\Bigl(i\bigl[2p\cdot y-f(q_0+y)+f(q_0-y)\bigr]\Bigr)\,n_j^{2}\\
-    &= \frac{1}{\pi^{k}} \int d^{k}y\, \int d^{k}n\
-          e^{-iR(q_0,y)}\, e^{2iy\cdot(p-\nabla f(q_0))} n_j^{2} \\
-    &= -\frac{1}{4\pi^{k}} \int d^{k}y\, e^{-iR(q_0,y)} \int d^{k}n\
-          \, \frac{\partial^2}{\partial y_j^2}e^{2iy\cdot(p-\nabla f(q_0))} \\
-    &=- \frac{1}{4\pi^{k}} \int d^{k}y\, e^{-iR(q_0,y)}\frac{\partial^2}{\partial y_j^2} \int d^{k}n \, e^{2iy\cdot n}\\
-    &= - \frac{1}{4} \int d^{k}y\, e^{-iR(q_0,y)}\frac{\partial^2}{\partial y_j^2} \frac{1}{2^k \pi^k} \int d^{k}n \, e^{iy\cdot n}\\
-    &=- \frac{1}{4} \int d^{k}y\, e^{-iR(q_0,y)}\frac{\partial^2}{\partial y_j^2} \delta^{k}(y)
-\end{split}
-\label{q023:moment-delta}
-\end{equation}
-
-Now to deal with this final integral, one must notice that the delta function is $k$-dimensional, forcing all others $y_i=0$, for $i\neq j$, in $R(q_0,y)$. From its expression this reduces the remainder \eqref{q023:remainder} to
-\begin{equation}
-     R(q_0, y)|_{y_i=0,i\neq j} =  2\sum_{l=1}^{u} \frac{1}{(2l+1)!} y_j^{2l+1} \cdot \partial_j^{2l+1}f(q_0).
-\end{equation}
-To avoid this overcrowded notation, define
-\begin{equation}
-    \beta_j(x) = 2\sum_{l=1}^{u} \frac{1}{(2l+1)!} x^{2l+1} \cdot \partial_j^{2l+1}f(q_0).
-    \label{q023:beta}
-\end{equation}
-(where $u$ again is related to the degree of the polynomial $f$, $r$, by $u =\lfloor \frac{r-1}{2}\rfloor$) such that $\beta_j(y_j)=R(q_0, y)|_{y_i=0,i\neq j}$, we can rewrite our integral as
-\begin{equation}
-    \int d^{k}p\,W(q_0,p)\,n_j^{2}= - \frac{1}{4} \int dx\, e^{-i\beta_j(x)}\frac{\partial^2}{\partial x^2} \delta(x)
-\end{equation}
-
-To deal with this (rather messy) ``derivative of the delta function'', which can still be defined as a distribution through its operation on functions, by applying integration by parts.
-The first derivative acts as, noticing the boundary terms vanish
-\begin{equation}
-    \int dx\ g(x)\delta'(x) = - \int dx\ g'(x)\delta(x)=-g'(0)
-\end{equation}
-and similarly
-\begin{equation}
-    \int dx\ g(x)\delta''(x) = - \int dx\ g'(x)\delta'(x)=g''(0)
-\end{equation}
-
-Then our beautiful integral becomes
-\begin{equation}
-\begin{split}
-    \int d^{k}p\,W(q_0,p)\,n_j^{2}&= - \frac{1}{4} \left(\frac{d^2}{dx^2} e^{-i\beta_j(x)}\right)_{x=0} \\
-    &= \frac{1}{4} e^{-i\beta_j(0)} \left[i\frac{d^2}{dx^2} \beta_j + \left(\frac{d}{dx} \beta_j\right)^2 \right]_{x=0}
-\end{split}
-\label{q023:second-moment}
-\end{equation}
-and from \eqref{q023:beta} one can see this is always zero, since either $\beta$ itself is already zero, as is the case for quadratic polynomials, where we don't have a remainder in \eqref{q023:remainder}, or the lowest degree on $x$ is at least three, hence both the first and the second derivative have no constant terms that survive when $x=0$ (the lowest degree is at least two for the first derivative and at least one for the second derivative).
-
-This null second moment of the nullifier forces a negativity of the Wigner function every time the set of values the Wigner function is non-zero for $n_j \neq 0$ has non-zero measure.
-
-For the quadratic case, we have a delta function that vanishes whenever $n_j\neq 0$, while for the hypergraph state the Wigner function is non-zero almost everywhere, so to counter-balance the positive values when integrating $W(q_0,p)n_j(q_0,p)^2$, we must have negative ones also.
-
-\end{solution}
-
-\begin{solution}[Part (e)]
-Start from the definition applying directly to the wave function $\psi_m$
-\begin{equation}
-\begin{split}
-    W_m(q_1,q_2,p_1,p_2) &= \frac{1}{\pi^{2}}\int_{\RR^{2}}d^{2}y\;e^{2i(p_1y_1+p_2y_2)}\,
-  \psi_m(q_1-y_1,q_2-y_2)\psi^*_m(q_1+y_1,q_2+y_2) \\
-  &= \frac{1}{\pi^{2}}\int_{\RR^{2}}d^{2}y\;e^{2i(p_1y_1+p_2y_2)}\,
-  \psi(q_1-y_1,q_2-y_2,m)\psi^*(q_1+y_1,q_2+y_2,m) \\
-  &= \frac{1}{\pi^{2}}\int_{\RR^{2}}d^{2}y\ dx\;e^{2i(p_1y_1+p_2y_2)}\,
-  \psi(q_1-y_1,q_2-y_2,m-x)\psi^*(q_1+y_1,q_2+y_2,m+x)\delta(x)
-\end{split} 
-\end{equation}
-where the last equation is valid since the delta forces $x=0$ (integral version of adding 0).
-
-On the other side, $\int dp_3 e^{2ip_3y_3}=\pi\delta(y_3)$, thus
-\hspace{-2cm}
-\begin{equation}
-\begin{split}
-    &W_m(q_1,q_2,p_1,p_2) \\
-    &= \frac{1}{\pi^{2}}\int_{\RR^{3}}d^{3}y\;e^{2i(p_1y_1+p_2y_2)}\,
-  \psi(q_1-y_1,q_2-y_2,m-y_3)\psi^*(q_1+y_1,q_2+y_2,m+y_3)\delta(y_3)\\
-  &= \frac{1}{\pi^{3}}\int_{\RR^{3}}d^{3}y\;e^{2i(p_1y_1+p_2y_2)}\,
-  \psi(q_1-y_1,q_2-y_2,m-y_3)\psi^*(q_1+y_1,q_2+y_2,m+y_3)\int dp_3 e^{2ip_3y_3}\\
-  &= \int dp_3 \frac{1}{\pi^{3}}\int_{\RR^{3}}d^{3}y\;e^{2i(p_1y_1+p_2y_2+p_3y_3)}\,
-  \psi(q_1-y_1,q_2-y_2,m-y_3)\psi^*(q_1+y_1,q_2+y_2,m+y_3)\\
-  &= \int dp_3\,W(q_1,q_2,m;p_1,p_2,p_3) 
-\end{split} 
-\end{equation}
-
-So applying this to the Wigner function for the hypergraph deduced in item c), with the cubic term on $y$, and again using that for fixed $q=(q_1,q_2,m)$, $dn_i=dp_i$, (more specifically, using that $dn_3=dp_3$) and denoting $q'=(q_1,q_2)$ and $p'=(p_1,p_2)$ for the corresponding two-mode phase space variables
-
-\begin{equation}
-    \begin{split}
-    W_m(q',p')&=\frac{1}{\pi^{3}}\int d^{3}y\;dn_3
-          \exp\!\Bigl(2i\bigl[ y_1n_1 + y_2n_2 + y_3n_3-  y_1y_2y_3 \bigr]\Bigr)\\
-        &=\frac{1}{\pi^{3}}\int d^{3}y\;dn_3 e^{2iy_3n_3}
-          \exp\!\Bigl(2i\bigl[ y_1n_1 + y_2n_2 -  y_1y_2y_3 \bigr]\Bigr)\\
-    &= \frac{1}{\pi^{2}}\int d^{3}y\;\delta(y_3)
-          \exp\!\Bigl(2i\bigl[ y_1n_1 + y_2n_2 -  y_1y_2y_3 \bigr]\Bigr)\\
-          &=  \frac{1}{\pi^{2}}\int d^{2}y\;
-          \exp\!\Bigl(2i\bigl[ y_1n_1 + y_2n_2  \bigr]\Bigr)\\
-          &= \delta(n_1)\delta(n_2)
-    \end{split}
-\end{equation}
-Note that the information about $m$ is encoded both on $n_1=p_1-mq_2$ and $n_2=p_2 - q_1m$. So the measurement acts by destroying the cubic interaction (with the delta function), producing a weighted graph state, with weight $m$. 
-
-The weighted graph is a notion you can make general by associating with each edge $e$ a weight $m_e$. For this weighted CV graph state, that would correspond to the phase function $f=mq_1q_2$, which is the phase of item b) multiplied by a constant $m$. Notice that, from the general for the nullifier formula $n_1 = p_1 - \partial_1f(q)=p_1-mq_2$.
-
-
-
-In item b), we already demonstrated that any quadratic phase $f(q)$ leads to a non-negative Wigner function, which is a product of delta functions. Negativity for a phase state can only exist for polynomials of degree at least three. To make this even clearer, one can write equation \eqref{q023:phase-wigner} in terms of the remainder \eqref{q023:remainder}
-\begin{equation}
-\begin{split}
-    W(q,p)
-    &= \frac{1}{\pi^{k}}\, \int d^{k}y\;
-          \exp\!\Bigl(i\bigl[2p\cdot y-f(q+y)+f(q-y)\bigr]\Bigr)\\
-    &= \frac{1}{\pi^{k}} \int d^{k}y\,
-          e^{-iR(q,y)}\, e^{2iy\cdot(p-\nabla f(q))}
-\end{split}
-\label{q023:wigner-remainder}
-\end{equation}
-which explicitly shows that the existence of a non-null Remainder is what prevents the Wigner function from reducing to a product of delta functions.
 
 \end{solution}
 
@@ -420,12 +155,17 @@ which explicitly shows that the existence of a non-null Remainder is what preven
 \begin{takeaway}
 \end{takeaway}
 
-
-\attempt{
-  date       = 2026-10-10,               % ISO, YYYY-MM-DD -- required if the block is used
-  time       = split into 3 days,
-  difficulty = 4,               % 1-5, perceived
-  howitwent  = {had to alter the question a few times, but it became too long. It was still worth, since it really solidified the knowledge on a subject I want to learn better. But question generation should be more thoroughly analyzed before starting, for these cases},
- }
+%  Everything below is optional.  An entry with no attempt block is complete.
+%  Record only what would change what you do next time: typos and arithmetic
+%  slips you caught yourself are artefacts of the medium, not facts about the
+%  mathematics.  Add "public," to show this block in the public build.
+% \attempt{
+%   date       = ,               % ISO, YYYY-MM-DD -- required if the block is used
+%   time       = ,
+%   difficulty = ,               % 1-5, perceived
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
 
 \end{entry}
