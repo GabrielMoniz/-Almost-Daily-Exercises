@@ -5,23 +5,32 @@
 %  (claude/research/cv-hypergraph-negativity/brief.md, section 2(b)).
 %  All items solved before issue; identities (a)-(b) and the single-photon
 %  output of (c) checked numerically by direct quadrature.
+%  15/10/2026: item (c) replaced (classicality via Mandel dropped; now sharpness
+%  of the threshold and fragility of Fock-state negativity via photon-number
+%  parity). W_out(0) = (1-2T)^n/pi checked numerically for n = 1, 2, 3, 5.
+%  15/10/2026 (second revision): (c) now asks for the closed form of the lossy
+%  Fock state and sharpness for every n (zeros of L_n); the fragility question
+%  moved to a new item (d) on the negative volume, with the n = 1 closed form and
+%  the threshold law nu_n ~ C_n (T-1/2)^(n+1). Both checked numerically
+%  (n = 1..5; C_n to 0.2% at T - 1/2 = 1e-4). Numerical study: companion entry.
 % -----------------------------------------------------------------------------
 \begin{entry}{Q023}{Fifty per cent loss and the Husimi function}
 
 \entrymeta{
-  topic   = {Wigner function; optical loss and thermal noise; Husimi function; nonclassicality},
-  est     = {$\sim$40 minutes },
+  topic   = {Wigner function; optical loss and thermal noise; Husimi function; Fock states; negative volume},
+  est     = {$\sim$60 minutes --- labelled stretch},
   origin  = Original,
   source  = {Original problem. The converse half of the threshold is proved in
     B.~Nugmanov, N.~Zunikov and F.~Ya.~Khalili, \emph{Robustness of negativity of the
     Wigner function to dissipation}, arXiv:2201.03257 (2022)},
   url     = https://arxiv.org/abs/2201.03257,
-  prereq  = {The single-mode Wigner function of \qref{Q022}; Gaussian convolutions},
+  prereq  = {The single-mode Wigner function and the Fock-state Wigner functions of
+    \qref{Q021}; Gaussian convolutions},
   status  = drafted,
 }
 
 \begin{problem}
-\emph{Context.} The ideal hyperedge of \qref{Q023} has a Wigner function that is
+\emph{Context.} The ideal hyperedge of \qref{Q022} has a Wigner function that is
 negative on part of phase space, and that negativity is what makes such states a
 computational resource: if every state in a computation built from Gaussian operations
 and homodyne measurements has a non-negative Wigner function, the computation can be
@@ -34,7 +43,7 @@ the other half, that every pure non-Gaussian state stays negative above the thre
 is proved in the source.
 
 \emph{Setting.} Take one bosonic mode with $[\hat q,\hat p]=i$, $\hbar=1$, write
-$z=(q,p)$, and use the Wigner function $W$ of \qref{Q022}, normalised to
+$z=(q,p)$, and use the Wigner function $W$ of \qref{Q021}, normalised to
 $\int dq\,dp\,W=1$. The vacuum has $W_{0}(z)=\pi^{-1}e^{-(q^2+p^2)}$, so each quadrature of
 the vacuum has variance $\tfrac12$, the \emph{vacuum variance}. For $v>0$ let
 \begin{equation}
@@ -83,14 +92,26 @@ Phys.~Rev.\ \textbf{177}, 1882 (1969)) relates it to the Wigner function:
   Q=W*N_{1/2}.
   \label{q023:husimi}
 \end{equation}
-A state is \emph{classical} if $\rho=\int d^2\alpha\,P(\alpha)\,\ket\alpha\!\bra\alpha$ with
-$P$ a probability density, that is, a statistical mixture of coherent states. Every
-classical state has a photon-number variance at least as large as its mean
-(L.~Mandel, Opt.~Lett.\ \textbf{4}, 205 (1979)):
+For the Fock states $\ket n=(\hat a^{\dagger})^{n}\ket0/\sqrt{n!}$ you may use the Wigner
+functions found in \qref{Q021},
 \begin{equation}
-  \rho\ \text{classical}\ \Longrightarrow\ \operatorname{Var}(\hat n)\ \ge\ \langle\hat n\rangle,
-  \qquad \hat n=\hat a^{\dagger}\hat a .
-  \label{q023:mandel}
+  W_{n}(\alpha)=\frac{(-1)^{n}}{\pi}\,e^{-2|\alpha|^{2}}\,\mathbf L_{n}\bigl(4|\alpha|^{2}\bigr),
+  \qquad \alpha=\frac{q+ip}{\sqrt2},
+  \label{q023:fock}
+\end{equation}
+where $\mathbf L_n$ is the Laguerre polynomial
+\begin{equation}
+  \mathbf L_{n}(y)=\sum_{k=0}^{n}\binom nk\frac{(-y)^{k}}{k!}
+  \label{q023:laguerre-sum}
+\end{equation}
+(NIST DLMF, \S18.5). For $n\ge1$ it has $n$ simple zeros, all in $(0,\infty)$, as the
+orthogonal polynomials of any weight on $(0,\infty)$ do (G.~Szeg\H{o}, \emph{Orthogonal
+Polynomials}, Theorem~3.3.1), and it obeys the multiplication theorem (NIST DLMF,
+\S18.18(iii))
+\begin{equation}
+  \mathbf L_{n}(\lambda y)=\sum_{k=0}^{n}\binom nk\,\lambda^{k}(1-\lambda)^{n-k}\,
+  \mathbf L_{k}(y),\qquad \lambda\in\RR .
+  \label{q023:multiplication}
 \end{equation}
 
 \begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
@@ -106,20 +127,34 @@ classical state has a photon-number variance at least as large as its mean
         that additive noise with $\bar n=\tfrac12$ gives $W_{out}=Q$, and that pure loss
         with $T=\tfrac12$ gives $W_{ out}(z)=2\,Q(\sqrt2\,z)$. Then show that
         $W_{out}\ge0$ for every input state whenever $T\le\tfrac12$ or
-        $\bar n\ge\tfrac12$. The variance $v/T$ is the added noise referred back to the
-        input: how large is it at each threshold, in units of the vacuum variance?
+        $\bar n\ge\tfrac12$. 
 
-  \item \emph{Positive is not classical.} Let the input be the one-photon state
-        $\ket1$. Using \eqref{q023:beam-splitter}, show that the output of pure loss is
-        $\rho_T=T\ket1\!\bra1+(1-T)\ket0\!\bra0$, so that by (b) its Wigner function is
-        non-negative for $T\le\tfrac12$. Using \eqref{q023:mandel}, show that $\rho_T$ is
-        not classical for any $T>0$. What does a non-negative Wigner function therefore
-        fail to certify?
+  \item \emph{Sharpness of the threshold.} Let the input be the Fock state $\ket n$ with
+        $n\ge1$. Using \eqref{q023:beam-splitter}, show that pure loss outputs the
+        binomial mixture
+        \begin{equation}
+          \rho_T=\sum_{k=0}^{n}\binom nk\,T^{k}(1-T)^{n-k}\,\ket k\!\bra k .
+          \label{q023:binomial}
+        \end{equation}
+        Using \eqref{q023:fock} and \eqref{q023:multiplication}, show that for
+        $T\neq\tfrac12$ its Wigner function is
+        \begin{equation}
+          W_{ out}(\alpha)=\frac{(1-2T)^{n}}{\pi}\,e^{-2|\alpha|^{2}}\,
+          \mathbf L_{n}\!\Bigl(\frac{4T}{2T-1}\,|\alpha|^{2}\Bigr).
+          \label{q023:lossy-fock}
+        \end{equation}
+        Show directly from \eqref{q023:lossy-fock} that $W_{ out}\ge0$ for
+        $T<\tfrac12$, and that for every $T>\tfrac12$ it is negative somewhere. Conclude
+        that the threshold of (b) is sharp: for every $T>\tfrac12$ some state stays
+        Wigner-negative.
+
+  
 \end{enumerate}
 \end{problem}
 
+
 \begin{solution}[Part (a)]
-From \eqref{q023:gaussian} we see that $N(x\sqrt{\gamma},v\gamma)=N(x,v)$ for any rescaling factor $\gamma$. So the Wigner function \eqref{q023:channel} can be written as (take $\gamma=1/T$)
+From \eqref{q023:gaussian} we see that $N(x\sqrt{\gamma},v\gamma)=\gamma^{-1/2}N(x,v)$ for any rescaling factor $\gamma$. So the Wigner function \eqref{q023:channel} can be written as (take $\gamma=1/T$)
 \begin{equation}
 \begin{split}
      W_{ out}(q,p)&=\int du\,dw\;W(u,w)\,N\bigl(\frac{q}{\sqrt{T}}-\,u;\,\frac{v}{T}\bigr)\,N\bigl(\frac{p}{\sqrt{T}}-\,w;\,\frac{v}{T}\bigr)\\
@@ -141,12 +176,64 @@ For this additive noise we precisely get that  $W_{out}=W * N_{1/2}$, which is p
 \begin{equation}
     W_{out}=W * N_{\bar n} = (W * N_{1/2}) * N_{\delta n},
 \end{equation}
-and $W * N_{1/2}$ is always non-negative, since it equals the Husimi function at the same time $N_{\delta n}$ is also a non-positive function, so the convolution of both is also non-negative (integral of the product of two non-negative functions)
+and $W * N_{1/2}$ is always non-negative, since it equals the Husimi function at the same time $N_{\delta n}$ is also a non-negative function, so the convolution of both is also non-negative (integral of the product of two non-negative functions)
 The analogous arguments follow for $T\leq 1/2$ for the pure loss. $T\leq 1/2 \implies v/T = \frac{1}{2} + \frac{1-2T}{2T} \geq 1/2$ and we can be the same argument for $\frac{1-2T}{2T}\geq0$.
 \end{solution}
 
 \begin{solution}[Part (c)]
+The state for the whole system is in the state $\ket{n,0}$, where the second entry represents the vacuum. The beam splitter acts as the unitary gate
+\begin{equation}
+\begin{split}
+     U \ket{n,0} &= \frac{1}{\sqrt{n!}}U (a^\dagger)^n U^\dagger U\ket{0,0} \\&= \frac{1}{\sqrt{n!}}\left(\sqrt T\,\hat a^{\dagger}+\sqrt{1-T}\,\hat b^{\dagger}\right)^n \ket{0,0} \\
+     &=\frac{1}{\sqrt{n!}} \sum_{k=0}^{n} \binom{n}{k} \sqrt{T^{k} (1-T)^{n-k}} (a^\dagger)^{k}(b^\dagger)^{n-k} \ket{0,0}\\
+     &=\frac{1}{\sqrt{n!}} \sum_{k=0}^{n} \binom{n}{k} \sqrt{T^{k} (1-T)^{n-k}} \sqrt{k!(n-k)!} \ket{k,n-k}\\
+     &= \sum_{k=0}^{n}  \sqrt{\binom{n}{k}T^{k} (1-T)^{n-k}} \ket{k,n-k}
+\end{split}
+\end{equation}
+(notice that $ \sqrt{\binom{n}{k}}=\sqrt{\frac{n!}{(n-k)!k!}} $).
 
+Discarding the second output means mathematically tracing out the second entry to get the corresponding reduced matrix for the system of interest. Now notice that $$\Tr_2 ( \ket{k,n-k} \bra{k',n-k'}) = \delta_{k,k'} \proj{k}$$, i.e., only diagonal terms survives the partial trace. Then, by linearity of the partial trace, the reduced state is
+\begin{equation}
+     \rho_T = \sum_{k=0}^{n}  \binom{n}{k}T^{k} (1-T)^{n-k} \proj{k}
+\end{equation}
+as desired.
+ 
+
+The map $\rho\mapsto W_\rho$ is linear also, such that the result Wigner function for $\rho_T$ is just a linear combination of the Wigner functions for Fock state. Using \eqref{q021: Wiegner function fock state} from \qref{Q021} 
+\begin{equation}
+\begin{split}
+    W_{\rho_T} (\alpha) &= \sum_{k=0}^{n}  \binom{n}{k}T^{k} (1-T)^{n-k} W_k (\alpha) \\
+    &= \frac{e^{-2|\alpha|^2}}{\pi} \sum_{k=0}^{n}  \binom{n}{k}T^{k} (1-T)^{n-k} (-1)^k\mathbf{L}_k(4|\alpha|^2)
+    \label{q023: Wigner expansion}
+\end{split}
+\end{equation}
+
+To simplify the expression, we can use that
+\begin{equation}
+   \mathbf L_n(\lambda x)= \sum_{k=0}^n \binom{n}{k}\lambda^k(1-\lambda)^{n-k}\mathbf L_k(x)
+\end{equation}
+which is quite similar to the right-hand side of \eqref{q023: Wigner expansion}, but there is a mismatch due to the $(-1)^k$. To deal with it, we must notice that we can manipulate the ratio similarly as in item b) $$\frac{1-T}{1-2T}= 1 +\frac{T}{1-2T}$$
+such that $$\lambda = -\frac{T}{1-2T} \implies 1- \lambda = \frac{1-T}{1-2T}.$$ 
+
+Then we can factor out $(1-2T)^n$ to see that
+\begin{equation}
+\begin{split}
+    W_{\rho_T} (\alpha) 
+    &= \frac{e^{-2|\alpha|^2}}{\pi} (1-2T)^n \sum_{k=0}^{n}  \binom{n}{k}\lambda^{k} (1-\lambda)^{n-k} \mathbf{L}_k(4|\alpha|^2)\\
+    &= \frac{e^{-2|\alpha|^2}}{\pi} (1-2T)^n  \mathbf{L}_n\left(\frac{4T}{2T-1} |\alpha|^2\right)
+\end{split}
+\end{equation}
+
+This expression explicitly shows the boundary at $T=1/2$. For $T<1/2$, the argument of the Laguerre polynomial is non-positive, making the polynomial itself always non-negative and also $1-2T \geq 0$, making $W_{\rho_T} \geq 0.$ 
+
+For $T>1/2$, the argument is non-negative. Analyzing the Laguerre polynomial in that region, let $x^{(n)}_k$ for $k=1,\cdots,n$ be the $n$ simple zeros of the Laguerre polynomial, which we can take to be in increasing order $x^{(n)}_1 < \cdots < x^{(n)}_n$.
+For $x\geq 0$, the polynomial starts positive at $x=0$, since $\mathbf L_n(0)=1$, and changes sign every time it crosses a zero $x^{(n)}_k$.
+
+ When we have odd $n$, we already have a negative factor in the Wigner function due to $(1-2T)^n$, so Wigner negativity happens when the polynomial is positive, ($\frac{4T}{2T-1} |\alpha|^2 < x^{(n)}_1$ or $x^{(n)}_{2k}<\frac{4T}{2T-1} |\alpha|^2<x^{(n)}_{1+2k}$ for $1\leq k \leq (n-1)/2$).
+
+ For even $n$, we need the polynomial to be negative, which happens for $x^{(n)}_{2k-1}<\frac{4T}{2T-1} |\alpha|^2<x^{(n)}_{2k}$ for $1\leq k \leq n/2$.
+
+ Therefore, we always have regions where the Wigner function is negative. Despite the Wigner function being suppressed by the $(1-2T)^n$, which suggests that the magic of the transmitted field is less robust when the input state has more photons, one must take into account the size of these regions and the negative area that is produced by them to properly analyze the decay of magic.    
 \end{solution}
 
 % \begin{remark}
