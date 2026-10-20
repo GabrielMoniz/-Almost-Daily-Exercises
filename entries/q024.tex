@@ -1,0 +1,141 @@
+% -----------------------------------------------------------------------------
+%  entries/q024.tex
+%  Issued 15/10/2026. Companion to Q023 (fifty per cent loss): how fast loss
+%  removes the negativity of Fock states. Items (a)-(b) pen and paper (moved from
+%  Q023(d)); items (c)-(f) numerical.
+%  Checked before issue (scipy, quadrature between the zeros of L_n): nu_1 closed
+%  form to 1e-15; threshold exponent n+1 and C_n for n = 1..5 (C_n to 0.2% at
+%  T - 1/2 = 1e-4); reference values for (d)-(f) in the tutor notes.
+% -----------------------------------------------------------------------------
+\begin{entry}{Q024}{How loss erodes the negativity of Fock states}
+
+\entrymeta{
+  topic   = {Wigner negativity; negative volume; optical loss; Fock states; numerical analysis},
+  est     = {multi-session --- (a)--(b) $\sim$25 minutes by hand, (c)--(f) computational},
+  origin  = Original,
+  source  = {Original problem, companion to \qref{Q023}},
+  prereq  = {\qref{Q023}, in particular \eqref{q023:channel}, \eqref{q023:binomial}
+    and \eqref{q023:lossy-fock}; Python with SciPy for (c)--(f)},
+  status  = drafted,
+}
+
+\begin{problem}
+\emph{Context.} \qref{Q023} showed that a Fock state $\ket n$ sent through pure loss of
+transmissivity $T$ keeps a negative Wigner function exactly when $T>\tfrac12$, and gave the
+output in closed form. That answers \emph{whether} the negativity survives, not \emph{how
+much} of it does. This entry quantifies how fast loss removes it: by hand for the single
+photon and near the threshold, numerically everywhere else. The question matters in
+practice, since every optical or microwave source of non-Gaussian states has a finite
+efficiency, and the choice of which state to prepare depends on how its negativity degrades.
+
+\emph{Setting.} Use the conventions of \qref{Q023}. Write $s:=|\alpha|^{2}=(q^2+p^2)/2$, so
+that the output \eqref{q023:lossy-fock} is a function $W_{n,T}(s)$, and
+$dq\,dp=2\pi\,ds$ after the angular integration. At $T=\tfrac12$ use the limit
+\begin{equation}
+  W_{n,1/2}(s)=\frac{1}{\pi}\,e^{-2s}\,\frac{(2s)^{n}}{n!}.
+  \label{q024:half}
+\end{equation}
+Measure the negativity of a state by its \emph{negative volume}
+\begin{equation}
+  \nu(\rho):=-\int_{W_\rho<0}dq\,dp\;W_\rho
+  =\frac12\Bigl(\int dq\,dp\,\bigl|W_\rho\bigr|-1\Bigr),
+  \label{q024:negvol}
+\end{equation}
+the total weight of the negative part of $W_\rho$. 
+
+\medskip\noindent\emph{By hand.}
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item \emph{The single photon.} Compute $\nu_1(T)$ in closed form for $T>\tfrac12$,
+        evaluate $\nu_1(1)$, and find the leading behaviour of $\nu_1(T)$ as
+        $T\to\tfrac12^{+}$.
+
+  \item \emph{The threshold law.} For general $n\ge1$, change variables to
+        $y=\frac{4T}{2T-1}\,s$ to show that
+        \begin{equation}
+          \lim_{T\to\frac12^{+}}\frac{\nu_n(T)}{(T-\tfrac12)^{n+1}}=C_n,
+          \qquad
+          C_n:=2^{n+1}\int_0^\infty dy\,\bigl[-(-1)^{n}\mathbf L_n(y)\bigr]_{+},
+          \label{q024:threshold-law}
+        \end{equation}
+        where $[x]_+:=\max\{x,0\}$. Relate the exponent $n+1$ to the behaviour of
+        $W_{n,1/2}$ near the origin.
+\end{enumerate}
+
+
+
+\end{problem}
+
+\begin{solution}[Part (a)]
+The Wigner for the Fock state $n$, in terms of $s$, is  
+\begin{equation}
+    W_{\rho_T} (s)= \frac{e^{-2 s}}{\pi} (1-2T)^n  \mathbf{L}_n\left(\frac{4T}{2T-1} s\right)
+\end{equation}
+such that the negativity for odd $n$ is
+\begin{equation}
+\begin{split}
+    v_n(T) &= 2(2T-1)^n\int_{\mathbf{L}_n>0} ds\, e^{-2 s}\mathbf{L}_n\left(\frac{4T}{2T-1} s\right)\\
+    &=\frac{(2T-1)^{n+1}}{2T} \int_{\mathbf{L}_n>0} du\, e^{- \left(\frac{2T-1}{2T}\right) u} \mathbf{L}_n\left( u \right)\\
+    \label{eq: negativitry any fock}
+\end{split}
+\end{equation}
+
+For $n=1$, taking $\lambda=\frac{2T-1}{2T}$, the integral becomes (applying integral by parts in the second term)
+\begin{equation}
+    \int_{0}^{1} du\, e^{- \lambda u} (1-u)= \frac{1- e^{-\lambda}}{\lambda} + \frac{e^{-\lambda}}{\lambda} - \frac{1}{\lambda} \int_{0}^{1} du e^{- \lambda u} = \frac{1}{\lambda} - \frac{1- e^{-\lambda }}{\lambda^2}  
+\end{equation}
+hence, noting that $\lambda= 1 -\frac{1}{2T} \implies 2T = \frac{1}{1-\lambda} \implies 2T-1=\frac{\lambda}{1-\lambda}$, we have
+\begin{equation}
+\begin{split}
+    v_1(T) &= \frac{(2T-1)^{2}}{2T} \left( \frac{1}{\lambda} - \frac{1- e^{-\lambda }}{\lambda^2}   \right)\\
+    &= \frac{\lambda^{2}}{1-\lambda} \left( \frac{1}{\lambda} - \frac{1- e^{-\lambda }}{\lambda^2}   \right)\\
+    &= \frac{\lambda}{1-\lambda} - \frac{1- e^{-\lambda }}{1-\lambda} \\
+    &= \frac{e^{-\lambda }}{1-\lambda} - 1
+\end{split}
+\end{equation}
+
+
+
+\end{solution}
+
+\begin{solution}[Part (b)]
+From \eqref{eq: negativitry any fock}, for $n$ odd, one can see that 
+\begin{equation}
+   \frac{v_n(T)}{(T-\frac{1}{2})^{n+1}} = \frac{2^{n}}{T} \int_{\mathbf{L}_n>0} du\, e^{- \left(\frac{2T-1}{2T}\right) u} \mathbf{L}_n\left( u \right)
+\end{equation}
+As $T\rightarrow 1/2$, the exponent goes to zero, so
+\begin{equation}
+   \lim_{T\rightarrow 1/2}\frac{v_n(T)}{(T-\frac{1}{2})^{n+1}} = 2^{n+1} \int_{\mathbf{L}_n>0} du\,  \mathbf{L}_n\left( u \right)
+\end{equation}
+
+We can proceed similarly for $n$ even, but in this case, we need the polynomial to be negative, hence
+\begin{equation}
+    v_n(T) =\frac{(2T-1)^{n+1}}{2T} \int_{\mathbf{L}_n<0} du\, e^{- \left(\frac{2T-1}{2T}\right) u} \mathbf{L}_n\left( u \right)
+\end{equation}
+such that
+\begin{equation}
+   \lim_{T\rightarrow 1/2}\frac{v_n(T)}{(T-\frac{1}{2})^{n+1}} =2^{n+1} \int_{\mathbf{L}_n<0} du\,  \mathbf{L}_n\left( u \right)
+\end{equation}
+
+Both cases can be written in the compact form of equation \eqref{q024:threshold-law}.
+
+\end{solution}
+% \begin{remark}
+% \end{remark}
+
+\begin{takeaway}
+\end{takeaway}
+
+%  Everything below is optional.  An entry with no attempt block is complete.
+%  Record only what would change what you do next time: typos and arithmetic
+%  slips you caught yourself are artefacts of the medium, not facts about the
+%  mathematics.  Add "public," to show this block in the public build.
+% \attempt{
+%   date       = ,               % ISO, YYYY-MM-DD -- required if the block is used
+%   time       = ,
+%   difficulty = ,               % 1-5, perceived
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
+
+\end{entry}
