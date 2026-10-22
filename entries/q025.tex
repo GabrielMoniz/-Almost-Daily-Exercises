@@ -1,0 +1,266 @@
+% -----------------------------------------------------------------------------
+%  entries/q025.tex
+%  Issued 21/10/2026. First entry of the GKP / magic / hypergraph sequence
+%  (Q025 GKP code; Q026 hyperedge as logical CCZ; Q027 magic-state injection with
+%  hypergraph states; Q028 Wigner negativity versus logical magic).
+%  All items solved before issue. Checked numerically: logical error rates of (c)
+%  for d = 2..5 (exact series vs leading term); the logical phase gates of (d)
+%  for d = 2..5.
+%  22/10/2026: (c) reframed without numerical values (closed-form d-scaling only);
+%  the Clifford argument moved from (d)(iii) to a new item (e), which now states
+%  the definition of a Gaussian unitary it needs.
+% -----------------------------------------------------------------------------
+\begin{entry}{Q025}{A qudit inside an oscillator: the GKP code}
+
+\entrymeta{
+  topic   = {Bosonic codes; GKP code; qudit Pauli and Clifford groups; Gaussian operations},
+  est     = {$\sim$2--3 hours including the write-up},
+  origin  = Original,
+  source  = {Original problem on the code of D.~Gottesman, A.~Kitaev and J.~Preskill,
+    \emph{Encoding a qubit in an oscillator}, Phys.~Rev.~A \textbf{64}, 012310 (2001)},
+  url     = https://arxiv.org/abs/quant-ph/0008040,
+  prereq  = {Displacement operators and BCH with a central commutator (toolbox T7);
+    the additive Gaussian noise of \qref{Q023}},
+  status  = drafted,
+}
+
+\begin{problem}
+\emph{Context.} An oscillator has an infinite-dimensional Hilbert space, and the noise it
+suffers in optics and microwave cavities (loss, heating, imperfect Gaussian gates) acts, to a
+good approximation, as small random shifts of $q$ and $p$. The code of Gottesman, Kitaev and
+Preskill (GKP) hides a $d$-level system inside the oscillator so that every shift smaller
+than a fixed size can be detected and undone. It is the error-correcting layer of current
+photonic architectures. This entry builds the code from its stabilizers, finds which shifts
+it corrects and at what noise level, and shows that its logical Clifford gates are all
+Gaussian. Where the remaining, non-Clifford gates come from is the subject of the next
+entries.
+
+\emph{Setting.} Take one mode with $[\hat q,\hat p]=i$, $\hbar=1$, and position
+eigenstates $\ket{q}$. For real $a,b$ define the shifts
+\begin{equation}
+  X(a):=e^{-ia\hat p},\qquad Z(b):=e^{ib\hat q},
+  \qquad X(a)\ket{q}=\ket{q+a},\qquad Z(b)\ket{q}=e^{ibq}\ket q ,
+  \label{q025:shifts}
+\end{equation}
+so that $Z(b)$ shifts $\hat p$ by $b$. By BCH with a central commutator \usetool{T7},
+\begin{equation}
+  Z(b)\,X(a)=e^{iab}\,X(a)\,Z(b).
+  \label{q025:weyl}
+\end{equation}
+Fix an integer $d\ge2$, let $\ell:=\sqrt{2\pi/d}$ and $\omega:=e^{2\pi i/d}$, and define
+the \emph{stabilizers} and \emph{logical Pauli operators}
+\begin{equation}
+  S_q:=X(d\ell),\quad S_p:=Z(d\ell),\qquad \bar X:=X(\ell),\quad \bar Z:=Z(\ell).
+  \label{q025:code}
+\end{equation}
+The \emph{code space} consists of the (unnormalisable) states fixed by $S_q$ and $S_p$. For
+$d=2$ this is the square GKP qubit, with $\ell=\sqrt\pi$. Treat the states formally, as in
+\qref{Q022}.
+
+\begin{enumerate}[label=\textbf{(\alph*)},leftmargin=*]
+  \item \emph{A qudit inside the oscillator.} Show that $S_q$ and $S_p$ commute with each
+        other and with $\bar X$ and $\bar Z$, that $\bar X^{d}=S_q$, $\bar Z^{d}=S_p$, and
+        that $\bar Z\bar X=\omega\,\bar X\bar Z$. Show that the states
+        \begin{equation}
+          \ket{\bar\jmath}:=\sum_{k\in\ZZ}\ket{q=(dk+j)\ell},\qquad j\in\ZZ_d ,
+          \label{q025:codewords}
+        \end{equation}
+        lie in the code space and satisfy $\bar Z\ket{\bar\jmath}=\omega^{j}\ket{\bar\jmath}$
+        and $\bar X\ket{\bar\jmath}=\ket{\overline{j+1}}$.
+
+  \item \emph{Which shifts are correctable.} Let a shift error $E=X(u)Z(v)$, with $u,v$
+        real, act on a code state $\ket{\bar\psi}$.
+        \begin{enumerate}[label=(\roman*)]
+          \item Show that the eigenvalues of $S_q$ and $S_p$ on $E\ket{\bar\psi}$
+                determine $v$ and $u$ modulo $\ell$, and nothing more.
+          \item The correction applies $R:=X(-\bar u)\,Z(-\bar v)$, where $\bar u$ and
+                $\bar v$ are the representatives of $u$ and $v$ modulo $\ell$ in
+                $[-\ell/2,\ell/2)$. Show that $RE$ is, up to a global phase, a logical
+                operator $\bar X^{m'}\bar Z^{m}$, and express the integers $m,m'$ in terms
+                of $u$ and $v$. For which $(u,v)$ does the correction restore the original
+                code state? Find the largest $r$ such that every shift with $|u|,|v|<r$ is corrected, and say how $r$ depends on $d$
+            \end{enumerate}
+
+  \item \emph{Noise level.} Let $u$ and $v$ be independent centred Gaussian variables of
+        variance $\sigma^2$, as in the additive noise of \qref{Q023} with $\bar n=\sigma^2$.
+        Write the probability $P_X$ that the correction of $u$ leaves a logical error as a
+        series of Gaussian integrals, and find its leading behaviour as $\sigma\to0$. 
+        
+  \item \emph{Clifford gates are Gaussian.} Let $F$ be the Gaussian unitary with
+        $F^\dagger\hat qF=-\hat p$ and $F^\dagger\hat pF=\hat q$ (a quarter turn of phase
+        space), and on two modes let $C:=e^{-i\hat q_1\hat p_2}$.
+        \begin{enumerate}[label=(\roman*)]
+          \item Show that conjugation by $F$ maps $\bar X\mapsto\bar Z^{-1}$ and
+                $\bar Z\mapsto\bar X$, as the qudit Fourier transform does, and that $C$
+                acts on codewords as the logical sum gate
+                $\ket{\bar\jmath_1,\bar\jmath_2}\mapsto\ket{\bar\jmath_1,\overline{j_1+j_2}}$.
+          \item Show that for even $d$ the Gaussian unitary $e^{i\hat q^{2}/2}$ acts on
+                the code as the logical phase gate $\ket{\bar\jmath}\mapsto
+                e^{i\pi j^{2}/d}\ket{\bar\jmath}$. Show that for odd $d$ it does not
+                preserve the code, and find the linear term $c\,\hat q$ that must be added
+                to the exponent to obtain a logical diagonal gate.
+        \end{enumerate}
+
+  
+\end{enumerate}
+\end{problem}
+
+\begin{solution}[Part (a)]
+Multiplying the argument of $Z(a)$ or $X(a)$ by $m$, is equivalent to raising it to the power of $m$, $Z(ma)=Z(a)^m$. Then $\bar Z^{d}=Z(d\ell)=S_p$. Analogously $\bar X^d=S_q$. 
+
+Using the central commutator \eqref{q025:weyl}
+\begin{itemize}
+    \item  $S_pS_q = e^{id^2\ell^2} X(d\ell)Z(d\ell) = e^{i2\pi d} X(d\ell)Z(d\ell)= S_qS_p$
+\item $
+    S_p\bar X = e^{id\ell^2} X(\ell)Z(d\ell) = e^{i2\pi } X(\ell)Z(d\ell)= \bar X  S_p$
+\item $ S_q\bar Z = e^{-id\ell^2} Z(\ell)X(d\ell) = e^{-i2\pi } Z(\ell)X(d\ell)= \bar Z  S_q $
+\item $ \bar Z\bar X = e^{i\ell^2} X(\ell)Z(\ell) = \omega  \bar X \bar Z$
+\end{itemize}
+    
+To see that $S_q,S_p$ stabilizes these states, and that $\bar Z, \bar X$ acts as the corresponding qudit generalized Pauli gates (noticing that $e^{i\ell^2}=\omega$)
+
+\begin{itemize}
+    \item  $S_p\ket{\bar j} =  \sum_{k\in\ZZ} Z(d\ell)\ket{(dk+j)\ell} = \sum_{k\in\ZZ} \omega^{d(dk+j)}\ket{(dk+j)\ell} = \ket{\bar {j}} $, since $\omega^d=1$
+\item $S_q\ket{\bar j} =  \sum_{k\in\ZZ} X(d\ell)\ket{(dk+j)\ell} = \sum_{k\in\ZZ} \ket{(d(k+1)+j)\ell} = \ket{\bar {j}} $, since $\sum_{k\in\ZZ}f(k)=\sum_{k\in\ZZ}f(k+1)$.
+\item $\bar Z\ket{\bar j} =  \sum_{k\in\ZZ} Z(\ell)\ket{(dk+j)\ell} = \sum_{k\in\ZZ} \omega^{dk+j}\ket{(dk+j)\ell} = \omega^{j}\ket{\bar {j}} $, since $\omega^d=1$
+\item $\bar X\ket{\bar j} =  \sum_{k\in\ZZ} X(\ell)\ket{(dk+j)\ell} = \sum_{k\in\ZZ} \ket{(dk+j+1)\ell} = \ket{\overline{j+1}} $.
+\end{itemize}
+
+\end{solution}
+
+\begin{solution}[Part (b)]
+i) Using the commutation rule
+\begin{equation}
+\begin{split}
+     S_pE= Z(d\ell)X(u)Z(v)= e^{idu\ell}ES_p \\
+     S_qE= X(d\ell)X(u)Z(v)= e^{-idv\ell}ES_q
+\end{split}
+\end{equation}
+such that the eigenvalues of $S_p,S_q$ associated with the eigenvector $E\ket{\bar j}$ are, respectively, $e^{idu\ell},e^{-idv\ell}$. To see that this only reveals information about $u,v \mod \ell$, notice that if $u \equiv \bar u \mod \ell$, then $u = \ell \, m' +\bar u $ for some integer $m'$, such that 
+$$e^{idu\ell}=e^{id (\ell \, m + \bar u )\ell}= \omega^{md} e^{id \bar u\ell}= e^{id \bar u\ell}.$$
+Analogously for $v = m\ell + \bar v$.
+
+ii) Then, using the previous notation,
+\begin{equation}
+\begin{split}
+     RE &= X(-\bar u)Z(-\bar v) X(u)Z(v)\\
+     &= e^{-iu\bar v} X(u-\bar u) Z(v-\bar v)\\
+     &= e^{-iu\bar v} X(m'\ell) Z(m\ell) \\
+     &= e^{-iu\bar v} X(m'\ell) Z(m\ell)\\
+     &= e^{-iu\bar v} \bar X^{m'} \bar Z^m
+\end{split}
+\end{equation}
+
+From that, we can see that the correction restores the original state, up to a phase, whenever $\bar X^{m'}=S_q$ and $\bar Z^{m}=S_p$, i.e., $m ,m'\equiv 0 \mod d.$ (Notice in the code space $S^k_q=S_q;\quad S^k_p=S_p$)
+
+Now, this correction works for any $\bar u, \bar v = [-\ell/2 , \ell/2)$, which is to say 
+$$kd\ell- \ell/2=m'\ell- \ell/2\leq u < m'\ell +\ell/2=kd\ell +\ell/2$$ and analogously for $v$, which means the set of correctable errors are 
+\begin{equation}
+    C = \cup_{k \in \ZZ} [d\ell k-\ell/2 , d\ell k+\ell/2)
+    \label{correctable set}
+\end{equation}
+
+Then, whenever $|u|,|v|< \ell/2$ to code is corrected. This means that as the dimension of the logical qudits increases, the radius decreases by the relation $r\propto d^{-1/2}$.
+\end{solution}
+
+\begin{solution}[Part (c)]
+The probability that the error in $X$ is correctable (using the correctable set \eqref{correctable set}
+\begin{equation}
+    P(u \in C) = \frac{1}{\sigma \sqrt{2\pi}}\sum_{_{k \in \ZZ}} \int_{d\ell k-\ell/2}^{d\ell k+\ell/2} dx e^{-x^2/2\sigma^2}.
+\end{equation}
+
+Clearly, the leading order integral happens for $k=0$. For $k\geq0$,the size of the interval is $\ell$ and in the integrand is smaller than $e^{-(d\ell k-\ell/2)^2/(2\sigma^2)}$. So the integrals become exponentially small as $\sigma \rightarrow 0$, and the factor $(d\ell k-\ell/2)^2$ makes the decay faster the greater it is. The same follows for $k<0$, with a factor $(d\ell k+\ell/2)^2$. Thus
+\begin{equation}
+    P(u \in C) \approx \frac{1}{\sigma \sqrt{2\pi}} \int_{-\ell/2}^{\ell/2} dx e^{-x^2/2\sigma^2}= \frac{2}{\sqrt{\pi}} \int_{0}^{\ell/(2\sqrt{2}\sigma)} e^{-t^2} = \text{erf
+}\left(\frac{\ell}{2\sqrt{2}\sigma}\right)
+\end{equation}
+
+This determines the probability of a logical error to occur by the relation
+\begin{equation}
+    P_X = 1 -P(u \in C)
+\end{equation}
+
+
+\end{solution}
+
+\begin{solution}[Part (d)]
+
+i)
+Given that $F$ is unitary, it follows that 
+$$F^\dagger\hat q^n F= \underbrace{(F^\dagger \hat qF) (F^\dagger \hat qF) \cdots (F^\dagger \hat qF)}_{n\ \text{factors}}=(-\hat p)^n$$ as well as 
+$$F^\dagger\hat p^n F= \underbrace{(F^\dagger \hat pF) (F^\dagger \hat pF) \cdots (F^\dagger \hat p F)}_{n\ \text{factors}}=\hat q^n.$$
+
+Then, noticing how it acts in the series expansion of the exponential, it must also act accordingly in the exponentials as
+\begin{equation}
+\begin{split}
+     F^\dagger X(a)F= F^\dagger e^{-ia\hat p}F= e^{-ia\hat q} = Z(-a)\\
+     F^\dagger Z(b)F= F^\dagger e^{ib\hat q}F= e^{-ib\hat p} = X(b)
+\end{split}
+\end{equation}
+being $F^\dagger \bar XF = \bar Z^{-1}$ and $F^\dagger \bar ZF = \bar X$ sub cases for $a=b=\ell$.
+
+For the two-mode gate acting on codewords
+\begin{equation}
+    \begin{split}
+        C\ket{\bar j_1, \bar j_2} &= \sum_{k\in\ZZ} e^{-i\hat q_1 \hat p_2}\ket{(dk+j_1)\ell} \otimes \ket{\bar j_2} \\
+        &= \sum_{k\in\ZZ} e^{-i(dk+j_1)\ell\hat  p_2}\ket{(dk+j_1)\ell} \otimes \ket{\bar j_2}\\
+        &= \sum_{k,k'\in\ZZ} \ket{(dk+j_1)\ell} \otimes e^{-i(dk+j_1)\ell\hat  p_2} \ket{(dk'+j_2)\ell}\\
+        &= \sum_{k,k'\in\ZZ} \ket{(dk+j_1)\ell} \otimes \ket{(d(k+k')+j_1+j_2)\ell}\\ 
+        &= \sum_{k,k'\in\ZZ} \ket{(dk+j_1)\ell} \otimes \ket{(dk'+j_1+j_2)\ell}\\ 
+        &= \ket{\bar j_1, \overline{j_1 +j_2}}
+    \end{split}
+\end{equation}
+
+ii) 
+\begin{equation}
+    \begin{split}
+        e^{i\hat q^2/2} \ket{\bar j} &= \sum_{k\in\ZZ} e^{i\hat q^2/2}\ket{(dk+j)\ell}\\
+        &=  \sum_{k\in\ZZ} e^{i(dk+j)^2\ell^2/2}\ket{(dk+j)\ell}\\
+        &=  \sum_{k\in\ZZ} \omega^{(dk+j)^2/2}\ket{(dk+j)\ell}\\
+        &=  \omega^{j^2/2} \sum_{k\in\ZZ} \omega^{d^2k^2/2} \omega^{dk j}\ket{(dk+j)\ell}
+    \end{split}
+\end{equation}
+
+Notice that $\omega^{dk j}=e^{2\pi k j}=1$ for any $j,k \in \ZZ$. However, 
+\begin{equation}
+    \omega^{d^2k^2/2}=e^{i\pi d k^2} =\begin{cases}
+        1, & d\ \text{is even}\\
+        (-1)^k,& d\ \text{is odd} 
+    \end{cases}
+\end{equation}
+such that we get the desired expression for $d$ even, and that is does preserve the code for $d$ odd, due to the introduction of the alternating sign. So the linear term that must be added is precisely the one leading to an alternating sign.
+
+Applying the linear term on the corresponding eigenstate of $\hat q$
+\begin{equation}
+    e^{ic\hat q} \ket{(dk+j)\ell} =  e^{icj\ell} e^{icdk\ell}  \ket{(dk+j)\ell}
+\end{equation}
+it follows that $e^{icj\ell}$ is just a constant phase, and the only term that matters is $e^{icdk\ell}$. We want it to be equal to $(-1)^k=e^{i\pi k}$, so possible choice is $cd\ell=\pi$, to cancel the alternating phase, resulting in 
+\begin{equation}
+    e^{i\hat q^2/2} e^{i\pi \hat q /d\ell} \ket{\bar j} = \omega^{j^2/2} \omega^{j/2} \ket{\bar j} 
+\end{equation}
+for $d$ odd.
+
+\end{solution}
+
+
+
+% \begin{remark}
+% \end{remark}
+
+\begin{takeaway}
+\end{takeaway}
+
+%  Everything below is optional.  An entry with no attempt block is complete.
+%  Record only what would change what you do next time: typos and arithmetic
+%  slips you caught yourself are artefacts of the medium, not facts about the
+%  mathematics.  Add "public," to show this block in the public build.
+% \attempt{
+%   date       = ,               % ISO, YYYY-MM-DD -- required if the block is used
+%   time       = ,
+%   difficulty = ,               % 1-5, perceived
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
+
+\end{entry}
