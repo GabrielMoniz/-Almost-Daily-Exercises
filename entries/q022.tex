@@ -272,7 +272,7 @@ Now to show that the second moment of the nullifier always vanishes for any phas
   e^{2ip\cdot y} e^{i(f(q-y)-f(q+y))}.
 \]
 
-From the expression \eqref{q022:odd-expansion} for $f(q+y)-f(q-y)$, we can separate the lowest order term of the Taylor expansion and express the remaining terms as an arbitrary function that depends only on the $q,y$, not on $p$, $R(q,y)$
+From the expression \eqref{q022:odd-expansion} for $f(q+y)-f(q-y)$, we can separate the lowest-order term of the Taylor expansion and express the remaining terms as an arbitrary function that depends only on $ q$ and $ y$, not on $p$, $R(q,y)$
 \[
   f(q+y)-f(q-y)= 2 (y\cdot\nabla)f(q) + R(q,y),
 \]
@@ -309,13 +309,13 @@ So starting from the desired expression and using our facts
 \label{q022:moment-delta}
 \end{equation}
 
-Now to deal with this final integral, one must notice that the delta function is $k$-dimensional, forcing all others $y_i=0$, for $i\neq j$, in $R(q_0,y)$. From its expression this reduces the remainder \eqref{q022:remainder} to
+Now to deal with this final integral, one must notice that the delta function is $k$-dimensional, forcing all others $y_i=0$, for $i\neq j$, in $R(q_0,y)$. From its expression, this reduces the remainder \eqref{q022:remainder} to
 \begin{equation}
-     R(q_0, y)|_{y_i=0,i\neq j} =  2\sum_{l=1}^{u} \frac{1}{(2l+1)!} y_j^{2l+1} \cdot \partial_j^{2l+1}f(q_0).
+     R(q_0, y)|_{y_i=0,i\neq j} =  2\sum_{l=1}^{u} \frac{1}{(2l+1)!} y_j^{2l+1} \partial_j^{2l+1}f(q_0).
 \end{equation}
 To avoid this overcrowded notation, define
 \begin{equation}
-    \beta_j(x) = 2\sum_{l=1}^{u} \frac{1}{(2l+1)!} x^{2l+1} \cdot \partial_j^{2l+1}f(q_0).
+    \beta_j(x) = 2\sum_{l=1}^{u} \frac{1}{(2l+1)!} x^{2l+1} \partial_j^{2l+1}f(q_0).
     \label{q022:beta}
 \end{equation}
 (where $u$ again is related to the degree of the polynomial $f$, $r$, by $u =\lfloor \frac{r-1}{2}\rfloor$) such that $\beta_j(y_j)=R(q_0, y)|_{y_i=0,i\neq j}$, we can rewrite our integral as
