@@ -1,0 +1,222 @@
+% -----------------------------------------------------------------------------
+%  entries/qNNN.tex
+%
+%  One file per problem, named after its permanent ID.  The ID never changes
+%  and never gets reused, even if the entry later moves to a different day.
+%
+%  Keys are comma-separated, so any value containing a comma must be braced:
+%      topic = {Trace norm, Hilbert-Schmidt norm}
+% -----------------------------------------------------------------------------
+\begin{entry}{Q028}{Three qubits, two ways}
+
+\entrymeta{
+  topic   = {Multipartite entanglement, SLOCC classification},
+  est     = $\sim$90 minutes,
+  origin  = Adapted,          % Sourced / Extracted / Adapted / Original
+  source  = {W.~D\"ur, G.~Vidal, J.~I.~Cirac, Phys.\ Rev.\ A \textbf{62}, 062314 (2000)},
+  url     = https://arxiv.org/abs/quant-ph/0005115,
+  prereq  = Schmidt decomposition,
+  status  = drafted,           % drafted / solved / written-up / published
+}
+
+\begin{problem}
+For two parties sharing a pure state, stochastic LOCC (SLOCC)---local
+operations and classical communication that are only required to succeed
+with nonzero probability---sorts all states by a single integer, the Schmidt
+rank. Three qubits behave differently: there are two inequivalent kinds of
+genuinely tripartite entanglement, represented by the GHZ and W states. This
+problem proves their inequivalence with a tripartite analogue of the Schmidt
+rank, and then shows that the two classes are nevertheless not separated from
+each other as subsets of state space.
+
+Work in $\mathcal{H} = (\mathbb{C}^2)^{\otimes 3}$ with computational basis
+$\{|jkl\rangle\}_{j,k,l\in\{0,1\}}$, and let
+\begin{equation}\label{eq:3q-states}
+  |\mathrm{GHZ}\rangle = \tfrac{1}{\sqrt2}\big(|000\rangle + |111\rangle\big),
+  \qquad
+  |W\rangle = \tfrac{1}{\sqrt3}\big(|001\rangle + |010\rangle + |100\rangle\big).
+  \label{q028: GHZ and W states}
+\end{equation}
+Write $GL(2,\mathbb{C})$ for the group of invertible $2\times 2$ complex
+matrices. Two nonzero vectors $|\psi\rangle, |\phi\rangle \in \mathcal{H}$
+are \emph{SLOCC-equivalent} if there exist $A, B, C \in GL(2,\mathbb{C})$ and
+$\lambda \in \mathbb{C}\setminus\{0\}$ such that
+\begin{equation}\label{eq:3q-slocc}
+  |\psi\rangle = \lambda\,(A\otimes B\otimes C)\,|\phi\rangle .
+\end{equation}
+D\"ur, Vidal and Cirac show that this coincides with interconvertibility by
+LOCC with nonzero success probability; here \eqref{eq:3q-slocc} is taken as
+the definition. The \emph{SLOCC class} of $|\phi\rangle$ is the set of unit
+vectors SLOCC-equivalent to it.
+
+The \emph{tensor rank} of $|\psi\rangle \in \mathcal{H}$ is
+\begin{equation}\label{eq:3q-rank}
+  \operatorname{rk}(\psi)
+  = \min\Big\{ r \in \mathbb{N} \;:\;
+    |\psi\rangle = \sum_{i=1}^{r} a_i \otimes b_i \otimes c_i,\;
+    a_i, b_i, c_i \in \mathbb{C}^2 \Big\},
+\end{equation}
+with $\operatorname{rk}(0) = 0$. The vectors in a decomposition need not be
+normalized or orthogonal.
+
+You may use the following fact. A vector
+$v = \sum_{j,k} M_{jk}|jk\rangle \in \mathbb{C}^2\otimes\mathbb{C}^2$ can be
+written as $b\otimes c$ (zero allowed) if and only if its coefficient matrix
+has rank at most one, that is,
+\begin{equation}\label{eq:3q-det}
+  v = b\otimes c \text{ for some } b, c
+  \quad\Longleftrightarrow\quad
+  \det M = 0 .
+  \label{q028: identity for rank 2}
+\end{equation}
+This holds because the rank of $M$ equals the Schmidt rank of $v$ (singular
+value decomposition; Nielsen and Chuang, Thm.~2.7).
+
+\begin{enumerate}
+  \item[(a)] Show that $\operatorname{rk}$ is invariant under SLOCC
+  equivalence \eqref{eq:3q-slocc}, and that
+  $\operatorname{rk}(\mathrm{GHZ}) = 2$.
+
+  \item[(b)] Show that $\operatorname{rk}(\mathrm{W}) = 3$
+
+  \item[(d)] Show that $|W\rangle$ is nonetheless a limit of unit vectors in
+  the SLOCC class of $|\mathrm{GHZ}\rangle$. Proceed as follows:
+  Let $w : \mathbb{R} \to \mathbb{C}^2$, $t \mapsto w(t)$, be a
+  differentiable curve of (not necessarily normalized) qubit vectors, with
+  the derivative $w'(t)$ taken component-wise. For every $\varepsilon \neq 0$
+  such that $w(\varepsilon)$ and $w(0)$ are linearly independent, define
+  \begin{equation}\label{eq:3q-quotient}
+    |\chi_\varepsilon\rangle
+    = \frac{w(\varepsilon)^{\otimes 3} - w(0)^{\otimes 3}}{\varepsilon}.
+  \end{equation}
+  \begin{enumerate}
+    \item[(i)] Show that $|\chi_\varepsilon\rangle \neq 0$ and that
+    $|\chi_\varepsilon\rangle / \||\chi_\varepsilon\rangle\|$ lies in the
+    SLOCC class of $|\mathrm{GHZ}\rangle$.
+    \item[(ii)] Compute $\lim_{\varepsilon\to 0} |\chi_\varepsilon\rangle$ in
+    terms of $w(0)$ and $w'(0)$.
+    \item[(iii)] Choose $w$ so that this limit is a nonzero multiple of
+    $|W\rangle$ and so that $w(\varepsilon)$ and $w(0)$ are linearly
+    independent for all sufficiently small $\varepsilon \neq 0$. Conclude.
+  \end{enumerate}
+
+\end{enumerate}
+\end{problem}
+
+\begin{solution}[a]
+Take a vector $v$ whose tensor rank is $r$, then for arbitrary $A, B, C \in GL(2,\mathbb{C})$ and
+$\lambda \in \mathbb{C}\setminus\{0\}$ defined the transformed vector $v' = \lambda(A\otimes B\otimes C)v$.
+Since $v$ is of rank $r$, we can write it as 
+\begin{equation}
+    v= \sum_{i=1}^ra_i\otimes b_i\otimes c_i
+\end{equation}
+thus
+\begin{equation}
+    v' =\lambda\sum_{i=1}^{r} Aa_i\otimes Bb_i\otimes Cc_i.
+\end{equation}
+The expression directly shows that the transformation cannot increase the rank, as it is already written as a sum of $r$ terms, so $\operatorname{rk}(v')\leq r$.
+
+Meanwhile, since $A,B,C$ are invertible, we can take $A^{-1},B^{-1},C^{-1} \in GL(2,\CC)$ and $\lambda^{-1} \in \CC \setminus \{0\}$, which itself defines a transformation in the same SLOCC class such that $v = \lambda^{-1}(A^{-1}\otimes B^{-1}\otimes C^{-1})v'$. Analogously, this implies $\operatorname{rk}(v)=r\leq \operatorname{rk}(v')$. Therefore, $\operatorname{rk}(v')=r$ also, being the tensor rank invariant by such transformations.
+
+For the $\ket{GHZ}$ state, it is already written as the sum of two tensors, thus $\operatorname{rk}(\ket{GHZ})\leq 2$
+
+Suppose by contradiction that $\operatorname{rk}(\ket{GHZ})= 1$, thus, there is $a,b,c\in \CC^{2}$ such that $\ket{GHZ}=\ket{a}\otimes\ket b\otimes\ket c$. Define $\ket{a^{\perp}}$ as the normalized vector orthogonal to $\ket{a}$ (which exists and, since the subspace has dimension 2, it is unique), hence
+\begin{equation}
+    \bra{a^{\perp}}\otimes\id \otimes \id\ket{GHZ} = 0
+\end{equation}
+However, from the expression \eqref{q028: GHZ and W states},
+\begin{equation}
+    \bra{a^{\perp}}\otimes\id \otimes \id\ket{GHZ} = \frac{1}{\sqrt{2}} \left( \braket{a^{\perp}}{0} \ket{00} + \braket{a^{\perp}}{1} \ket{11}\right)
+\end{equation}
+which can never be zero for any non-null vector $\ket{a^{\perp}}$, since the subspace has dimension 2; there is no other direction that is mutually orthogonal to $\ket{0}$ and $\ket 1$. Therefore, by contradiction, we have that $\operatorname{rk}(\ket{GHZ})=2.$
+
+\end{solution}
+
+\begin{solution}[b]
+If we assume that $\operatorname{rk}(\ket{W})=1$, we arrive at a similar contradiction as in the previous case. 
+We thus assume, again by contradiction, that $\operatorname{rk}(\ket{W})=2$. Hence there are vectors satisfying
+$\ket{W}= \ket{a_0,b_0,c_0}+ \ket{a_1,b_1,c_1}$. We must have that at least one pair of vectors from the same subspace is linearly independent (otherwise, if all were linearly dependent, we could reduce it to a separable state $\lambda\ket{a_0,b_0,c_0}$). Without loss of generality, take $\ket{a_0},\ket{a_1}$ to be linearly independent.
+
+Similarly as before we take $\ket{a_i^{\perp}}$ the normalized vector orthogonal to $\ket{a_i}$, such that 
+\begin{equation}
+     \bra{a_i^{\perp}}\otimes\id \otimes \id\ket{GHZ} = \ket{b_i,c_i}.
+\end{equation}
+
+Nonetheless, using the expression from \eqref{q028: GHZ and W states}
+\begin{equation}
+\begin{split}
+    \bra{a_i^{\perp}}\otimes\id \otimes \id\ket{GHZ} &= \frac{1}{\sqrt{3}} (\braket{a_i^{\perp}}{0} \ket{01} + \braket{a_i^{\perp}}{0} \ket{10} + \braket{a_i^{\perp}}{1} \ket{00})\\
+    &= \sum_{ij} M^{(i)}_{jk}\ket{jk}
+\end{split}
+\end{equation}
+for the matrix
+\begin{equation}
+    M^{(i)}=\frac{1}{\sqrt{3}}\begin{pmatrix}
+        \braket{a_i^{\perp}}{1} &  \braket{a_i^{\perp}}{0}\\
+        \braket{a_i^{\perp}}{0} & 0
+    \end{pmatrix}
+\end{equation}
+whose determinant vanishes if and only if $\ket{a_i^{\perp}}=\ket{1}$, but that would mean $\ket{a_0},\ket{a_1}$ are linearly dependent, which is contradiction. 
+
+Therefore, by exhausting the other possibilities, $\operatorname{rk}(\ket{W})=3$.
+
+
+
+\end{solution}
+
+
+
+
+\begin{solution}[c]
+Given $\epsilon>0$, since $\ket{0},\ket{1}$ are orthogonal there is a $A_\epsilon \in GL(2,\CC)$ such that $A_\epsilon\ket{0}=w(\epsilon)$ and $A_\epsilon\ket{1}=-w(0)$, for any $w(\epsilon)\in \CC^{2}$ and $w(0)\in \CC^{2}$. Moreover, we can take $\lambda = \sqrt{2}/\epsilon$ such that 
+\begin{equation}
+    \lambda (A_\epsilon^{\otimes3})\ket{GHZ}= |\chi_\varepsilon\rangle
+\end{equation}
+
+The limit can be obtained through the derivative of the function $f(t)=w(t)^{\otimes3}$, which, by the product rule (notice that the proof for tensor product is analogous to regular multiplication of functions), is
+\begin{equation}
+    f(t) = w(t)\otimes w(t) \otimes w'(t) + w(t)\otimes w'(t) \otimes w(t) + w'(t)\otimes w(t) \otimes w(t)
+\end{equation}
+such that 
+\begin{equation}
+    \lim_{\epsilon \rightarrow 0} \ket{\chi_\epsilon}= w(0)\otimes w(0) \otimes w'(0) + w(0)\otimes w'(0) \otimes w(0) + w'(0)\otimes w(0) \otimes w(0)
+\end{equation}
+
+This limit is proportional to the $\ket{W}$ state if $w'(0)=\ket{1}$ and $w(0)=\ket{0}$. From the argument that there is always a matrix $A_\epsilon$ satisfying $A_\epsilon\ket{0}=w(\epsilon)$ and $A_\epsilon\ket{1}=-w(0)$, it directly follows that the desired limit exists and thus that the SLOCC class of $\ket {GHZ}$ is not closed.
+ 
+ But we can construct an example explicitly. A natural choice of curve that satisfies these initial conditions is $w(t)=\cos(t)\ket{0}+\sin(t)\ket{1}$. We then need that
+ \begin{equation}
+     A_\epsilon \ket{0} = \cos(\epsilon) \ket{0} + \sin(\epsilon)\ket{1}, \quad A_\epsilon \ket{1} = -\ket{0}
+ \end{equation}
+ which is satisfied by the matrix 
+ \begin{equation}
+     A_\epsilon = \begin{pmatrix}
+         \cos(\epsilon)  &  -1 \\
+          \sin(\epsilon) & 0
+     \end{pmatrix}
+ \end{equation}
+
+\end{solution}
+
+
+
+% \begin{remark}
+% \end{remark}
+
+\begin{takeaway}
+\end{takeaway}
+
+%  Everything below is optional.  An entry with no attempt block is complete.
+%  Record only what would change what you do next time: typos and arithmetic
+%  slips you caught yourself are artefacts of the medium, not facts about the
+%  mathematics.  Add "public," to show this block in the public build.
+% \attempt{
+%   date       = ,               % ISO, YYYY-MM-DD -- required if the block is used
+%   time       = ,
+%   difficulty = ,               % 1-5, perceived
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
+
+\end{entry}
