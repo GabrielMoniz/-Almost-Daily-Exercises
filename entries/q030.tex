@@ -1,0 +1,153 @@
+% -----------------------------------------------------------------------------
+%  entries/q030.tex
+%
+%  One file per problem, named after its permanent ID.  The ID never changes
+%  and never gets reused, even if the entry later moves to a different day.
+%
+%  Keys are comma-separated, so any value containing a comma must be braced:
+%      topic = {Trace norm, Hilbert-Schmidt norm}
+% -----------------------------------------------------------------------------
+\begin{entry}{Q030}{Charlie's help}
+
+\entrymeta{
+  topic   = {Multipartite entanglement, measurement on a third party},
+  est     = {$\sim$30 minutes (including write-up)},
+  origin  = Original,          % Sourced / Extracted / Adapted / Original
+  source  = Original problem,
+  prereq  = Schmidt decomposition,
+  status  = drafted,           % drafted / solved / written-up / published
+}
+
+\begin{problem}
+Tracing out one qubit of $|\mathrm{GHZ}\rangle$ leaves the other two in a
+separable state, whereas the two-qubit marginal of $|W\rangle$ is entangled;
+in this sense $W$ is the more robust of the two under the loss of a particle
+(D\"ur, Vidal, Cirac, Phys.\ Rev.\ A \textbf{62}, 062314 (2000)). Losing a
+qubit, however, is not the only thing that can happen to it: its holder may
+instead measure it and announce the result. This problem asks which of the
+two states is more useful when the third party cooperates in this way.
+
+Three qubits $A$, $B$, $C$, held by Alice, Bob and Charlie, are in one of
+the states
+\begin{equation}\label{eq:q030-states}
+  |\mathrm{GHZ}\rangle = \tfrac{1}{\sqrt2}\big(|000\rangle + |111\rangle\big),
+  \qquad
+  |W\rangle = \tfrac{1}{\sqrt3}\big(|001\rangle + |010\rangle + |100\rangle\big),
+\end{equation}
+with the qubits ordered $ABC$. Charlie measures $C$ in an orthonormal basis
+$\{|\varphi_0\rangle, |\varphi_1\rangle\}$ of $\mathbb{C}^2$ of his choice
+and announces the outcome $k$. For a three-qubit state $|\psi\rangle$,
+outcome $k$ occurs with probability
+$p_k = \big\|(\mathds{1}\otimes\mathds{1}\otimes\langle\varphi_k|)
+|\psi\rangle\big\|^2$ and, when $p_k > 0$, leaves $AB$ in the pure state
+\begin{equation}\label{eq:q030-post}
+  |\psi_k\rangle = \frac{1}{\sqrt{p_k}}\,
+  (\mathds{1}\otimes\mathds{1}\otimes\langle\varphi_k|)\,|\psi\rangle .
+\end{equation}
+A normalized two-qubit vector is \emph{maximally entangled} if its reduced
+state on $A$ is $\mathds{1}/2$. You may use the following fact: writing a
+normalized $v = \sum_{j,k} M_{jk}|jk\rangle \in \mathbb{C}^2\otimes
+\mathbb{C}^2$, its reduced state on $A$ is $MM^\dagger$, so
+\begin{equation}\label{eq:q030-max}
+  v \text{ is maximally entangled}
+  \quad\Longleftrightarrow\quad
+  MM^\dagger = \tfrac12\,\mathds{1}.
+\end{equation}
+
+\begin{enumerate}
+  \item[(a)] Find a basis for Charlie such that, for $|\mathrm{GHZ}\rangle$,
+  every outcome leaves Alice and Bob maximally entangled.
+
+  \item[(b)] Show that for $|W\rangle$ an outcome leaves Alice and Bob
+  maximally entangled only if the corresponding basis vector is $|0\rangle$
+  up to a phase. Conclude that no basis has the property of (a), and compute
+  the probability of the maximally entangled outcome when it occurs.
+\end{enumerate}
+\end{problem}
+
+\begin{solution}[a)]
+One can use the fact that the Bell states $\ket{\Phi^{\pm }} = \frac{1}{\sqrt{2}} \left(\ket{00} \pm \ket{11}\right)$ are maximally entangled and notice that, for the $X-$Pauli basis $\ket{\pm} = \frac{1}{\sqrt{2}} (\ket{0}\pm \ket{1})$, we have 
+\begin{equation}
+    (\mathds{1}\otimes\mathds{1}\otimes\bra{\pm}) \ket{GHZ} = \frac{1}{\sqrt{2}} \ket{\Phi^{\pm}}
+\end{equation}
+
+Thus, clearly being one possible choice of basis that always leaves the outcome maximally entangled
+
+\end{solution}
+
+\begin{solution}[b)]
+Consider the most general way we can parametrize an orthonormal basis on the one-qubit space is: 
+\begin{equation}
+    \ket{\varphi_0} = \cos(\theta) \ket{0} +e^{i\phi} \sin(\theta) \ket{1}, \quad  \ket{\varphi_1} = \sin(\theta) \ket{0} - e^{i\phi} \cos(\theta) \ket{1}
+\end{equation}
+
+Then the projections are
+\begin{equation}
+\begin{split}
+    \bra{\phi_0} \ket{W} = \frac{1}{\sqrt{3}} \big[ \cos(\theta)\ket{01} + \cos(\theta)\ket{10} + e^{-i\phi}\sin(\theta)\ket{00} \big] \\
+    \bra{\phi_1} \ket{W} = \frac{1}{\sqrt{3}} \big[ \sin(\theta)\ket{01} + \sin(\theta)\ket{10} - e^{-i\phi}\cos(\theta)\ket{00} \big]
+\end{split}
+\end{equation}
+which leads to probabilities
+\begin{equation}
+    p_0 = \frac{1}{3} (\cos(\theta)^{2} +1), \quad p_1= \frac{1}{3} (\sin(\theta)^{2} +1)
+\end{equation}
+such that the corresponding matrices ( where $M^{(k)}$ is associated with the state $\ket{\psi_k}$) are:
+\begin{equation}
+\begin{split}
+    M^{(0)} = \frac{1}{\sqrt{\cos(\theta)^{2} +1}}\begin{pmatrix}
+        e^{-i\phi}\sin(\theta) & \cos(\theta) \\
+        \cos(\theta) & 0
+    \end{pmatrix} \\
+    M^{(1)} = \frac{1}{\sqrt{\sin(\theta)^{2} +1}}\begin{pmatrix}
+        e^{-i\phi}\cos(\theta) & \sin(\theta) \\
+        \sin(\theta) & 0
+    \end{pmatrix}
+\end{split}
+\end{equation}
+
+
+Now we can check whether the condition \eqref{eq:q030-max} can be satisfied simultaneously for both matrices by calculating $MM^{\dagger}$ for both of them.
+
+From their expression
+\begin{equation}
+\begin{split}
+    M^{(0)}(M^{(0)})^{\dagger} = \frac{1}{\cos(\theta)^{2} +1}\begin{pmatrix}
+        1 & \e^{-i\phi}\sin(\theta)\cos(\theta) \\
+        \e^{i\phi}\sin(\theta)\cos(\theta) & \cos(\theta)^2
+    \end{pmatrix} \\
+    M^{(1)}(M^{(1)})^{\dagger} = \frac{1}{\sin(\theta)^{2} +1}\begin{pmatrix}
+        1 & \e^{-i\phi}\sin(\theta)\cos(\theta) \\
+        \e^{i\phi}\sin(\theta)\cos(\theta) & \sin(\theta)^2
+    \end{pmatrix}.
+\end{split}
+\label{q030: conjugate matrices}
+\end{equation}
+
+But this implies that we cannot have both resulting matrices proportional to the identity simultaneously. For the first case, we would need $\theta = n\pi$ ($\sin{\theta}=0$), whereas for the second we would need $\theta = n\pi +\pi/2$ ($\cos{\theta}=0$). 
+
+In both cases, this implies that we only achieved a maximally entangled state by projecting through $\bra{0}$ up to a phase. At the same time, the probability is $\frac{2}{3}$. 
+
+
+\end{solution}
+
+% \begin{remark}
+% \end{remark}
+
+\begin{takeaway}
+\end{takeaway}
+
+%  Everything below is optional.  An entry with no attempt block is complete.
+%  Record only what would change what you do next time: typos and arithmetic
+%  slips you caught yourself are artefacts of the medium, not facts about the
+%  mathematics.  Add "public," to show this block in the public build.
+% \attempt{
+%   date       = ,               % ISO, YYYY-MM-DD -- required if the block is used
+%   time       = ,
+%   difficulty = ,               % 1-5, perceived
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
+
+\end{entry}

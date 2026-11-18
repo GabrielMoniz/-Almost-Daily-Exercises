@@ -1,0 +1,146 @@
+% -----------------------------------------------------------------------------
+%  entries/q029.tex
+%
+%  One file per problem, named after its permanent ID.  The ID never changes
+%  and never gets reused, even if the entry later moves to a different day.
+%
+%  Keys are comma-separated, so any value containing a comma must be braced:
+%      topic = {Trace norm, Hilbert-Schmidt norm}
+% -----------------------------------------------------------------------------
+\begin{entry}{Q029}{Entangled across every cut, yet not genuinely}
+
+\entrymeta{
+  topic   = {Multipartite entanglement, biseparability, PPT criterion},
+  est     = {$\sim$40 minutes (including write-up)},
+  origin  = Original,          % Sourced / Extracted / Adapted / Original
+  source  = Original problem,
+  prereq  = {Partial transpose, PPT criterion},
+  status  = drafted,           % drafted / solved / written-up / published
+}
+
+\begin{problem}
+Two parties sharing a mixed state face a single question: is the state
+separable across their one cut, or not? Three parties can be cut in three
+ways, and the notion of \emph{genuine} tripartite entanglement is designed to
+exclude states whose entanglement could have been produced by pairs of
+parties alone. This problem shows that this notion is subtler than
+``entangled across every cut''.
+
+Work in $\mathcal{H} = (\mathbb{C}^2)^{\otimes 3}$, with qubits $A, B, C$ in
+this order and computational basis $\{|abc\rangle\}$. For a bipartition
+$X|YZ$ of $\{A, B, C\}$, a density operator $\rho$ on $\mathcal{H}$ is
+\emph{separable across $X|YZ$} if
+\begin{equation}\label{eq:q029-sep}
+  \rho = \sum_i p_i\, \sigma_i^{X} \otimes \tau_i^{YZ},
+\end{equation}
+with $\{p_i\}$ a probability distribution and $\sigma_i^X$, $\tau_i^{YZ}$
+density operators; let $S_{X|YZ}$ denote the set of such states. A state is
+\emph{biseparable} if it is a convex combination of states each of which lies
+in \emph{some} $S_{X|YZ}$, the bipartition being allowed to vary from term to
+term; a state is \emph{genuinely multipartite entangled} (GME) if it is not
+biseparable (Ma, Li, Shang, Eq.~(1) with $k = 2$; G\"uhne and T\'oth,
+Phys.\ Rep.\ \textbf{474}, 1 (2009), Sec.~3).
+
+Consider the three vectors
+\begin{equation}\label{eq:q029-pairs}
+  |\beta_A\rangle = \tfrac{1}{\sqrt2}\big(|000\rangle + |011\rangle\big)
+  \qquad
+  |\beta_B\rangle = \tfrac{1}{\sqrt2}\big(|000\rangle + |101\rangle\big)
+  \qquad
+  |\beta_C\rangle = \tfrac{1}{\sqrt2}\big(|000\rangle + |110\rangle\big)
+\end{equation}
+that is, a Bell pair $\ket{\Phi^+}$ shared by two of the qubits with the remaining one, the
+subscript, in $|0\rangle$; and the state
+\begin{equation}\label{eq:q029-rho}
+  \rho = \tfrac13\big(|\beta_A\rangle\langle\beta_A|
+         + |\beta_B\rangle\langle\beta_B|
+         + |\beta_C\rangle\langle\beta_C|\big).
+\end{equation}
+Since $|\beta_X\rangle$ is a product vector across $X|YZ$, the state $\rho$
+is biseparable by construction.
+
+You may use the following tool. The \emph{partial transpose} on $A$ is the
+operator $\rho^{T_A}$ with matrix elements
+\begin{equation}\label{eq:q029-pt}
+  \langle a\,bc|\,\rho^{T_A}\,|a'\,b'c'\rangle
+  = \langle a'\,bc|\,\rho\,|a\,b'c'\rangle ,
+\end{equation}
+and analogously on $B$ or $C$. If $\rho$ is separable across $A|BC$, then
+$\rho^{T_A} \geq 0$ (Peres, Phys.\ Rev.\ Lett.\ \textbf{77}, 1413 (1996)).
+
+\begin{enumerate}
+  \item[(a)] Show that $\rho$ is entangled across each of the three
+  bipartitions $A|BC$, $B|AC$ and $C|AB$.
+
+  \item[(b)] Conclude that being entangled across every bipartition does not
+  imply GME, and describe the set of biseparable states in terms of
+  $S_{A|BC}$, $S_{B|AC}$ and $S_{C|AB}$. Explain why (a) is possible.
+\end{enumerate}
+\end{problem}
+
+\begin{solution}[a]
+The state is invariant under permutation of $A, B, C$, so proving that there is entanglement between one bipartition is enough. Without loss os generality, let's focus on the partial transpose over $A$.
+
+For instance $\proj{\beta_A}=\proj{0}_A \otimes \proj{\Phi^+}_{BC}$, such that 
+$$\proj{\beta_A}^{T_A}=\proj{0}_A^T \otimes \proj{\Phi^+}=\proj{\beta_A}$$
+
+Before proceeding, we first analyze how the Bell pair state $\ket{\Phi^+}$ is affected by the partial transpose. Consider a Bell pair shared between $ A$ and $ X$, its partial transpose over $A$, considering the partial transpose is linear in $\rho$ directly from the definition
+\begin{equation}
+    \ketbra{\Phi^+}{\Phi^+}_{AX}=\frac{1}{2} \sum_{i,j=0}^{1} \ketbra{ii}{jj} \implies
+    \ketbra{\Phi^+}{\Phi^+}_{AX}^{T_A}=\frac{1}{2} \sum_{i,j=0}^{1} \ketbra{ji}{ij} = \frac{1}{2}SWAP_{AX}
+\end{equation}
+
+
+Thus, since $\ketbra{\beta_B}{\beta_B}= \ketbra{\Phi^+}{\Phi^+}_{AC} \otimes \ketbra{0}{0}_{B}$ and $\ketbra{\beta_C}{\beta_C}= \ketbra{\Phi^+}{\Phi^+}_{AB} \otimes \ketbra{0}{0}_{C}$, we have that 
+\begin{equation}
+    \ketbra{\beta_B}{\beta_B}^{T_A} = \frac{1}{2}SWAP_{AC} \otimes \ketbra{0}{0}_{B} \qquad \ketbra{\beta_C}{\beta_C}^{T_A} = \frac{1}{2}SWAP_{AB} \otimes \ketbra{0}{0}_{C}
+\end{equation}
+
+Now, consider the other bell pair $\ket{\Psi^-} = \frac{1}{\sqrt{2}} (\ket{01}-\ket{10})$. It follows that $\braket{\Phi^+|\Psi^-}=0$, meanwhile $SWAP\ket{\Psi^-} = - \ket{\Psi^-}$.
+
+Then, taking the expectation respective to the state  $\ket{\psi}=\ket{\Psi^-}_{AC}\otimes \ket{0}_B$ to the partial transposes of the states $\ket{\beta_A}$ and $\ket{\beta_B}$ we have:
+\begin{equation}
+    \braket{\proj{\beta_A}^{T_A}} = 0, \quad \braket{\proj{\beta_B}^{T_A}} = -\frac{1}{2} 
+\end{equation}
+
+The expectation value for $\ket{\beta_C}$ requires a little more care, notice $\bra{0}_C \ket{\Psi^-}_{AC} =  -\frac{1}{\sqrt{2}}\ket{1}_A$, then
+\begin{equation}
+    \braket{\psi|\proj{\beta_C}^{T_A}|\psi} = \frac{1}{4}\braket{10|SWAP_{AB}|10} =0
+\end{equation}
+
+Therefore, again invoking the linearity of the partial transpose, $\braket{\psi|\rho^{T_A}|\psi} = -\frac{1}{6}$, violating the positivity and certifying the entanglement.
+
+
+\end{solution}
+
+\begin{solution}[b)]
+
+The set of biseparable states is given by all linear combinations $$p_1\rho_1 + p_2\rho_2 + p_3\rho_3$$
+where
+$ p_i\geq0$ and $\sum_i p_i =1$ for any $\ p_1 \in S_{A|BC},\ p_2 \in S_{B|AC},\ p_3 \in S_{C|AB}$.
+
+And $\rho$ is clearly a convex combination of this form. The apparent difficulty arises because the state is mixed and a convex combination of separable states might be entangled.
+
+    
+\end{solution}
+
+% \begin{remark}
+% \end{remark}
+
+\begin{takeaway}
+\end{takeaway}
+
+%  Everything below is optional.  An entry with no attempt block is complete.
+%  Record only what would change what you do next time: typos and arithmetic
+%  slips you caught yourself are artefacts of the medium, not facts about the
+%  mathematics.  Add "public," to show this block in the public build.
+% \attempt{
+%   date       = ,               % ISO, YYYY-MM-DD -- required if the block is used
+%   time       = ,
+%   difficulty = ,               % 1-5, perceived
+%   howitwent  = ,
+%   insight    = ,
+%   note       = ,
+% }
+
+\end{entry}

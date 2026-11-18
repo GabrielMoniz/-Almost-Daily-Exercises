@@ -31,7 +31,7 @@ each other as subsets of state space.
 
 Work in $\mathcal{H} = (\mathbb{C}^2)^{\otimes 3}$ with computational basis
 $\{|jkl\rangle\}_{j,k,l\in\{0,1\}}$, and let
-\begin{equation}\label{eq:3q-states}
+\begin{equation}
   |\mathrm{GHZ}\rangle = \tfrac{1}{\sqrt2}\big(|000\rangle + |111\rangle\big),
   \qquad
   |W\rangle = \tfrac{1}{\sqrt3}\big(|001\rangle + |010\rangle + |100\rangle\big).
@@ -63,7 +63,7 @@ You may use the following fact. A vector
 $v = \sum_{j,k} M_{jk}|jk\rangle \in \mathbb{C}^2\otimes\mathbb{C}^2$ can be
 written as $b\otimes c$ (zero allowed) if and only if its coefficient matrix
 has rank at most one, that is,
-\begin{equation}\label{eq:3q-det}
+\begin{equation}
   v = b\otimes c \text{ for some } b, c
   \quad\Longleftrightarrow\quad
   \det M = 0 .
@@ -137,9 +137,9 @@ If we assume that $\operatorname{rk}(\ket{W})=1$, we arrive at a similar contrad
 We thus assume, again by contradiction, that $\operatorname{rk}(\ket{W})=2$. Hence there are vectors satisfying
 $\ket{W}= \ket{a_0,b_0,c_0}+ \ket{a_1,b_1,c_1}$. We must have that at least one pair of vectors from the same subspace is linearly independent (otherwise, if all were linearly dependent, we could reduce it to a separable state $\lambda\ket{a_0,b_0,c_0}$). Without loss of generality, take $\ket{a_0},\ket{a_1}$ to be linearly independent.
 
-Similarly as before we take $\ket{a_i^{\perp}}$ the normalized vector orthogonal to $\ket{a_i}$, such that 
+Similarly as before we take $\ket{a_i^{\perp}}$ the normalized vector orthogonal to $\ket{a_i}$, such that, for $j\neq i$, 
 \begin{equation}
-     \bra{a_i^{\perp}}\otimes\id \otimes \id\ket{GHZ} = \ket{b_i,c_i}.
+     \bra{a_i^{\perp}}\otimes\id \otimes \id\ket{GHZ} = \ket{b_j,c_j}.
 \end{equation}
 
 Nonetheless, using the expression from \eqref{q028: GHZ and W states}
@@ -156,7 +156,7 @@ for the matrix
         \braket{a_i^{\perp}}{0} & 0
     \end{pmatrix}
 \end{equation}
-whose determinant vanishes if and only if $\ket{a_i^{\perp}}=\ket{1}$, but that would mean $\ket{a_0},\ket{a_1}$ are linearly dependent, which is contradiction. 
+whose determinant vanishes if and only if $\ket{a_i^{\perp}}=\ket{1}$ for both $i$, but that would mean $\ket{a_0},\ket{a_1}$ are linearly dependent, which is contradiction. 
 
 Therefore, by exhausting the other possibilities, $\operatorname{rk}(\ket{W})=3$.
 
@@ -168,7 +168,7 @@ Therefore, by exhausting the other possibilities, $\operatorname{rk}(\ket{W})=3$
 
 
 \begin{solution}[c]
-Given $\epsilon>0$, since $\ket{0},\ket{1}$ are orthogonal there is a $A_\epsilon \in GL(2,\CC)$ such that $A_\epsilon\ket{0}=w(\epsilon)$ and $A_\epsilon\ket{1}=-w(0)$, for any $w(\epsilon)\in \CC^{2}$ and $w(0)\in \CC^{2}$. Moreover, we can take $\lambda = \sqrt{2}/\epsilon$ such that 
+Given $\epsilon>0$, since $\ket{0},\ket{1}$ are orthogonal there is a $A_\epsilon \in GL(2,\CC)$ such that $A_\epsilon\ket{0}=w(\epsilon)$ and $A_\epsilon\ket{1}=-w(0)$, for any $w(\epsilon),w(0)\in \CC^{2}$ linearly independent. Moreover, we can take $\lambda = \sqrt{2}/\epsilon$ such that 
 \begin{equation}
     \lambda (A_\epsilon^{\otimes3})\ket{GHZ}= |\chi_\varepsilon\rangle
 \end{equation}
